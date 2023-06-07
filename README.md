@@ -16,5 +16,5 @@ npm run build
 ```
 
 
-### Aplicação Frontend
+### Aplicação Backend
 Veja [GPC-Backend](https://github.com/grupo09-projeto-integrador/GPC-Backend).
