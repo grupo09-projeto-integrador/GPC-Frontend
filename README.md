@@ -1,19 +1,20 @@
-# gpc-frontend
+# Aplicação front-end Vue.js do Projeto GPC
 
-## Project setup
+## Setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Build para Desenvolvimento
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Build para produção
 ```
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Aplicação Frontend
+Veja [GPC-Backend](https://github.com/grupo09-projeto-integrador/GPC-Backend).
