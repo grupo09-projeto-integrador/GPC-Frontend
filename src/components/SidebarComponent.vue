@@ -19,42 +19,34 @@
     <router-link to="/relatorios">Relatórios</router-link>
     <p>Notificações</p>
     <router-link to="/logout">Sair</router-link> -->
-    <div class="navbar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+    <div class="navbar fixed-top d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 250px;">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
       <img alt="Logo Empresa" src="../assets/logo.png">
     </a>
     <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-      <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">
-          <i class="bi bi-house-fill"></i> <router-link class="text-white" to="/inicio">Inicio</router-link>
-        </a>
+    <hr>
+    <ul class="nav d-flex align-items-start nav-pills flex-column mb-auto">
+      <li class="nav-item d-flex align-items-center justify-content-center">
+          <i class="bi bi-house-fill"></i> <router-link class="nav-link text-white" to="/inicio">Inicio</router-link>
       </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <i class="bi bi-people-fill"></i><router-link class="text-white" to="/usuarios">Pessoas</router-link>
-        </a>
+      <li class="nav-item d-flex align-items-center justify-content-center">
+        <i class="bi bi-people-fill"></i><router-link class="nav-link text-white" to="/usuarios">Pessoas</router-link>
       </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <i class="bi bi-gear-fill"></i><router-link class="text-white" to="/categorias">Categorias</router-link>
-        </a>
+      <li class="nav-item d-flex align-items-center justify-content-center">
+        <i class="bi bi-bookmark-fill"></i><router-link class="nav-link text-white" to="/categorias">Categorias</router-link>
       </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <i class="bi bi-archive-fill"></i><router-link class="text-white" to="/ativos">Ativos</router-link>
-        </a>
+      <li class="nav-item d-flex align-items-center justify-content-center">
+        <i class="bi bi-archive-fill"></i><router-link class="nav-link  text-white" to="/ativos">Ativos</router-link>
       </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <i class="bi bi-archive-fill"></i><router-link class="text-white" to="/relatorios">Relatórios</router-link>
-        </a>
+      <li class="nav-item d-flex align-items-center justify-content-center">
+        <i class="bi bi-clipboard2-data-fill"></i><router-link class="nav-link  text-white" to="/relatorios">Relatórios</router-link>
       </li>
     </ul>
     <hr>
-    <a href="/logout" class="d-flex align-items-center text-white text-decoration-none">
-    <i class="bi bi-box-arrow-right"></i>Logout
-    </a>
+    <li class="nav-item d-flex align-items-center justify-content-center">
+      <i class="bi bi-box-arrow-right"></i>
+      <a href="/logout" class="nav-link text-white">Logout</a>
+    </li>
   </div>
 </template>
 
@@ -68,8 +60,20 @@ export default defineComponent({
 <style scoped>
 .navbar{
   height: 100%;
-  position: fixed;
+  /* position: fixed; */
+}
 
+a{
+  font-size: 16px;
+}
+
+i{
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+li{
+  margin-bottom: 12px;
 }
 
 </style>

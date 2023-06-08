@@ -15,7 +15,11 @@
   </script>
   
   <style>
-    #app {
+  @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+  *{
+    font-family: 'Poppins', sans-serif;
+  }
+  #app {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
