@@ -16,8 +16,10 @@
   
   <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
   *{
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;  
   }
   #app {
     -webkit-font-smoothing: antialiased;
