@@ -1,20 +1,22 @@
 <template>
   <SidebarComponent/>
-  <router-view/>
-  </template>
+  <div class="main-content">
+    <router-view/>
+  </div>
+</template>
   
-  <script lang="ts">
+<script lang="ts">
   import SidebarComponent from './components/SidebarComponent.vue';
-  
+
   export default {
     name: 'App',
     components: {
       SidebarComponent
     }
   }
-  </script>
+</script>
   
-  <style>
+<style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
@@ -29,5 +31,8 @@
     /* margin-top: 60px; */
     height: 100vh;
   }
-  </style>
+  .main-content{
+    margin-left: 15.6rem;
+  }
+</style>
   
