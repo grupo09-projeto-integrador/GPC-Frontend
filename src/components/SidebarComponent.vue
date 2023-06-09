@@ -1,5 +1,5 @@
 <template>
-    <div class="navbar fixed-top d-flex flex-column flex-shrink-0 p-3 text-white" style="width: 250px;">
+    <div class="navbar d-flex flex-column  p-3 text-white h-100" style="width: 250px;">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
       <img alt="Logo Empresa" src="../assets/logo.png">
     </a>
