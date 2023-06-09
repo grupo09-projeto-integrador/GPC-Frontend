@@ -1,33 +1,82 @@
 <template>
-  <h4>Movimentações</h4>
-  <div class="forms-beneficiario">
-    <form id="form-cadastro-beneficiario">
-      <div class="flexbox">
-        <div class="info">
-          <label for="beneficiario">Beneficiario:</label>
-          <input id="beneficiario" type="text" />
-        </div>
-
-        <div class="info">
-          <label for="ativo">Ativo:</label>
-          <input id="ativo" type="text" />
-        </div>
+  <form class="form-filtro">
+    <div class="form-row d-flex justify-content-center">
+      <div class="form-group col-md-4">
+        <label for="ativo-id">Movimentação</label>
+        <input
+          type="text"
+          class="form-control"
+          id="movimentacao-id"
+          placeholder="ID da Movimentação"
+        />
       </div>
-
-      <div class="flexbox">
-        <div class="info">
-          <label for="dt_emprestimo">Data de Empréstimo:</label>
-          <input id="dt_emprestimo" type="date" />
-        </div>
-        <div class="info">
-          <label for="dt_devolucao">Data de Devolução:</label>
-          <input id="dt_devolucao" type="date" />
-        </div>
+      <div class="form-group d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-search"></i>
+        </button>
       </div>
-    </form>
-  </div>
-
-  <div class="table">
+      <div class="form-group col-md-4">
+        <label for="categoria-id">Categoria</label>
+        <input
+          type="text"
+          class="form-control"
+          id="categoria-id"
+          placeholder="ID da Categoria"
+        />
+      </div>
+      <div class="form-group d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
+    <div class="form-row d-flex justify-content-center">
+      <div class="form-group col-md-4">
+        <label for="ativo-id">Ativo</label>
+        <input
+          type="text"
+          class="form-control"
+          id="ativo-id"
+          placeholder="ID da Ativo"
+        />
+      </div>
+      <div class="form-group d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="beneficiario-id">Beneficiario</label>
+        <input
+          type="text"
+          class="form-control"
+          id="beneficiario-id"
+          placeholder="ID do Beneficiário"
+        />
+      </div>
+      <div class="form-group d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
+    <div class="form-row d-flex justify-content-center">
+      <div class="form-group col-md-3">
+        <label for="inputCity">Data de Empréstimo</label>
+        <input type="date" class="form-control" id="dt_emprestimo" />
+      </div>
+      <div class="form-group col-md-3">
+        <label for="inputCity">Data de Devolução</label>
+        <input type="date" class="form-control" id="dt_devolucao" />
+      </div>
+      
+      <div class="d-flex align-items-center">
+        <label style="margin:0"><input type="checkbox" />Mostrar devolvidos</label>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+  </form>
+  <!-- <div class="table">
     <div class="table-title">
       <div class="filtrar">
         <a href="#"><i class="bi bi-funnel-fill"></i>Filtrar</a>
@@ -70,7 +119,12 @@
         </tr>
       </tbody>
     </table>
-  </div>
+  </div> -->
 </template>
 
-<style scoped></style>
+<style scoped>
+.form-filtro {
+  width: 75%;
+  margin-top: 2rem;
+}
+</style>

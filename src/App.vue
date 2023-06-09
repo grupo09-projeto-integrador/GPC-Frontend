@@ -37,9 +37,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100vh;
+    overflow-x: hidden;
   }
   .main-content{
     margin-left: 15.6rem;
-  }
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
 </style>
   
