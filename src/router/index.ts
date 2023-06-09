@@ -22,9 +22,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AtivosView.vue')
   },
   {
-    path: '/emprestimos',
-    name: 'emprestimos',
-    component: () => import('../views/EmprestimosView.vue')
+    path: '/movimentacoes',
+    name: 'movimentacoes',
+    component: () => import('../views/MovimentacoesView.vue')
   },
   {
     path: '/relatorios',
