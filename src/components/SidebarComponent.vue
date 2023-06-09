@@ -19,7 +19,7 @@
         <i class="bi bi-archive-fill"></i><router-link class="nav-link  text-white" to="/ativos">Ativos</router-link>
       </li>
       <li class="nav-item d-flex align-items-center justify-content-center">
-        <i class="bi bi-calendar-check-fill"></i><router-link class="nav-link  text-white" to="/ativos">Empréstimos</router-link>
+        <i class="bi bi-calendar-check-fill"></i><router-link class="nav-link  text-white" to="/movimentacoes">Movimentações</router-link>
       </li>
       <li class="nav-item d-flex align-items-center justify-content-center">
         <i class="bi bi-clipboard2-data-fill"></i><router-link class="nav-link  text-white" to="/relatorios">Relatórios</router-link>
@@ -43,8 +43,7 @@ export default defineComponent({
 <style scoped>
 .navbar{
   height: 100%;
-  background-color: #0067C8;
-  /* position: fixed; */
+  background-color: var(--cor-principal);
 }
 
 a{
@@ -53,14 +52,10 @@ a{
 
 i{
   font-size: 18px;
-  margin-bottom: 6px;
 }
 
 li{
   margin-bottom: 12px;
 }
 
-i.logout{
-  margin-bottom: 0;
-}
 </style>
