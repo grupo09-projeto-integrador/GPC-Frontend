@@ -11,7 +11,8 @@
     </div>
 </template>
   
-<script>
+<script lang="ts">import { RouteLocationRaw } from 'vue-router';
+
 export default {
     name: "LinkDinamicoComponent",
     props: {
@@ -22,15 +23,19 @@ export default {
         routeRegister: {
             type: String,
             required: true
+        },
+        defaultActive: {
+            type: String,
+            default: "list"
         }
     },
     data() {
         return {
-            activeButton: 'list'
+            activeButton: this.defaultActive
         };
     },
     methods: {
-        navigateTo(route, buttonId) {
+        navigateTo(route: RouteLocationRaw, buttonId: string) {
             this.activeButton = buttonId; // Set the active button
             this.$router.push(route);
         }
