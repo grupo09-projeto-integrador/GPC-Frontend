@@ -23,7 +23,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="ativo in ativos" :key="ativo.id">
+          <tr v-for="ativo in ativosFilter" :key="ativo.id">
             <td> {{ ativo.id }} </td>
             <td>{{ ativo.categoria.id }}</td>
             <td>{{ ativo.idPatrimonio }}</td>
@@ -64,6 +64,23 @@ export default defineComponent({
       searchQuery: '',
     };
   },
+  computed: {
+    ativosFilter(): Ativo[] {
+      if (!this.searchQuery) {
+        return this.ativos;
+      } else {
+        return this.ativos.filter((ativo: Ativo) => {
+          return ativo.id.toString().includes(this.searchQuery) ||
+            ativo.categoria?.id.toString().includes(this.searchQuery) ||
+            ativo.idPatrimonio.toString().includes(this.searchQuery) ||
+            ativo.condicao.toString().includes(this.searchQuery) ||
+            ativo.status.toString().includes(this.searchQuery) ||
+            ativo.dataEntrada.toString().includes(this.searchQuery);
+        });
+      }
+    }
+  },
+
   mounted() {
     this.fetchAtivos();
   },
