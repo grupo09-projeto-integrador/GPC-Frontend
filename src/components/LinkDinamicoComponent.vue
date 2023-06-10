@@ -1,11 +1,11 @@
 <template>
     <div class="link-path d-flex align-items-center mt-2">
         <button class="button-usersList" :class="{ active: activeButton === 'list' }"
-            @click="navigateTo(routeList, 'list')">
+            @click="navigateTo(routeList)">
             Listar
         </button>
         <button class="button-usersList" :class="{ active: activeButton === 'register' }"
-            @click="navigateTo(routeRegister, 'register')">
+            @click="navigateTo(routeRegister)">
             Cadastrar Novo
         </button>
     </div>
@@ -35,8 +35,8 @@ export default {
         };
     },
     methods: {
-        navigateTo(route: RouteLocationRaw, buttonId: string) {
-            this.activeButton = buttonId; // Set the active button
+        navigateTo(route: RouteLocationRaw) {
+            this.activeButton = route as string;
             this.$router.push(route);
         }
     }
