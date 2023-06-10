@@ -1,55 +1,49 @@
 <template>
-    <div class="link-path d-flex align-items-center mt-3">
-      <button
-        class="button-usersList"
-        :class="{ active: activeButton === 'list' }"
-        @click="navigateTo(routeList, 'list')"
-      >
-        Listar
-      </button>
-      <button
-        class="button-usersList"
-        :class="{ active: activeButton === 'register' }"
-        @click="navigateTo(routeRegister, 'register')"
-      >
-        Cadastrar Novo
-      </button>
+    <div class="link-path d-flex align-items-center mt-2">
+        <button class="button-usersList" :class="{ active: activeButton === 'list' }"
+            @click="navigateTo(routeList, 'list')">
+            Listar
+        </button>
+        <button class="button-usersList" :class="{ active: activeButton === 'register' }"
+            @click="navigateTo(routeRegister, 'register')">
+            Cadastrar Novo
+        </button>
     </div>
-  </template>
+</template>
   
-  <script>
-  export default {
+<script>
+export default {
     name: "LinkDinamicoComponent",
     props: {
-      routeList: {
-        type: String,
-        required: true
-      },
-      routeRegister: {
-        type: String,
-        required: true
-      }
+        routeList: {
+            type: String,
+            required: true
+        },
+        routeRegister: {
+            type: String,
+            required: true
+        }
     },
     data() {
-      return {
-        activeButton: 'list' 
-      };
+        return {
+            activeButton: 'list'
+        };
     },
     methods: {
-      navigateTo(route, buttonId) {
-        this.activeButton = buttonId; // Set the active button
-        this.$router.push(route);
-      }
+        navigateTo(route, buttonId) {
+            this.activeButton = buttonId; // Set the active button
+            this.$router.push(route);
+        }
     }
-  };
-  </script>
+};
+</script>
   
-  <style scoped>
-  .button-usersList {
+<style scoped>
+.button-usersList {
     user-select: none;
     cursor: pointer;
     width: 220px;
-    height: 40px;
+    height: 35px;
     border: none;
     border-radius: 4px;
     font-size: 16px;
@@ -57,23 +51,23 @@
     background-color: #aaa69e;
     color: #ffffff;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
-    margin: 10px;
+    margin-right: 10px;
     transition: background-color 0.3s ease, transform 0.3s ease;
     outline: none;
-  }
-  
-  .button-usersList:hover {
+}
+
+.button-usersList:hover {
     background-color: #f3c436;
     transform: scale(1.05);
-  }
-  
-  .button-usersList:active {
+}
+
+.button-usersList:active {
     transform: scale(0.98);
-  }
-  
-  .active {
-    background-color: #f3c436 !important; 
+}
+
+.active {
+    background-color: #f3c436 !important;
     outline: none;
-  }
-  </style>
+}
+</style>
   
