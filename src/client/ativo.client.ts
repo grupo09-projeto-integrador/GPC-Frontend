@@ -65,7 +65,7 @@ export class AtivoClient {
 
     public async save(ativo: Ativo): Promise<Ativo> {
         try {
-            return (await this.axiosClient.post<Ativo>('/', ativo)).data
+            return (await this.axiosClient.post<Ativo>('/ativos', ativo)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }

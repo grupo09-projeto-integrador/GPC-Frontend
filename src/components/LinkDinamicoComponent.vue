@@ -1,17 +1,18 @@
 <template>
     <div class="link-path d-flex align-items-center mt-2">
         <button class="button-usersList" :class="{ active: activeButton === 'list' }"
-            @click="navigateTo(routeList, 'list')">
+            @click="navigateTo(routeList)">
             Listar
         </button>
         <button class="button-usersList" :class="{ active: activeButton === 'register' }"
-            @click="navigateTo(routeRegister, 'register')">
+            @click="navigateTo(routeRegister)">
             Cadastrar Novo
         </button>
     </div>
 </template>
   
-<script>
+<script lang="ts">import { RouteLocationRaw } from 'vue-router';
+
 export default {
     name: "LinkDinamicoComponent",
     props: {
@@ -22,16 +23,20 @@ export default {
         routeRegister: {
             type: String,
             required: true
+        },
+        defaultActive: {
+            type: String,
+            default: "list"
         }
     },
     data() {
         return {
-            activeButton: 'list'
+            activeButton: this.defaultActive
         };
     },
     methods: {
-        navigateTo(route, buttonId) {
-            this.activeButton = buttonId; // Set the active button
+        navigateTo(route: RouteLocationRaw) {
+            this.activeButton = route as string;
             this.$router.push(route);
         }
     }

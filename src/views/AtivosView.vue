@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content d-flex flex-column align-items-start gap-5">
+  <div class="main-content d-flex flex-column align-items-start">
     <div class="page-header d-flex justify-content-between align-items-center">
       <LinkDinamicoComponent routeList="/ativos" routeRegister="/ativos/cadastrar" />
 
