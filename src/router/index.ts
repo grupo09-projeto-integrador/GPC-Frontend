@@ -25,12 +25,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/ativos',
     name: 'ativos',
-    component: () => import('../views/AtivosView.vue')
+    component: () => import('../views/ativo-views/AtivosView.vue')
   },
   {
     path: '/ativos/cadastrar',
     name: 'ativos.cadastrar',
-    component: () => import('../views/AtivosCadastrar.vue')
+    component: () => import('../views/ativo-views/AtivosCadastrar.vue')
+  },
+  {
+    path: '/ativos/editar/:ativoId',
+    name: 'ativos-editar',
+    component: () => import('../views/ativo-views/AtivosEditar.vue')
   },
   {
     path: '/movimentacoes',
