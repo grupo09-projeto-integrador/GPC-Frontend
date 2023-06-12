@@ -11,7 +11,8 @@
     </div>
 </template>
   
-<script lang="ts">import { RouteLocationRaw } from 'vue-router';
+<script lang="ts">
+import { RouteLocationRaw } from 'vue-router';
 
 export default {
     name: "LinkDinamicoComponent",
@@ -31,13 +32,13 @@ export default {
     },
     data() {
         return {
-            activeButton: this.defaultActive
+            activeButton: (this as any).defaultActive
         };
     },
     methods: {
-        navigateTo(route: RouteLocationRaw) {
+        navigateTo(this: any, route: RouteLocationRaw) {
             this.activeButton = route as string;
-            this.$router.push(route);
+            (this as any).$router.push(route);
         }
     }
 };
@@ -75,4 +76,3 @@ export default {
     outline: none;
 }
 </style>
-  

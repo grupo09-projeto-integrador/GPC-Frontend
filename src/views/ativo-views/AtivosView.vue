@@ -33,7 +33,7 @@
 
             <td>
               <div class="d-flex justify-content-center actions">
-                <button class="btn btn-sm btn-primary me-2">
+                <button class="btn btn-sm btn-primary me-2" @click="editItem(ativo)">
                   <i class="bi bi-pencil-square"></i> Editar </button>
                 <button class="btn btn-sm btn-danger" @click="deleteItem(ativo)">
                   <i class="bi bi-trash"></i> Excluir </button>
@@ -114,6 +114,13 @@ export default defineComponent({
       } catch (error) {
         console.error(error);
       }
+    },
+
+    async editItem(ativo: Ativo) {
+
+      const ativoId = ativo.id;
+      this.$router.push({ name: "ativos-editar", params: {ativoId} });
+      
     }
   },
 });
