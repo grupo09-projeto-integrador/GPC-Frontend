@@ -12,6 +12,16 @@ export class CategoriaClient{
         })
     }
 
+    public async findAll(): Promise<Categoria[]> {
+        try {
+            return (await this.axiosClient.get<Categoria[]>('/categorias/listar')).data
+        } catch (error: any) {
+            return Promise.reject(error.response)
+        }
+    }
+
+
+
     public async findById(id: number): Promise<Categoria> {
         try {
             return (await this.axiosClient.get<Categoria>(`/categorias/id?${id}`)).data

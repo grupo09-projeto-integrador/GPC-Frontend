@@ -35,13 +35,58 @@
 
   
   import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'; // @ is an alias to /src
+import { CategoriaClient } from '@/client/categoria.client';
+import { Categoria } from '@/model/categoria';
+import { Condicao } from '@/model/condicao';
+import { Status } from '@/model/status';
+
 
 export default defineComponent({
   name: 'CategoriaCadastrar',
   components: {
     LinkDinamicoComponent,
   },
-  });
+
+
+  
+  data() {
+        return {
+            conditions: Object.values(Condicao),
+            statuses: Object.values(Status),
+            categoria: new Categoria(),
+            CategoriaClient: new CategoriaClient()
+        };
+    },
+    methods: {
+        async submitForm() {
+            const payload = {
+                categoria: {
+                    id: 1,
+                    isSuspenso: false,
+                    dataEdicao: new Date(),
+                    dataCriacao: new Date()
+                } 
+            };
+
+            const categoria = new Categoria();
+            categoria.isSuspenso = true;
+            categoria.nomeCategoria = this.categoria.nomeCategoria;
+            categoria.minimoAmarelo = this.categoria.minimoAmarelo;
+            categoria.maximoAmarelo = this.categoria.maximoAmarelo;
+
+            this.CategoriaClient.save(categoria)
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+
+
+    }
+
+});
   </script>
   
 

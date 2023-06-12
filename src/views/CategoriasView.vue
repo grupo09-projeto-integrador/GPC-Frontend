@@ -4,7 +4,7 @@
       <LinkDinamicoComponent routeList="/categorias" routeRegister="/categorias/cadastrar" />
 
       <div class="search-container mt-3">
-        <input type="text" class="search-input" placeholder="Search..." />
+        <input type="text" class="search-input" placeholder="Search..." v-model="searchQuery" />
         <i class="bi bi-search search-icon"></i>
       </div>
     </div>
@@ -22,6 +22,25 @@
             </tr>
           </thead>
 
+          <tbody>
+          <tr v-for="categoria in categoriaFilter" :key="categoria.id">
+            <td> {{ categoria.id }} </td>
+            <td>{{ categoria.nomeCategoria }}</td>
+            <td>{{ categoria.qtdeAtivos }}</td>
+            <td>{{ categoria.maximoAmarelo }}</td>
+            <td>{{ categoria.minimoAmarelo }}</td>
+
+            <td>
+              <div class="d-flex justify-content-center actions">
+                <button class="btn btn-sm btn-primary me-2">
+                  <i class="bi bi-pencil-square"></i> Editar </button>
+                <button class="btn btn-sm btn-danger" @click="deleteItem(categoria)">
+                  <i class="bi bi-trash"></i> Excluir </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
         </table>
       </div>
    </div>
@@ -32,6 +51,7 @@
 import { defineComponent } from 'vue';
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'; // @ is an alias to /src
 import { Categoria } from '@/model/categoria';
+import { CategoriaClient } from '@/client/categoria.client';
 
 export default defineComponent({
   name: 'Categoria',
@@ -46,7 +66,7 @@ data(){
     };
   },
   computed: {
-    ativosFilter(): Categoria[] {
+    categoriaFilter(): Categoria[] {
       if (!this.searchQuery) {
         return this.categoria;
       } else {
@@ -61,9 +81,40 @@ data(){
     }
   },
 
+  mounted() {
+    this.fetchAtivos();
+  },
+
+  methods: {
+    async fetchAtivos() {
+      try {
+        const categoriaClient = new CategoriaClient();
+        this.categoria = await categoriaClient.findAll();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    
+    async deleteItem(categoria: Categoria) {
+      const confirmation = confirm("Você tem certeza de que deseja excluir este ativo?");
+      if (!confirmation) {
+        return;
+      }
+
+      try {
+        const categoriaClient = new CategoriaClient();
+        await categoriaClient.delete(categoria.id);
+        this.categoria = this.categoria.filter((item) => item.id !== categoria.id);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  },
+}
 
 
-});
+
+);
 </script> 
 
 <style scoped>
