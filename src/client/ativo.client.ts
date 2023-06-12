@@ -10,7 +10,7 @@ export class AtivoClient {
 
     constructor() {
         this.axiosClient = axios.create({
-            baseURL: 'http://localhost:8080/ativos',
+            baseURL: 'http://localhost:8081',
             headers: { 'Content-type': 'application/json' }
         })
     }
@@ -25,7 +25,7 @@ export class AtivoClient {
 
     public async findAll(): Promise<Ativo[]> {
         try {
-            return (await this.axiosClient.get<Ativo[]>('/all')).data
+            return (await this.axiosClient.get<Ativo[]>('/ativos/listar')).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -65,7 +65,7 @@ export class AtivoClient {
 
     public async save(ativo: Ativo): Promise<Ativo> {
         try {
-            return (await this.axiosClient.post<Ativo>('/', ativo)).data
+            return (await this.axiosClient.post<Ativo>('/ativos', ativo)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -81,7 +81,7 @@ export class AtivoClient {
 
     public async delete(id: number): Promise<void> {
         try {
-            await this.axiosClient.delete(`/${id}`)
+            await this.axiosClient.delete(`/ativos?id=${id}`)
         } catch (error: any) {
             return Promise.reject(error.response)
         }
