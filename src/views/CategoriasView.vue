@@ -21,6 +21,7 @@
               <th scope="col">Ação</th>
             </tr>
           </thead>
+
         </table>
       </div>
    </div>
@@ -30,12 +31,38 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'; // @ is an alias to /src
+import { Categoria } from '@/model/categoria';
 
 export default defineComponent({
   name: 'Categoria',
   components: {
     LinkDinamicoComponent,
   },
+
+data(){
+    return {
+      categoria: [] as Categoria[],
+      searchQuery: '',
+    };
+  },
+  computed: {
+    ativosFilter(): Categoria[] {
+      if (!this.searchQuery) {
+        return this.categoria;
+      } else {
+        return this.categoria.filter((categoria: Categoria) => {
+          return categoria.id.toString().includes(this.searchQuery) ||
+          categoria.nomeCategoria.toString().includes(this.searchQuery) ||
+            categoria.qtdeAtivos.toString().includes(this.searchQuery) ||
+            categoria.minimoAmarelo.toString().includes(this.searchQuery) ||
+            categoria.maximoAmarelo.toString().includes(this.searchQuery);
+        });
+      }
+    }
+  },
+
+
+
 });
 </script> 
 
