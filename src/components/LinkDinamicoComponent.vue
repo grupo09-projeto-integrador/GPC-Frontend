@@ -29,7 +29,7 @@ export default {
             default: "list"
         }
     },
-    data() {
+    data(): any {
         return {
             activeButton: this.defaultActive
         };
