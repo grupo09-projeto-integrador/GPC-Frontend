@@ -4,6 +4,7 @@
       <LinkDinamicoComponent
         routeList="/movimentacoes"
         routeRegister="/movimentacoes/cadastrar"
+        defaultActive="register"
       />
     </div>
   </div>
