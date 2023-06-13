@@ -10,14 +10,14 @@ export class AtivoClient {
 
     constructor() {
         this.axiosClient = axios.create({
-            baseURL: 'http://localhost:8081',
+            baseURL: 'http://localhost:8080',
             headers: { 'Content-type': 'application/json' }
         })
     }
     
     public async findById(id: number): Promise<Ativo> {
         try {
-            return (await this.axiosClient.get<Ativo>(`/${id}`)).data
+            return (await this.axiosClient.get<Ativo>(`/ativos?id=${id}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
