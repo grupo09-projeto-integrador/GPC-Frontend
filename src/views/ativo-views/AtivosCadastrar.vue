@@ -86,7 +86,7 @@ export default defineComponent({
             const ativo = new Ativo();
             ativo.isSuspenso = true;
             ativo.dataCriacao = new Date();
-            ativo.categoria = payload.categoria;
+            // ativo.categoria = payload.categoria;
             ativo.idPatrimonio = this.ativo.idPatrimonio;
             ativo.condicao = this.ativo.condicao;
             ativo.status = this.ativo.status;
