@@ -37,11 +37,6 @@
                 <label for="dt_entrada">Data de Entrada</label>
                 <input type="date" class="form-control" id="dt_entrada" v-model="ativo.dataEntrada" style="width: 300px;" />
             </div>
-            <div class="form-floating" style="width: 600px;">
-                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
-                    v-model="ativo.descricao" style="height: 100px"></textarea>
-                <label for="floatingTextarea2">Adicione uma descrição (opcional)</label>
-            </div>
             <div class="col-12 p-0">
                 <button type="submit" class="btn btn-primary" @submit="submitForm">Cadastrar</button>
             </div>
