@@ -22,37 +22,35 @@
             v-model="movimentacao.ativo"
           />
         </div>
-        <button type="submit" class="col-md-2 btn btn-primary align-self-end">
+        <button class="col-md-2 btn-search btn btn-primary align-self-end">
           <i class="bi bi-search"></i>
         </button>
-      </div>
-      <div class="row d-flex align-items-center align-self-start">
+
         <div class="col d-flex flex-column align-self-start">
-          <label for="beneficiario-id">Beneficiário</label>
+          <label for="beneficario_id">Beneficário</label>
           <input
             type="number"
             class="form-control"
-            id="beneficiario-id"
+            id="beneficario_id"
             placeholder="ID do Beneficiário"
             v-model="movimentacao.beneficiario"
           />
         </div>
-        <button type="submit" class="col-md-2 btn btn-primary align-self-end">
+        <button class="col-md-2 btn-search btn btn-primary align-self-end">
           <i class="bi bi-search"></i>
         </button>
       </div>
-
-      <div class="d-flex flex-column">
-        <label for="dt_emprestimo">Data de Empréstimo</label>
-        <input
-          type="date"
-          class="form-control"
-          id="dt_emprestimo"
-          v-model="movimentacao.dataEmprestimo"
-          style="width: 300px"
-        />
-      </div>
-      <div class="d-flex align-items-center gap-3">
+      <div class="flex-row d-flex align-itens-cemter gap-4 align-self-start">
+        <div class="d-flex flex-column">
+          <label for="dt_emprestimo">Data de Empréstimo</label>
+          <input
+            type="date"
+            class="form-control"
+            id="dt_emprestimo"
+            v-model="movimentacao.dataEmprestimo"
+            style="width: 300px"
+          />
+        </div>
         <div class="d-flex flex-column">
           <label for="dt_devolucao">Data de Devolução</label>
           <input
@@ -84,8 +82,12 @@
         ></textarea>
       </div>
       <div class="col-12 p-0">
-        <button type="submit" class="btn btn-primary" @submit="submitForm">
-          Abrir movimentação
+        <button
+          type="submit"
+          class="btn btn-primary d-flex gap-2"
+          @submit="submitForm"
+        >
+          <i class="bi bi-calendar-plus"></i>Abrir Movimentação
         </button>
       </div>
     </form>
@@ -150,10 +152,14 @@ export default defineComponent({
         .catch((error: any) => {
           console.log(error)
         })
-      
+
       // this.$router.push('/movimentacoes')
     }
   }
 })
 </script>
-<style scoped></style>
+<style scoped>
+.btn-search {
+  width: 52px;
+}
+</style>
