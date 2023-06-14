@@ -30,7 +30,7 @@ export default {
             default: "list"
         }
     },
-    data() {
+    data(): any {
         return {
             activeButton: (this as any).defaultActive
         };

@@ -17,6 +17,7 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap');
+@import'~bootstrap/dist/css/bootstrap.css';
 
 :root {
   --cor-principal: #0067C8;
