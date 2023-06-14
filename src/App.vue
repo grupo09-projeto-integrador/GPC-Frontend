@@ -14,16 +14,22 @@ export default {
 }
 </script>
   
-<style>
+<style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap');
-@import'~bootstrap/dist/css/bootstrap.css';
+
+
+$theme-colors: (
+  "primary": #0067C8,
+  "warning": #F7A81B,
+  "secondary": #808192
+);
+$body-bg: white;
+
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
 
 :root {
-  --cor-principal: #0067C8;
-  --cor-secundario: #F7A81B;
-  --bg-principal: white;
-  --text-secundario: #808192;
   --font-principal: 'Inter', sans-serif;
   --font-weight-leve: 400;
   --font-weight-principal: 500;
