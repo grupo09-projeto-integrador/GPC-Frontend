@@ -17,6 +17,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/CategoriasView.vue')
   },
   {
+    path: '/categorias/cadastrar',
+    name: 'categorias cadastrar',
+    component: () => import('../views/CategoriaCadastrarView.vue')
+  },
+
+  {
     path: '/ativos',
     name: 'ativos',
     component: () => import('../views/ativo-views/AtivosView.vue')
@@ -34,7 +40,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/movimentacoes',
     name: 'movimentacoes',
-    component: () => import('../views/MovimentacoesView.vue')
+    component: () => import('../views/movimentacao-views/MovimentacoesView.vue')
+  },
+  {
+    path: '/movimentacoes/cadastrar',
+    name: 'movimentacoes.cadastrar',
+    component: () => import('../views/movimentacao-views/MovimentacoesCadastrar.vue')
   },
   {
     path: '/relatorios',

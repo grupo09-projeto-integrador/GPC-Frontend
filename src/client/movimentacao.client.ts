@@ -6,16 +6,23 @@ export class MovimentacoesClient {
 
   constructor() {
     this.axiosClient = axios.create({
-      baseURL: 'http://localhost:8080/api/movimentacoes',
+      baseURL: 'http://localhost:8080/movimentacoes',
       headers: { 'Content-type': 'application/json' }
     })
   }
 
   public async findById(id: number): Promise<Movimentacao> {
     try {
-      return (await this.axiosClient.get<Movimentacao>(`/${id}`)).data
+      return (await this.axiosClient.get<Movimentacao>(`/?id=${id}`)).data
     } catch (error: any) {
       return Promise.reject(error.response)
     }
   }
+  public async save(movimentacao: Movimentacao): Promise<Movimentacao> {
+    try {
+        return (await this.axiosClient.post<Movimentacao>('', movimentacao)).data
+    } catch (error: any) {
+        return Promise.reject(error.response)
+    }
+}
 }
