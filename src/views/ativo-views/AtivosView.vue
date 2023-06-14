@@ -9,7 +9,42 @@
       </div>
     </div>
 
-    <div class="table-display mt-4 w-100">
+    <form class="form-app d-flex flex-column align-items-start gap-3 mt-4">
+      <div class="row d-flex align-items-center align-self-start">
+        <div class="col d-flex flex-column align-self-start">
+          <label for="categoria-id">Nome Categoria</label>
+          <input type="text" class="form-control" id="categoria-id" placeholder="Nome da Categoria" />
+        </div>
+
+        <div class="col d-flex flex-column align-self-start">
+          <label for="condicao_id">Condição</label>
+          <select class="form-select">
+            <option selected>Todas as condiçoes</option>
+          </select>
+        </div>
+
+        <div class="col d-flex flex-column align-self-start">
+          <label for="status_id">Status</label>
+          <select class="form-select">
+            <option selected>Todas as status</option>
+          </select>
+        </div>
+
+        <div class="col d-flex align-self-start align-items-center gap-2">
+
+        <div class="d-flex flex-column">
+          <label for="dt_entrada">Data de Entrada</label>
+          <input type="date" class="form-control" id="dt_entrada" style="width: 200px" />
+        </div>
+
+        <button type="submit" class="btn btn-primary align-self-end d-flex align-items-center">
+          <i class="bi bi-funnel"></i>Filtrar
+        </button>
+      </div>
+      </div>
+    </form>
+
+    <div class="table-display w-100 mt-3">
       <table class="table table-sm table-bordered w-100">
         <thead>
           <tr>
@@ -25,7 +60,7 @@
         <tbody>
           <tr v-for="ativo in ativosFilter" :key="ativo.id">
             <td> {{ ativo.id }} </td>
-            <td>{{ ativo.categoria.id }}</td>
+            <td>{{ ativo.categoria.nomeCategoria }}</td>
             <td>{{ ativo.idPatrimonio }}</td>
             <td>{{ ativo.condicao }}</td>
             <td>{{ ativo.status }}</td>
@@ -42,21 +77,21 @@
           </tr>
         </tbody>
       </table>
-            <!-- Add pagination controls -->
-  <div class="pagination-container align-self-end">
-    <ul class="pagination">
-      <li class="page-item" :class="{ disabled: currentPage === 0 }">
-        <a class="page-link" href="#" aria-label="Previous" @click="previousPage">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      <li class="page-item" :disabled="ativosFilter.length < pageSize">
-        <a class="page-link" href="#" aria-label="Next" @click="nextPage">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
-  </div>
+      <!-- Add pagination controls -->
+      <div class="pagination-container align-self-end">
+        <ul class="pagination">
+          <li class="page-item" :class="{ disabled: currentPage === 0 }">
+            <a class="page-link" href="#" aria-label="Previous" @click="previousPage">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item" :disabled="ativosFilter.length < pageSize">
+            <a class="page-link" href="#" aria-label="Next" @click="nextPage">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -82,7 +117,7 @@ export default defineComponent({
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
       currentPage: 0,
-      pageSize: 5,
+      pageSize: 6,
     };
   },
   computed: {
@@ -138,8 +173,8 @@ export default defineComponent({
     async editItem(ativo: Ativo) {
 
       const ativoId = ativo.id;
-      this.$router.push({ name: "ativos-editar", params: {ativoId} });
-      
+      this.$router.push({ name: "ativos-editar", params: { ativoId } });
+
     },
 
     previousPage() {
