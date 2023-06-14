@@ -1,10 +1,10 @@
 <template>  
-  <div class="main-content d-flex flex-column align-items-start gap-5">
+  <div class="main-content d-flex flex-column align-items-start">
     <div class="page-header d-flex justify-content-between align-items-center">
       <LinkDinamicoComponent routeList="/categorias" routeRegister="/categorias/cadastrar" />
 
       <div class="search-container mt-3">
-        <input type="text" class="search-input" placeholder="Search..." />
+        <input type="text" class="search-input" placeholder="Search..." v-model="searchQuery" />
         <i class="bi bi-search search-icon"></i>
       </div>
     </div>
@@ -21,6 +21,26 @@
               <th scope="col">Ação</th>
             </tr>
           </thead>
+
+          <tbody>
+          <tr v-for="categoria in categoriaFilter" :key="categoria.id">
+            <td> {{ categoria.id }} </td>
+            <td>{{ categoria.nomeCategoria }}</td>
+            <td>{{ categoria.qtdeAtivos }}</td>
+            <td>{{ categoria.maximoAmarelo }}</td>
+            <td>{{ categoria.minimoAmarelo }}</td>
+
+            <td>
+              <div class="d-flex justify-content-center actions">
+                <button class="btn btn-sm btn-primary me-2">
+                  <i class="bi bi-pencil-square"></i> Editar </button>
+                <button class="btn btn-sm btn-danger" @click="deleteItem(categoria)">
+                  <i class="bi bi-trash"></i> Excluir </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
         </table>
       </div>
    </div>
@@ -30,13 +50,71 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'; // @ is an alias to /src
+import { Categoria } from '@/model/categoria';
+import { CategoriaClient } from '@/client/categoria.client';
 
 export default defineComponent({
   name: 'Categoria',
   components: {
     LinkDinamicoComponent,
   },
-});
+
+data(){
+    return {
+      categoria: [] as Categoria[],
+      searchQuery: '',
+    };
+  },
+  computed: {
+    categoriaFilter(): Categoria[] {
+      if (!this.searchQuery) {
+        return this.categoria;
+      } else {
+        return this.categoria.filter((categoria: Categoria) => {
+          return categoria.id.toString().includes(this.searchQuery) ||
+          categoria.nomeCategoria.toString().includes(this.searchQuery) ||
+            categoria.qtdeAtivos.toString().includes(this.searchQuery) ||
+            categoria.minimoAmarelo.toString().includes(this.searchQuery) ||
+            categoria.maximoAmarelo.toString().includes(this.searchQuery);
+        });
+      }
+    }
+  },
+
+  mounted() {
+    this.fetchAtivos();
+  },
+
+  methods: {
+    async fetchAtivos() {
+      try {
+        const categoriaClient = new CategoriaClient();
+        this.categoria = await categoriaClient.findAll();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    
+    async deleteItem(categoria: Categoria) {
+      const confirmation = confirm("Você tem certeza de que deseja excluir este ativo?");
+      if (!confirmation) {
+        return;
+      }
+
+      try {
+        const categoriaClient = new CategoriaClient();
+        await categoriaClient.delete(categoria.id);
+        this.categoria = this.categoria.filter((item) => item.id !== categoria.id);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  },
+}
+
+
+
+);
 </script> 
 
 <style scoped>
