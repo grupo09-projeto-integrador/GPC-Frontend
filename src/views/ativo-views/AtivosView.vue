@@ -4,7 +4,7 @@
       <LinkDinamicoComponent routeList="/ativos" routeRegister="/ativos/cadastrar" />
 
       <div class="search-container mt-3">
-        <input type="text" class="search-input" placeholder="Search..." v-model="searchQuery" />
+        <input type="text" class="search-input" placeholder="Buscar por Id Património..." v-model="searchQuery" />
         <i class="bi bi-search search-icon"></i>
       </div>
     </div>
@@ -14,7 +14,7 @@
         <thead>
           <tr>
             <th scope="col">Id</th>
-            <th scope="col">Id Categoria</th>
+            <th scope="col">Nome Categoria</th>
             <th scope="col">Id Património</th>
             <th scope="col">Condição</th>
             <th scope="col">Status</th>
@@ -42,6 +42,21 @@
           </tr>
         </tbody>
       </table>
+            <!-- Add pagination controls -->
+  <div class="pagination-container align-self-end">
+    <ul class="pagination">
+      <li class="page-item" :class="{ disabled: currentPage === 0 }">
+        <a class="page-link" href="#" aria-label="Previous" @click="previousPage">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" :disabled="ativosFilter.length < pageSize">
+        <a class="page-link" href="#" aria-label="Next" @click="nextPage">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
     </div>
   </div>
 </template>
@@ -52,6 +67,8 @@ import LinkDinamicoComponent from "@/components/LinkDinamicoComponent.vue";
 import { Ativo } from "@/model/ativo";
 import { AtivoClient } from "@/client/ativo.client";
 import axios from "axios";
+import { PageRequest } from "@/model/page/page-request";
+import { PageResponse } from "@/model/page/page-response";
 
 export default defineComponent({
   name: "AtivosView",
@@ -61,7 +78,11 @@ export default defineComponent({
   data() {
     return {
       ativos: [] as Ativo[],
-      searchQuery: '',
+      searchQuery: "",
+      selectedYear: null as number | null,
+      selectedMonth: null as number | null,
+      currentPage: 0,
+      pageSize: 5,
     };
   },
   computed: {
@@ -69,14 +90,7 @@ export default defineComponent({
       if (!this.searchQuery) {
         return this.ativos;
       } else {
-        return this.ativos.filter((ativo: Ativo) => {
-          return ativo.id.toString().includes(this.searchQuery) ||
-            ativo.categoria?.id.toString().includes(this.searchQuery) ||
-            ativo.idPatrimonio.toString().includes(this.searchQuery) ||
-            ativo.condicao.toString().includes(this.searchQuery) ||
-            ativo.status.toString().includes(this.searchQuery) ||
-            ativo.dataEntrada.toString().includes(this.searchQuery);
-        });
+        return this.ativos.filter((item) => item.idPatrimonio.toLocaleLowerCase().includes(this.searchQuery));
       }
     }
   },
@@ -87,8 +101,13 @@ export default defineComponent({
   methods: {
     async fetchAtivos() {
       try {
+        const pageRequest = new PageRequest();
+        pageRequest.currentPage = this.currentPage;
+        pageRequest.pageSize = this.pageSize;
+
         const ativoClient = new AtivoClient();
-        this.ativos = await ativoClient.findAll();
+        const pageResponse: PageResponse<Ativo> = await ativoClient.findByFiltrosPaginado(pageRequest);
+        this.ativos = pageResponse.content;
       } catch (error) {
         console.error(error);
       }
@@ -121,7 +140,20 @@ export default defineComponent({
       const ativoId = ativo.id;
       this.$router.push({ name: "ativos-editar", params: {ativoId} });
       
-    }
+    },
+
+    previousPage() {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+        this.fetchAtivos();
+      }
+    },
+    nextPage() {
+      if (this.ativosFilter.length === this.pageSize) {
+        this.currentPage++;
+        this.fetchAtivos();
+      }
+    },
   },
 });
 </script>

@@ -73,14 +73,14 @@
           />
         </div>
         <div class="form-check align-self-end mb-2">
-        <input
-          id="isDevolvido"
-          class="form-check-input"
-          type="checkbox"
-          v-model="movimentacao.isDevolvido"
-        />
-        <label class="m-0" for="isDevolvido">Mostrar devolvidos</label>
-      </div>
+          <input
+            id="isDevolvido"
+            class="form-check-input"
+            type="checkbox"
+            v-model="movimentacao.isDevolvido"
+          />
+          <label class="m-0" for="isDevolvido">Mostrar devolvidos</label>
+        </div>
       </div>
 
       <!-- </div> -->
@@ -94,6 +94,9 @@
         </button>
       </div>
     </form>
+    <table>
+      
+    </table>
   </div>
 </template>
 
