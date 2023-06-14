@@ -46,12 +46,12 @@
   <div class="pagination-container align-self-end">
     <ul class="pagination">
       <li class="page-item" :class="{ disabled: currentPage === 0 }">
-        <a class="page-link" href="#" aria-label="Previous" @click="previousPage"  style="color: #3C3C43;background-color: #B5C2C9;">
+        <a class="page-link" href="#" aria-label="Previous" @click="previousPage">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
       <li class="page-item" :disabled="ativosFilter.length < pageSize">
-        <a class="page-link" href="#" aria-label="Next" @click="nextPage" style="color: #3C3C43;background-color: #B5C2C9;">
+        <a class="page-link" href="#" aria-label="Next" @click="nextPage">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
