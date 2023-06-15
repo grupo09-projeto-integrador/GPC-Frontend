@@ -4,29 +4,27 @@
       <LinkDinamicoComponent routeList="/ativos" routeRegister="/ativos/cadastrar" />
 
       <div class="search-container mt-3">
-        <input type="text" class="search-input" placeholder="Buscar por Id Património..." v-model="searchQuery" />
+        <input type="text" class="search-input" placeholder="Buscar por Id Património ou Nome ..." v-model="searchQuery" />
         <i class="bi bi-search search-icon"></i>
       </div>
     </div>
 
     <form class="form-app d-flex flex-column align-items-start gap-3 mt-4">
       <div class="row d-flex align-items-center align-self-start">
-        <div class="col d-flex flex-column align-self-start">
-          <label for="categoria-id">Nome Categoria</label>
-          <input type="text" class="form-control" id="categoria-id" placeholder="Nome da Categoria" />
-        </div>
 
         <div class="col d-flex flex-column align-self-start">
           <label for="condicao_id">Condição</label>
-          <select class="form-select">
-            <option selected>Todas as condiçoes</option>
+          <select class="form-select" v-model="selectedCondicao" style="width: 300px" >
+            <option value="" selected>Todas as condiçoes</option>
+            <option v-for="condicao in availableCondicao" :value="condicao">{{ condicao }}</option>
           </select>
         </div>
 
         <div class="col d-flex flex-column align-self-start">
           <label for="status_id">Status</label>
-          <select class="form-select">
-            <option selected>Todas as status</option>
+          <select class="form-select" v-model="selectedStatus" style="width: 300px" >
+            <option value="" selected>Todas as status</option>
+            <option v-for="status in availableStatus" :value="status">{{ status }}</option>
           </select>
         </div>
 
@@ -34,17 +32,13 @@
 
         <div class="d-flex flex-column">
           <label for="dt_entrada">Data de Entrada</label>
-          <input type="date" class="form-control" id="dt_entrada" style="width: 200px" />
+          <input type="date" class="form-control" id="dt_entrada" style="width: 300px" v-model="selectedDate" />
         </div>
-
-        <button type="submit" class="btn btn-primary align-self-end d-flex align-items-center">
-          <i class="bi bi-funnel"></i>Filtrar
-        </button>
       </div>
       </div>
     </form>
 
-    <div class="table-display w-100 mt-3">
+    <div class="table-display w-100 mt-4">
       <table class="table table-sm table-bordered w-100">
         <thead>
           <tr>
@@ -104,6 +98,8 @@ import { AtivoClient } from "@/client/ativo.client";
 import axios from "axios";
 import { PageRequest } from "@/model/page/page-request";
 import { PageResponse } from "@/model/page/page-response";
+import { Status } from "@/model/status";
+import { Condicao } from "@/model/condicao";
 
 export default defineComponent({
   name: "AtivosView",
@@ -114,20 +110,42 @@ export default defineComponent({
     return {
       ativos: [] as Ativo[],
       searchQuery: "",
-      selectedYear: null as number | null,
-      selectedMonth: null as number | null,
+      selectedStatus: null as Status | null,
+      selectedCondicao: null as Condicao | null,
+      selectedDate: null as string | null,
       currentPage: 0,
       pageSize: 6,
     };
   },
   computed: {
     ativosFilter(): Ativo[] {
-      if (!this.searchQuery) {
-        return this.ativos;
-      } else {
-        return this.ativos.filter((item) => item.idPatrimonio.toLocaleLowerCase().includes(this.searchQuery));
-      }
+    if (!this.searchQuery && !this.selectedStatus && !this.selectedCondicao && !this.selectedDate) {
+      return this.ativos;
+    } else {
+      const lowerCaseQuery = this.searchQuery.toLowerCase();
+      return this.ativos.filter((ativo: Ativo) => {
+        const matchesQuery =
+          ativo.categoria.nomeCategoria.toLowerCase().includes(lowerCaseQuery) ||
+          ativo.idPatrimonio.toString().toLocaleLowerCase().includes(this.searchQuery) ||
+          ativo.id.toString().toLowerCase().includes(lowerCaseQuery);
+
+        const matchesStatus = !this.selectedStatus || ativo.status === this.selectedStatus;
+        const matchesCondicao = !this.selectedCondicao || ativo.condicao === this.selectedCondicao;
+        const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
+
+        return matchesQuery && matchesStatus && matchesCondicao && matchesDate;
+      });
     }
+  },
+
+    availableStatus(): string[] {
+      const status = Object.values(Status);
+      return status.map((st) => st.toUpperCase());
+    },
+    availableCondicao(): string[] {
+      const condicao = Object.values(Condicao);
+      return condicao.map((cond) => cond.toUpperCase());
+    },
   },
 
   mounted() {
@@ -215,7 +233,7 @@ export default defineComponent({
 
 .search-input {
   position: relative;
-  width: 300px;
+  width: 350px;
   height: 36px;
   padding: 0.5rem 1rem 0.5rem 2rem;
   font-size: 16px;
@@ -234,7 +252,6 @@ export default defineComponent({
   font-style: normal;
   font-weight: 400;
   font-size: 15px;
-  letter-spacing: -0.408px;
   color: #3c3c43;
 }
 
