@@ -7,7 +7,7 @@ export class CategoriaClient{
     
     constructor() {
         this.axiosClient = axios.create({
-            baseURL: 'http://localhost:3000/categorias',
+            baseURL: 'http://localhost:8080/categorias',
             headers: { 'Content-type': 'application/json' }
         })
     }
