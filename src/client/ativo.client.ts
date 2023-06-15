@@ -1,5 +1,7 @@
 import { Ativo } from '@/model/ativo'
 import { Condicao } from '@/model/condicao'
+import { PageRequest } from '@/model/page/page-request'
+import { PageResponse } from '@/model/page/page-response'
 import { Status } from '@/model/status'
 import axios, { AxiosInstance } from 'axios'
 
@@ -14,18 +16,62 @@ export class AtivoClient {
             headers: { 'Content-type': 'application/json' }
         })
     }
-    
+
     public async findById(id: number): Promise<Ativo> {
+
         try {
-            return (await this.axiosClient.get<Ativo>(`/ativos?id=${id}`)).data
+            const response = await this.axiosClient.get<Ativo>(`/ativos/${id}`);
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+
+    public async findAll(): Promise<Ativo[]> {
+        try {
+            const response = await this.axiosClient.get<Ativo[]>('/ativos');
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            return []; // Return an empty array if there's an error
+        }
+    }
+
+    public async save(ativo: Ativo): Promise<Ativo> {
+        try {
+            const response = await this.axiosClient.post<Ativo>('/ativos', ativo);
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+    public async update(ativo: Ativo): Promise<Ativo> {
+        try {
+            const response = await this.axiosClient.put<Ativo>(`${ativo.id}`, ativo);
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+    public async delete(id: number): Promise<void> {
+        try {
+            await this.axiosClient.delete(`/ativos?id=${id}`)
         } catch (error: any) {
             return Promise.reject(error.response)
         }
     }
 
-    public async findAll(): Promise<Ativo[]> {
+    public async findByFiltrosPaginado(pageRequest: PageRequest): Promise<PageResponse<Ativo>> {
         try {
-            return (await this.axiosClient.get<Ativo[]>('/ativos/listar')).data
+            let requestPath = ''
+
+            requestPath += `page=${pageRequest.currentPage}`
+            requestPath += `&size=${pageRequest.pageSize}`
+
+            return (await this.axiosClient.get<PageResponse<Ativo>>(`/ativos?${requestPath}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -33,7 +79,7 @@ export class AtivoClient {
 
     public async findByCondicao(condicao: Condicao): Promise<Ativo[]> {
         try {
-            return (await this.axiosClient.get<Ativo[]>(`/condicao/${condicao}`)).data
+            return (await this.axiosClient.get<Ativo[]>(`/ativos/condicao?condicao=${condicao}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -41,7 +87,7 @@ export class AtivoClient {
 
     public async findByStatus(status: Status): Promise<Ativo[]> {
         try {
-            return (await this.axiosClient.get<Ativo[]>(`/status/${status}`)).data
+            return (await this.axiosClient.get<Ativo[]>(`/ativos/status?status=${status}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -49,7 +95,7 @@ export class AtivoClient {
 
     public async findByIdPatrimonio(idPatrimonio: string): Promise<Ativo[]> {
         try {
-            return (await this.axiosClient.get<Ativo[]>(`/idPatrimonio/${idPatrimonio}`)).data
+            return (await this.axiosClient.get<Ativo[]>(`/ativos/idPatrimonio?idPatrimonio=${idPatrimonio}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -57,31 +103,7 @@ export class AtivoClient {
 
     public async findByNomeCategoria(nomeCategoria: string): Promise<Ativo[]> {
         try {
-            return (await this.axiosClient.get<Ativo[]>(`/nomeCategoria/${nomeCategoria}`)).data
-        } catch (error: any) {
-            return Promise.reject(error.response)
-        }
-    }
-
-    public async save(ativo: Ativo): Promise<Ativo> {
-        try {
-            return (await this.axiosClient.post<Ativo>('/ativos', ativo)).data
-        } catch (error: any) {
-            return Promise.reject(error.response)
-        }
-    }
-
-    public async update(ativo: Ativo): Promise<Ativo> {
-        try {
-            return (await this.axiosClient.put<Ativo>('/', ativo)).data
-        } catch (error: any) {
-            return Promise.reject(error.response)
-        }
-    }
-
-    public async delete(id: number): Promise<void> {
-        try {
-            await this.axiosClient.delete(`/ativos?id=${id}`)
+            return (await this.axiosClient.get<Ativo[]>(`/ativos/nomeCategoria?nomeCategoria=${nomeCategoria}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
