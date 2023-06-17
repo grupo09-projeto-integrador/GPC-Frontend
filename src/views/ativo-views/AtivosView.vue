@@ -64,7 +64,7 @@
               <div class="d-flex justify-content-center actions">
                 <button class="btn btn-sm btn-primary me-2" @click="editItem(ativo)">
                   <i class="bi bi-pencil-square"></i> Editar </button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(ativo)">
+                <button class="btn btn-sm btn-danger me-2" @click="deleteItem(ativo)" style="background-color: #dc3545;color: #fff;">
                   <i class="bi bi-trash"></i> Excluir </button>
               </div>
             </td>
