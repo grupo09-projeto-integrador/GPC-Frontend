@@ -13,5 +13,10 @@ export class Ativo extends AbstractEntity {
     descricao! : string
     dataEntrada! : Date
 
+    constructor() {
+        super()
+        this.categoria = new Categoria();
+    }
+
 
 }
