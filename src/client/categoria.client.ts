@@ -7,18 +7,31 @@ export class CategoriaClient{
     
     constructor() {
         this.axiosClient = axios.create({
-            baseURL: 'http://localhost:8081/api/categorias',
+            baseURL: 'http://localhost:8080/categorias',
             headers: { 'Content-type': 'application/json' }
         })
     }
 
     public async findAll(): Promise<Categoria[]> {
         try {
-            return (await this.axiosClient.get<Categoria[]>(`/listar`)).data
-        } catch (error: any) {
-            return Promise.reject(error.response)
+          const response = await this.axiosClient.get<Categoria[]>('/listar');
+          return response.data;
+        } catch (error) {
+          console.error(error);
+          return []; // Return an empty array if there's an error
         }
-    }
+      }
+
+    public async findByNome(nome: string): Promise<Categoria> {
+        try {
+          const response = await axios.get<Categoria>(`http://localhost:8080/categorias/nomeCategoria?nomeCategoria=${nome}`)
+      
+          return response.data;
+
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      }
 
 
 
