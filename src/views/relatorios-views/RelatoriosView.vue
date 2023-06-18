@@ -1,5 +1,5 @@
 <template>
-  <div class="container main-content d-flex flex-column rounded">
+  <div class="container main-content d-flex flex-column justify-content-start rounded">
     <div class="header p-3">
       <div class="title">Relatórios</div>
       <div class="subtitle">Selecione uma opção abaixo:</div>
