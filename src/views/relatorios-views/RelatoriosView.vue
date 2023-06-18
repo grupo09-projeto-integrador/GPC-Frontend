@@ -24,7 +24,7 @@ export default defineComponent({
 <style scoped>
 .container {
   max-width: 1000px;
-  height: 95vh;
+  height: 90vh;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
