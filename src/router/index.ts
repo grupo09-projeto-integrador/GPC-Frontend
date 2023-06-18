@@ -50,8 +50,33 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/relatorios',
     name: 'relatorios',
-    component: () => import('../views/RelatoriosView.vue')
-  }
+    component: () => import('../views/relatorios-views/RelatoriosView.vue')
+  },
+  {
+    path: '/relatorios/beneficiarios',
+    name: 'relatorios.beneficiarios',
+    component: () => import('../views/relatorios-views/RelatoriosBeneficiarios.vue')
+  },
+  {
+    path: '/relatorios/funcionarios',
+    name: 'relatorios.funcionarios',
+    component: () => import('../views/relatorios-views/RelatoriosFuncionarios.vue')
+  },
+  {
+    path: '/relatorios/emprestimos',
+    name: 'relatorios.emprestimos',
+    component: () => import('../views/relatorios-views/RelatoriosEmprestimo.vue')
+  },
+  {
+    path: '/relatorios/listadeespera',
+    name: 'relatorios.listadeespera',
+    component: () => import('../views/relatorios-views/relatorios-listaDeEspera/ListaDeEsperaListar.vue')
+  },
+  {
+    path: '/relatorios/listadeespera/cadastrar',
+    name: 'relatorios.listadeespera.cadastrar',
+    component: () => import('../views/relatorios-views/relatorios-listaDeEspera/ListaDeEsperaCadastrar.vue')
+  },
 ]
 
 const router = createRouter({
