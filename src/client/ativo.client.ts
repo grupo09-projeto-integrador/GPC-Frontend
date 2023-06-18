@@ -49,12 +49,12 @@ export class AtivoClient {
 
     public async update(ativo: Ativo): Promise<Ativo> {
         try {
-            const response = await this.axiosClient.put<Ativo>(`${ativo.id}`, ativo);
-            return response.data;
+          const response = await this.axiosClient.put<Ativo>('http://localhost:8080/ativos', ativo);
+          return response.data;
         } catch (error) {
-            return Promise.reject(error);
+          return Promise.reject(error);
         }
-    }
+      }   
 
     public async delete(id: number): Promise<void> {
         try {
