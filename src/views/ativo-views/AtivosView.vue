@@ -4,7 +4,8 @@
       <LinkDinamicoComponent routeList="/ativos" routeRegister="/ativos/cadastrar" />
 
       <div class="search-container mt-3">
-        <input type="text" class="search-input" placeholder="Buscar por Id Património ou Nome ..." v-model="searchQuery" />
+        <input type="text" class="search-input" placeholder="Buscar por Id Património ou Nome ..."
+          v-model="searchQuery" />
         <i class="bi bi-search search-icon"></i>
       </div>
     </div>
@@ -14,7 +15,7 @@
 
         <div class="col d-flex flex-column align-self-start">
           <label for="condicao_id">Condição</label>
-          <select class="form-select" v-model="selectedCondicao" style="width: 300px" >
+          <select class="form-select" v-model="selectedCondicao" style="width: 300px">
             <option value="" selected>Todas as condiçoes</option>
             <option v-for="condicao in availableCondicao" :value="condicao">{{ condicao }}</option>
           </select>
@@ -22,7 +23,7 @@
 
         <div class="col d-flex flex-column align-self-start">
           <label for="status_id">Status</label>
-          <select class="form-select" v-model="selectedStatus" style="width: 300px" >
+          <select class="form-select" v-model="selectedStatus" style="width: 300px">
             <option value="" selected>Todas as status</option>
             <option v-for="status in availableStatus" :value="status">{{ status }}</option>
           </select>
@@ -30,11 +31,11 @@
 
         <div class="col d-flex align-self-start align-items-center gap-2">
 
-        <div class="d-flex flex-column">
-          <label for="dt_entrada">Data de Entrada</label>
-          <input type="date" class="form-control" id="dt_entrada" style="width: 300px" v-model="selectedDate" />
+          <div class="d-flex flex-column">
+            <label for="dt_entrada">Data de Entrada</label>
+            <input type="date" class="form-control" id="dt_entrada" style="width: 300px" v-model="selectedDate" />
+          </div>
         </div>
-      </div>
       </div>
     </form>
 
@@ -64,7 +65,8 @@
               <div class="d-flex justify-content-center actions">
                 <button class="btn btn-sm btn-primary me-2" @click="editItem(ativo)">
                   <i class="bi bi-pencil-square"></i> Editar </button>
-                <button class="btn btn-sm btn-danger me-2" @click="deleteItem(ativo)" style="background-color: #dc3545;color: #fff;">
+                <button class="btn btn-sm btn-danger me-2" @click="deleteItem(ativo)"
+                  style="background-color: #dc3545;color: #fff;">
                   <i class="bi bi-trash"></i> Excluir </button>
               </div>
             </td>
@@ -119,25 +121,24 @@ export default defineComponent({
   },
   computed: {
     ativosFilter(): Ativo[] {
-    if (!this.searchQuery && !this.selectedStatus && !this.selectedCondicao && !this.selectedDate) {
-      return this.ativos;
-    } else {
-      const lowerCaseQuery = this.searchQuery.toLowerCase();
-      return this.ativos.filter((ativo: Ativo) => {
-        const matchesQuery =
-          ativo.categoria.nomeCategoria.toLowerCase().includes(lowerCaseQuery) ||
-          ativo.idPatrimonio.toString().toLocaleLowerCase().includes(this.searchQuery) ||
-          ativo.id.toString().toLowerCase().includes(lowerCaseQuery);
+      if (!this.searchQuery && !this.selectedStatus && !this.selectedCondicao && !this.selectedDate) {
+        return this.ativos.sort((a, b) => a.id - b.id); // Sort by ID in ascending order
+      } else {
+        const lowerCaseQuery = this.searchQuery.toLowerCase();
+        return this.ativos.filter((ativo: Ativo) => {
+          const matchesQuery =
+            ativo.categoria.nomeCategoria.toLowerCase().includes(lowerCaseQuery) ||
+            ativo.idPatrimonio.toString().toLocaleLowerCase().includes(this.searchQuery) ||
+            ativo.id.toString().toLowerCase().includes(lowerCaseQuery);
 
-        const matchesStatus = !this.selectedStatus || ativo.status === this.selectedStatus;
-        const matchesCondicao = !this.selectedCondicao || ativo.condicao === this.selectedCondicao;
-        const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
+          const matchesStatus = !this.selectedStatus || ativo.status === this.selectedStatus;
+          const matchesCondicao = !this.selectedCondicao || ativo.condicao === this.selectedCondicao;
+          const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
 
-        return matchesQuery && matchesStatus && matchesCondicao && matchesDate;
-      });
-    }
-  },
-
+          return matchesQuery && matchesStatus && matchesCondicao && matchesDate;
+        }).sort((a, b) => a.id - b.id); // Sort filtered rows by ID in ascending order
+      }
+    },
     availableStatus(): string[] {
       const status = Object.values(Status);
       return status.map((st) => st.toUpperCase());
@@ -189,9 +190,13 @@ export default defineComponent({
     },
 
     async editItem(ativo: Ativo) {
-
-      const ativoId = ativo.id;
-      this.$router.push({ name: "ativos-editar", params: { ativoId } });
+      try {
+        const ativoClient = new AtivoClient();
+        const editAtivoId = ativo.id;
+        await this.$router.push({ name: "ativos-editar", params: { ativoId: editAtivoId } });
+      } catch (error) {
+        console.error(error);
+      }
 
     },
 
