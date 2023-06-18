@@ -11,7 +11,7 @@
     >
       <div class="d-flex align-items-center align-self-start gap-5">
         <div class="d-flex flex-column align-self-start">
-          <label for="categoria">Categoria</label>
+          <label for="categoria">Nome Categoria</label>
           <input
             class="form-control"
             list="datalistOptions"
@@ -25,7 +25,7 @@
         </datalist>
 
         <div class="d-flex flex-column">
-          <label for="patrimonio-id">Patrimônio</label>
+          <label for="patrimonio-id">Id Patrimônio</label>
           <input
             type="text"
             class="form-control"
@@ -144,6 +144,12 @@ export default defineComponent({
   methods: {
     async submitForm() {
 
+        if (!this.ativo.categoria.nomeCategoria) {
+    this.errorMessage.status = "error";
+    this.errorMessage.message = "O campo Categoria é obrigatório.";
+    return;
+  }
+
         try {
         await this.fetchCategoriaId();
         const response = await this.ativoClient.save(this.ativo);
@@ -162,21 +168,27 @@ export default defineComponent({
       }
 
     },
-    async fetchCategoriaId(){
-        try {
-            console.log(this.ativo.categoria.nomeCategoria);
-        const categoriaClient = new CategoriaClient();
-        const categoriaData = await categoriaClient.findByNome(this.ativo.categoria.nomeCategoria);
+    async fetchCategoriaId() {
+  try {
+    console.log(this.ativo.categoria.nomeCategoria);
+    const categoriaClient = new CategoriaClient();
+    const categoriaData = await categoriaClient.findByNome(this.ativo.categoria.nomeCategoria);
 
-        if (categoriaData && categoriaData.id) {
-            this.ativo.categoria = categoriaData;
-        } else {
-          console.error("Categoria não encontrada");
-        }
-      } catch (error) {
-        console.error("Failed to fetch Categoria ID:", error);
-      }
+    if (categoriaData && categoriaData.id) {
+      this.ativo.categoria = categoriaData;
+    } else {
+      this.errorMessage.status = "error";
+      this.errorMessage.message = "A categoria não foi encontrada no banco de dados.";
     }
+  } catch (error) {
+    console.error("Failed to fetch Categoria ID:", error);
+    this.errorMessage.status = "error";
+    this.errorMessage.message = "Ocorreu um erro ao buscar a categoria.";
+  }
+},
+
+
+
   },
 });
 </script>
