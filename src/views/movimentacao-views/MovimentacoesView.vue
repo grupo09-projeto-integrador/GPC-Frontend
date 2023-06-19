@@ -184,9 +184,10 @@ export default defineComponent({
       const params = {
         dataEntrada: this.movimentacao.dataEmprestimo || null,
         dataDevolucao: this.movimentacao.dataDevolucao || null,
-        beneficiarioId: this.movimentacao.beneficiario.id || null,
-        categoriaId: this.movimentacao.ativo.categoria.id || null,
-        ativoId: this.movimentacao.ativo.id || null
+        beneficiarioId: this.movimentacao.beneficiario || null,
+        categoriaId: this.movimentacao.ativo || null,
+        ativoId: this.movimentacao.ativo || null,
+        isDevolvido: this.movimentacao.isDevolvido || null
       }
       this.movimentacaoClient
         .filtrar(params)
