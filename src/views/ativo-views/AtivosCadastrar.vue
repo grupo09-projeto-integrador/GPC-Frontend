@@ -1,24 +1,12 @@
 <template>
   <div class="main-content d-flex flex-column align-items-start">
-    <LinkDinamicoComponent
-      routeList="/ativos"
-      routeRegister="/ativos/cadastrar"
-      default-active="register"
-    />
-    <form
-      class="form-app d-flex flex-column align-items-start mt-4 h-100"
-      @submit.prevent="submitForm"
-    >
+    <LinkDinamicoComponent routeList="/ativos" routeRegister="/ativos/cadastrar" default-active="register" />
+    <form class="form-app d-flex flex-column align-items-start mt-4 h-100" @submit.prevent="submitForm">
       <div class="d-flex align-items-center align-self-start gap-5">
         <div class="d-flex flex-column align-self-start">
           <label for="categoria">Nome Categoria</label>
-          <input
-            class="form-control"
-            list="datalistOptions"
-            id="categoria"
-            style="width: 300px"
-            v-model="ativo.categoria.nomeCategoria"
-          />
+          <input class="form-control" list="datalistOptions" id="categoria" style="width: 300px"
+            v-model="ativo.categoria.nomeCategoria" />
         </div>
         <datalist id="datalistOptions">
           <option v-for="option in datalistOptions" :value="option"></option>
@@ -26,43 +14,23 @@
 
         <div class="d-flex flex-column">
           <label for="patrimonio-id">Id Patrimônio</label>
-          <input
-            type="text"
-            class="form-control"
-            id="patrimonio-id"
-            placeholder="ID do Patrimônio"
-            v-model="ativo.idPatrimonio"
-            style="width: 300px"
-          />
+          <input type="text" class="form-control" id="patrimonio-id" placeholder="ID do Patrimônio"
+            v-model="ativo.idPatrimonio" style="width: 300px" />
         </div>
       </div>
       <div class="d-flex align-items-center align-self-start gap-5">
         <div class="d-flex flex-column align-self-start">
           <label for="condicao">Condição</label>
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            id="condicao"
-            v-model="ativo.condicao"
-          >
+          <select class="form-select" aria-label="Default select example" id="condicao" v-model="ativo.condicao">
             <option selected>Selecione uma condição</option>
-            <option
-              v-for="condition in conditions"
-              :key="condition"
-              :value="condition"
-            >
+            <option v-for="condition in conditions" :key="condition" :value="condition">
               {{ condition }}
             </option>
           </select>
         </div>
         <div class="d-flex flex-column align-self-start">
           <label for="status">Status</label>
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            id="status"
-            v-model="ativo.status"
-          >
+          <select class="form-select" aria-label="Default select example" id="status" v-model="ativo.status">
             <option selected>Selecione um status</option>
             <option v-for="status in statuses" :key="status" :value="status">
               {{ status }}
@@ -72,29 +40,22 @@
       </div>
       <div class="d-flex flex-column">
         <label for="dt_entrada">Data de Entrada</label>
-        <input
-          type="datetime-local"
-          class="form-control"
-          id="dt_entrada"
-          v-model="ativo.dataEntrada"
-          style="width: 300px"
-        />
+        <input type="datetime-local" class="form-control" id="dt_entrada" v-model="ativo.dataEntrada"
+          style="width: 300px" />
       </div>
       <!-- Error Message -->
       <div class="mt-3 d-flex align-items-center gap-3">
-          <button type="submit" class="btn btn-primary">Cadastrar Ativo</button>
-          <p
-            :class="[
-              'error-message',
-              errorMessage.status === 'success'
-                ? 'text-success'
-                : 'text-danger',
-            ]"
-          >
-            {{ errorMessage.message }}
-          </p>
-        </div>
-    
+        <button type="submit" class="btn btn-primary">Cadastrar Ativo</button>
+        <p :class="[
+          'error-message',
+          errorMessage.status === 'success'
+            ? 'text-success'
+            : 'text-danger',
+        ]">
+          {{ errorMessage.message }}
+        </p>
+      </div>
+
     </form>
   </div>
 </template>
@@ -120,18 +81,18 @@ export default defineComponent({
       statuses: Object.values(Status),
       ativo: new Ativo(),
       datalistOptions: [] as string[],
-        errorMessage: {
-            status: "",
-            message: "",
-        },
+      errorMessage: {
+        status: "",
+        message: "",
+      },
     };
   },
   computed: {
-    ativoClient(){
-        return new AtivoClient();
+    ativoClient() {
+      return new AtivoClient();
     }
   },
-  async mounted(){
+  async mounted() {
     try {
       const categoriaClient = new CategoriaClient();
       const ativoData = await categoriaClient.findAll();
@@ -144,20 +105,20 @@ export default defineComponent({
   methods: {
     async submitForm() {
 
-        if (!this.ativo.categoria.nomeCategoria) {
-    this.errorMessage.status = "error";
-    this.errorMessage.message = "O campo Categoria é obrigatório.";
-    return;
-  }
+      if (!this.ativo.categoria.nomeCategoria) {
+        this.errorMessage.status = "error";
+        this.errorMessage.message = "O campo Categoria é obrigatório.";
+        return;
+      }
 
-        try {
+      try {
         await this.fetchCategoriaId();
         const response = await this.ativoClient.save(this.ativo);
         const data = response;
-         // Set success message
-         this.errorMessage.status = "success";
+        // Set success message
+        this.errorMessage.status = "success";
         this.errorMessage.message = "Ativo Registrado Com Sucesso!";
-      }  catch (error: any) {
+      } catch (error: any) {
         this.errorMessage.status = "error";
         if (error.response && error.response.data) {
           const errorMessages = Object.values(error.response.data);
@@ -169,23 +130,23 @@ export default defineComponent({
 
     },
     async fetchCategoriaId() {
-  try {
-    console.log(this.ativo.categoria.nomeCategoria);
-    const categoriaClient = new CategoriaClient();
-    const categoriaData = await categoriaClient.findByNome(this.ativo.categoria.nomeCategoria);
+      try {
+        console.log(this.ativo.categoria.nomeCategoria);
+        const categoriaClient = new CategoriaClient();
+        const categoriaData = await categoriaClient.findByNome(this.ativo.categoria.nomeCategoria);
 
-    if (categoriaData && categoriaData.id) {
-      this.ativo.categoria = categoriaData;
-    } else {
-      this.errorMessage.status = "error";
-      this.errorMessage.message = "A categoria não foi encontrada no banco de dados.";
-    }
-  } catch (error) {
-    console.error("Failed to fetch Categoria ID:", error);
-    this.errorMessage.status = "error";
-    this.errorMessage.message = "Ocorreu um erro ao buscar a categoria.";
-  }
-},
+        if (categoriaData && categoriaData.id) {
+          this.ativo.categoria = categoriaData;
+        } else {
+          this.errorMessage.status = "error";
+          this.errorMessage.message = "A categoria não foi encontrada no banco de dados.";
+        }
+      } catch (error) {
+        console.error("Failed to fetch Categoria ID:", error);
+        this.errorMessage.status = "error";
+        this.errorMessage.message = "Ocorreu um erro ao buscar a categoria.";
+      }
+    },
 
 
 
