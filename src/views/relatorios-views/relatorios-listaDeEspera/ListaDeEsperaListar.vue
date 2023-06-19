@@ -4,18 +4,41 @@
             <LinkDinamicoComponent routeList="/relatorios/listadeespera"
                 routeRegister="/relatorios/listadeespera/cadastrar" />
             <div class="search-container mt-3">
-                <input type="text" class="search-input" placeholder="Buscar ..." v-model="searchQuery" />
+                <input type="text" class="search-input" placeholder="Buscar Por Nome do Beneficiario..." v-model="searchQuery" />
                 <i class="bi bi-search search-icon"></i>
             </div>
         </div>
+        <form class="form-app d-flex flex-column align-items-start gap-3 mt-4">
+      <div class="d-flex align-items-center align-self-start gap-4">
+
+        <div class=" d-flex flex-column align-self-start">
+          <label for="urgencia_id">Nível de Urgência</label>
+          <select class="form-select"  style="width: 300px">
+          </select>
+        </div>
+
+        <div class=" d-flex flex-column align-self-start">
+            <label for="dt_entrada">Categoria</label>
+            <select class="form-select"  style="width: 300px">
+          </select>
+          </div>
+
+        <div class=" d-flex flex-column align-self-start ">
+            <label for="dt_entrada">Data do Registro</label>
+            <input type="date" class="form-control" id="dt_entrada" style="width: 300px" />
+        </div>
+      </div>
+    </form>
             <table class="table table-sm table-bordered w-100 mt-4">
                 <thead>
                     <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Data de Registro</th>
+                        <th scope="col">Data do Registro</th>
                         <th scope="col">Nome do Beneficiario</th>
-                        <th scope="col">Contato do Beneficiario</th>
+                        <th scope="col">Contato</th>
                         <th scope="col">Categoria</th>
+                        <th scope="col">Nível de Urgência</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
