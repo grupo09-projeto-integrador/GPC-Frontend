@@ -2,7 +2,7 @@
     <div class="main-content">
         <LinkDinamicoComponent routeList="/relatorios/listadeespera" routeRegister="/relatorios/listadeespera/cadastrar"
             default-active="register" />
-        <form class="form-app d-flex flex-column align-items-start mt-4 gap-4">
+        <form class="form-app d-flex flex-column align-items-start mt-4 gap-4" @submit.prevent="submitForm">
             <div class="d-flex align-items-center align-self-start gap-4">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="beneficiario">CPF do Beneficiario</label>
@@ -22,21 +22,8 @@
             <div class="d-flex align-items-center align-self-start gap-5">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="categoria">Categoria do Ativo</label>
-                    <input class="form-control" list="datalistOptions" id="categoria" style="width: 300px" />
+                    <select class="form-select"  id="categoria" style="width: 300px"></select>
                 </div>
-                <datalist id="datalistOptions">
-                    <option v-for="option in datalistOptionsCategoria" :value="option"></option>
-                </datalist>
-                <div class="d-flex flex-column align-self-end gap-2">
-                    <label for="urgent">Nível de Urgência</label>
-                    <select class="form-select" id="urgent" style="width: 300px">
-                    </select>
-                </div>
-            </div>
-            <div class="descricao d-flex flex-column gap-2">
-                <label for="descricao">Adicione uma descrição (opcional)</label>
-                <textarea class="form-control" placeholder="Faça uma observação aqui" id="descricao"
-                    style="height: 120px;width: 800px;"></textarea>
             </div>
             <div class="mt-3 d-flex align-items-center gap-3">
                 <button type="submit" class="btn btn-primary">Adicionar Beneficiario</button>
@@ -48,6 +35,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LinkDinamicoComponent from "@/components/LinkDinamicoComponent.vue";
+import { Categoria } from '@/model/categoria';
+import { Pessoa } from '@/model/pessoa';
+import { CategoriaClient } from '@/client/categoria.client';
+import { Beneficiario } from '@/model/beneficiario';
+import { BeneficiarioClient } from '@/client/beneficiario.client';
 export default defineComponent({
     name: "ListaDeEsperaCadastrar",
     components: {
@@ -57,7 +49,39 @@ export default defineComponent({
         return {
             datalistOptions: [] as string[],
             datalistOptionsCategoria: [] as string[],
+            categoria: [] as Categoria[],
+            listaDeEspera: [],
+            beenficiario: [] as Beneficiario[],
+            nivelUrgencia: [
+                { id: 1, nome: 'Alta' },
+                { id: 2, nome: 'Média' },
+                { id: 3, nome: 'Baixa' },
+            ],
         };
+    },
+    computed:{
+        categoriaClient(){
+            return new CategoriaClient();
+        },
+        beneficiarioClient(){
+            return new BeneficiarioClient();
+        }
+    },
+//     async mounted() {
+//     try {
+//       const beneficiarioClient = new BeneficiarioClient();
+//       const data = await beneficiarioClient.findAll();
+//       this.datalistOptions = data.map((beneficiario: { perfil: { cpf: string; }; }) => beneficiario.perfil.cpf);
+//       console.log(this.datalistOptions);
+//     } catch (error) {
+//       console.error("Failed to fetch cpf data:", this.datalistOptions);
+//     }
+//   },
+    methods: {
+        async submitForm() {
+        },
+        async fetchBeneficiario() {
+        },
     },
 });
 </script>
