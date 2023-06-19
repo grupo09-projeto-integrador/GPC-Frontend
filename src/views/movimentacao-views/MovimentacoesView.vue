@@ -8,7 +8,6 @@
     </div>
     <form
       class="form-app d-flex flex-column align-items-start gap-3 mt-4 h-auto"
-      @submit.prevent="cadastrar"
     >
       <div class="row d-flex align-items-center align-self-start">
         <div class="col d-flex flex-column align-self-start">
@@ -46,7 +45,7 @@
             class="form-control"
             id="categoria"
             placeholder="Selecione uma categoria"
-            v-model="movimentacao.categoria"
+            v-model="movimentacao.ativo"
           />
         </div>
       </div>
@@ -83,11 +82,7 @@
         </div>
       </div>
       <div class="col-12 p-0">
-        <button
-          type="submit"
-          class="btn btn-primary d-flex gap-1"
-          @submit="submitForm"
-        >
+        <button type="submit" class="btn btn-primary d-flex gap-1">
           <i class="bi bi-funnel"></i>Filtrar
         </button>
       </div>
@@ -109,12 +104,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="movimentacao in movimentacoesFilter" :key="movimentacao.id">
+          <tr
+            v-for="movimentacao in movimentacoesFilter"
+            :key="movimentacao.id"
+          >
             <td>{{ movimentacao.id }}</td>
-            <td>{{ movimentacao.beneficiario.nome }}</td>
+            <td>{{ movimentacao.beneficiario.perfil.nome }}</td>
             <td>{{ movimentacao.ativo.idPatrimonio }}</td>
             <td>{{ movimentacao.ativo.categoria.nomeCategoria }}</td>
-            <td>{{ movimentacao.status }}</td>
             <td>{{ formatDate(movimentacao.dataEmprestimo) }}</td>
             <td>{{ formatDate(movimentacao.dataDevolucao) }}</td>
             <td>{{ movimentacao.isDevolvido }}</td>
@@ -140,23 +137,23 @@
       </table>
       <!-- Add pagination controls -->
       <!-- <div class="pagination-container align-self-end"> -->
-        <ul class="pagination">
-          <li class="page-item" :class="{ disabled: currentPage === 0 }">
-            <a
-              class="page-link"
-              href="#"
-              aria-label="Previous"
-              @click="previousPage"
-            >
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          <li class="page-item" :disabled="movimentacoesFilter.length < pageSize">
-            <a class="page-link" href="#" aria-label="Next" @click="nextPage">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
+      <!-- <ul class="pagination">
+        <li class="page-item" :class="{ disabled: currentPage === 0 }">
+          <a
+            class="page-link"
+            href="#"
+            aria-label="Previous"
+            @click="previousPage"
+          >
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" :disabled="movimentacoesFilter.length < pageSize">
+          <a class="page-link" href="#" aria-label="Next" @click="nextPage">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul> -->
       <!-- </div> -->
     </div>
   </div>
@@ -167,49 +164,77 @@ import { defineComponent } from 'vue'
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'
 import { Movimentacao } from '@/model/movimentacao'
 import { MovimentacoesClient } from '@/client/movimentacao.client'
-import { Ativo } from '@/model/ativo'
-import { Beneficiario } from '@/model/beneficiario'
 
 export default defineComponent({
   name: 'MovimentacoesView',
   components: {
     LinkDinamicoComponent
   },
-  data(): any {
+  data() {
     return {
+      currentPage: 0,
+      pageSize: 6,
       movimentacoes: [] as Movimentacao[],
       movimentacao: new Movimentacao(),
-      movimentacaoClient: new MovimentacoesClient(),
+      movimentacaoClient: new MovimentacoesClient()
     }
   },
   computed: {
-    movimentacoesFilter(): Ativo[] {
-      if (!this.searchQuery && !this.selectedStatus && !this.selectedCondicao && !this.selectedDate) {
-        return this.movimentacoes.sort((a: any, b:any) => a.id - b.id); // Sort by ID in ascending order
-      } else {
-        const lowerCaseQuery = this.searchQuery.toLowerCase();
-        return this.movimentacoes.filter((ativo: Ativo) => {
-          const matchesQuery =
-            ativo.categoria.nomeCategoria.toLowerCase().includes(lowerCaseQuery) ||
-            ativo.idPatrimonio.toString().toLocaleLowerCase().includes(this.searchQuery) ||
-            ativo.id.toString().toLowerCase().includes(lowerCaseQuery);
-
-          const matchesStatus = !this.selectedStatus || ativo.status === this.selectedStatus;
-          const matchesCondicao = !this.selectedCondicao || ativo.condicao === this.selectedCondicao;
-          const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
-
-          return matchesQuery && matchesStatus && matchesCondicao && matchesDate;
-        }).sort((a:any, b:any) => a.id - b.id); // Sort filtered rows by ID in ascending order
+    movimentacoesFilter(): Movimentacao[] {
+      const params = {
+        dataEntrada: this.movimentacao.dataEmprestimo || null,
+        dataDevolucao: this.movimentacao.dataDevolucao || null,
+        beneficiarioId: this.movimentacao.beneficiario.id || null,
+        categoriaId: this.movimentacao.ativo.categoria.id || null,
+        ativoId: this.movimentacao.ativo.id || null
       }
-    },
+      this.movimentacaoClient
+        .filtrar(params)
+        .then((response: any) => {
+          this.movimentacoes = response
+        })
+        .catch((error: any) => {
+          console.log(error)
+        })
+      return this.movimentacoes
+    }
   },
   methods: {
     formatDate(dateString: string | number | Date) {
-      const dateTime = new Date(dateString);
-      const formattedDate = dateTime.toLocaleDateString();
-      const formattedTime = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      return `${formattedDate} ${formattedTime}`;
+      const dateTime = new Date(dateString)
+      const formattedDate = dateTime.toLocaleDateString()
+      const formattedTime = dateTime.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+      return `${formattedDate} ${formattedTime}`
     },
+    async deleteItem(movimentacao: Movimentacao) {
+      const confirmation = confirm(
+        'Você tem certeza de que deseja excluir essa movimentação?'
+      )
+      if (!confirmation) {
+        return
+      }
+
+      try {
+        await this.movimentacaoClient.deletar(movimentacao.id)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async editItem(movimentacao: Movimentacao) {
+      try {
+        const movimentacaoId = movimentacao.id
+        await this.$router.push({
+          name: 'ativos-editar',
+          params: { movimentacaoId: movimentacaoId }
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }
 })
 </script>
