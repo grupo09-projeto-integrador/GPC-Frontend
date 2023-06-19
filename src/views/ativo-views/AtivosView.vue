@@ -48,7 +48,7 @@
             <th scope="col">Id Património</th>
             <th scope="col">Condição</th>
             <th scope="col">Status</th>
-            <th scope="col">Data Entrada</th>
+            <th scope="col">Data de Entrada</th>
             <th scope="col">Ação</th>
           </tr>
         </thead>
