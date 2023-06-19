@@ -14,12 +14,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/categorias',
     name: 'categorias',
-    component: () => import('../views/CategoriasView.vue')
+    component: () => import('../views/categoria-views/CategoriasView.vue')
   },
   {
     path: '/categorias/cadastrar',
     name: 'categorias cadastrar',
-    component: () => import('../views/CategoriaCadastrarView.vue')
+    component: () => import('../views/categoria-views/CategoriaCadastrarView.vue')
   },
 
   {
