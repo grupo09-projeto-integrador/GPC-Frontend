@@ -7,18 +7,18 @@
         <form action="" class=" d-flex align-self-start align-items-start gap-5 p-3">
             <div class="d-flex flex-column">
                 <label for="dt_inicio">De</label>
-                <input type="date" class="form-control" id="dt_inicio" style="width: 300px" />
+                <input type="date" class="form-control" id="dt_inicio" style="width: 300px" v-model="inicio_data" />
             </div>
             <div class="d-flex flex-column">
                 <label for="dt_fim">Para</label>
-                <input type="date" class="form-control" id="dt_fim" style="width: 300px" />
+                <input type="date" class="form-control" id="dt_fim" style="width: 300px" v-model="fim_data" />
             </div>
         </form>
         <div class="nav d-flex flex-column gap-2 p-3">
-            <router-link to="/relatorios/cadastros/beneficiarios">Beneficiários</router-link>
-            <router-link to="/relatorios/cadastros/categorias">Categorias</router-link>
-            <router-link to="/relatorios/cadastros/ativos">Ativos</router-link>
-            <router-link to="/relatorios/cadastros/empréstimos">Emprestimos</router-link>
+            <router-link :to="{ path: '/relatorios/cadastros/beneficiarios', query: { from: inicio_data, to: fim_data } }">Beneficiários</router-link>
+            <router-link :to="{ path: '/relatorios/cadastros/categorias', query: { from: inicio_data, to: fim_data } }">Categorias</router-link>
+            <router-link  :to="{ path: '/relatorios/cadastros/ativos', query: { from: inicio_data, to: fim_data } }">Ativos</router-link>
+            <router-link :to="{ path: '/relatorios/cadastros/empréstimos', query: { from: inicio_data, to: fim_data } }">Emprestimos</router-link>
         </div>
     </div>
 </template>
@@ -27,7 +27,14 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: 'RelatoriosView'
+    name: 'RelatoriosView',
+    data() {
+        return {
+            inicio_data: '',
+            fim_data: ''
+        }
+    },
+
 });
 </script>
   
