@@ -112,7 +112,6 @@ th {
     font-size: 18px;
     color: #ffffff !important;
     background-color: #0067c8 !important;
-    /* Replace with the same Bootstrap color as the <thead> background */
 }
 
 td {

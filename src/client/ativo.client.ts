@@ -27,6 +27,14 @@ export class AtivoClient {
         }
     }
 
+    public async findByDate(startDate: string, endDate: string): Promise<Ativo[]> {
+        try {
+            return (await this.axiosClient.get<Ativo[]>(`/ativos/${startDate}/${endDate}`)).data
+        } catch (error: any) {
+            return Promise.reject(error.response)
+        }
+    }
+
 
     public async findAll(): Promise<Ativo[]> {
         try {
