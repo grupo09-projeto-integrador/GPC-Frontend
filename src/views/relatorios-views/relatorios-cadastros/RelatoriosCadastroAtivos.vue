@@ -7,41 +7,57 @@
                 <p class="fromTo">De {{ from }} Até {{ to }}</p>
             </div>
             <div class="download">
-                <button class="btn btn-danger d-flex align-items-center gap-2" style="background-color: #DC3545;color: #fff; margin-right: 30px;">
+                <button class="btn btn-danger d-flex align-items-center gap-2"
+                    style="background-color: #DC3545;color: #fff; margin-right: 30px;">
                     <i class="bi bi-download"></i>
                     <span>Download</span>
                 </button>
             </div>
         </div>
         <div class="data d-flex flex-column gap-2">
-            <span class="numeroCadastro">Ativos Cadastrados : {{  }}</span>
-            <span class="ativosDisponiveis">Ativos Disponiveis : {{  }}</span>
-            <span class="ativosIndisponiveis">Ativos Indisponiveis : {{  }}</span>
-            <span class="ativosAtivos">Ativos Ativos : {{  }}</span>
-            <span class="ativosInativos">Ativos Inativos : {{  }}</span>
+            <span class="numeroCadastro">Ativos Cadastrados : {{ countAtivosCadastrados }}</span>
+            <span class="ativosDisponiveis">Ativos Disponiveis : {{ countAtivosDisponiveis }}</span>
+            <span class="ativosIndisponiveis">Ativos Indisponiveis : {{ countAtivosIndisponiveis }}</span>
+            <span class="ativosAtivos">Ativos Ativos : {{ countAtivosAtivos }}</span>
+            <span class="ativosInativos">Ativos Inativos : {{ countAtivosInativos }}</span>
         </div>
         <table class="table table-sm table-bordered w-100 mt-4">
-        <thead>
-          <tr>
-            <th scope="col">Data de Cadastro</th>
-            <th scope="col">Nome Categoria</th>
-            <th scope="col">Id Património</th>
-            <th scope="col">Condição</th>
-            <th scope="col">Status</th>
-            <th scope="col">Data de Entrada</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="ativo in ativos" :key="ativo.id">
-            <td> {{ formatDate(ativo.dataCriacao) }} </td>
-            <td>{{ ativo.categoria.nomeCategoria }}</td>
-            <td>{{ ativo.idPatrimonio }}</td>
-            <td>{{ ativo.condicao }}</td>
-            <td>{{ ativo.status }}</td>
-            <td>{{ formatDate(ativo.dataEntrada) }}</td>
-          </tr>
-        </tbody>
-      </table>
+            <thead>
+                <tr>
+                    <th scope="col">Data de Cadastro</th>
+                    <th scope="col">Nome Categoria</th>
+                    <th scope="col">Id Património</th>
+                    <th scope="col">Condição</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Data de Entrada</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="ativo in ativos" :key="ativo.id">
+                    <td> {{ formatDate(ativo.dataCriacao) }} </td>
+                    <td>{{ ativo.categoria.nomeCategoria }}</td>
+                    <td>{{ ativo.idPatrimonio }}</td>
+                    <td>{{ ativo.condicao }}</td>
+                    <td>{{ ativo.status }}</td>
+                    <td>{{ formatDate(ativo.dataEntrada) }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Add pagination controls -->
+        <div class="pagination-container align-self-end">
+            <ul class="pagination">
+                <li class="page-item" :class="{ disabled: currentPage === 0 }">
+                    <a class="page-link" href="#" aria-label="Previous" @click="previousPage">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" :disabled="ativos.length < pageSize">
+                    <a class="page-link" href="#" aria-label="Next" @click="nextPage">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </template> 
 
@@ -58,7 +74,26 @@ export default defineComponent({
             ativos: [] as Ativo[],
             nowsDate: '',
             from: '',
-            to: ''
+            to: '',
+            currentPage: 0,
+            pageSize: 3,
+        }
+    },
+    computed: {
+        countAtivosAtivos(): number {
+            return this.ativos.filter(ativo => !ativo.isSuspenso).length;
+        },
+        countAtivosInativos(): number {
+            return this.ativos.filter(ativo => ativo.isSuspenso).length;
+        },
+        countAtivosCadastrados(): number {
+            return this.ativos.length;
+        },
+        countAtivosDisponiveis(): number {
+            return this.ativos.filter(ativo => ativo.status === 'DISPONIVEL').length;
+        },
+        countAtivosIndisponiveis(): number {
+            return this.ativos.filter(ativo => ativo.status === 'USANDO').length;
         }
     },
     created() {
@@ -69,26 +104,42 @@ export default defineComponent({
         this.nowsDate = new Date().toLocaleString();
         this.fetchAtivos();
     },
-    methods:{
+    methods: {
         formatDate(dateString: string | number | Date) {
-      const dateTime = new Date(dateString);
-      const formattedDate = dateTime.toLocaleDateString();
-      const formattedTime = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      return `${formattedDate} ${formattedTime}`;
-    },
-    async fetchAtivos() {
-      try {
-        const ativoClient = new AtivoClient();
-        const response = await ativoClient.findByDate(
-          this.from,
-          this.to
-        );
-        this.ativos = response;
-        console.log(this.ativos)
-      } catch (error) {
-        console.error(error);
-      }
-    },
+            const dateTime = new Date(dateString);
+            const formattedDate = dateTime.toLocaleDateString();
+            const formattedTime = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return `${formattedDate} ${formattedTime}`;
+        },
+        async fetchAtivos() {
+            try {
+                const pageRequest = new PageRequest();
+                pageRequest.currentPage = this.currentPage;
+                pageRequest.pageSize = this.pageSize;
+                const ativoClient = new AtivoClient();
+                const response: PageResponse<Ativo> = await ativoClient.findByDate(
+                    pageRequest,
+                    this.from,
+                    this.to
+                );
+                this.ativos = response.content;
+                console.log(this.ativos)
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        previousPage() {
+            if (this.currentPage > 0) {
+                this.currentPage--;
+                this.fetchAtivos();
+            }
+        },
+        nextPage() {
+            if (this.ativos.length === this.pageSize) {
+                this.currentPage++;
+                this.fetchAtivos();
+            }
+        },
     }
 });
 </script>
@@ -106,7 +157,9 @@ export default defineComponent({
     color: #777;
 }
 
-td,th,tr{
+td,
+th,
+tr {
     text-align: center;
 }
 
