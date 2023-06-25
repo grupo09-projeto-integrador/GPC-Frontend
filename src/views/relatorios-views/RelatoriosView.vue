@@ -5,9 +5,7 @@
       <div class="subtitle">Selecione uma opção abaixo:</div>
     </div>
     <div class="nav d-flex flex-column gap-2 p-3">
-      <router-link to="/relatorios/beneficiarios">Beneficiários</router-link>
-      <router-link to="/relatorios/funcionarios">Funcionários</router-link>
-      <router-link to="/relatorios/emprestimos">Empréstimo</router-link>
+      <router-link to="/relatorios/cadastros">Relatórios de Cadastro</router-link>
       <router-link to="/relatorios/listadeespera">Lista de Espera</router-link>
     </div>
   </div>
