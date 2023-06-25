@@ -14,12 +14,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/categorias',
     name: 'categorias',
-    component: () => import('../views/CategoriasView.vue')
+    component: () => import('../views/categoria-views/CategoriasView.vue')
   },
   {
     path: '/categorias/cadastrar',
     name: 'categorias cadastrar',
-    component: () => import('../views/CategoriaCadastrarView.vue')
+    component: () => import('../views/categoria-views/CategoriaCadastrarView.vue')
   },
 
   {
@@ -53,19 +53,29 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/relatorios-views/RelatoriosView.vue')
   },
   {
-    path: '/relatorios/beneficiarios',
-    name: 'relatorios.beneficiarios',
-    component: () => import('../views/relatorios-views/RelatoriosBeneficiarios.vue')
+    path: '/relatorios/cadastros',
+    name: 'relatorios.cadastros',
+    component: () => import('../views/relatorios-views/RelatoriosCadastro.vue')
   },
   {
-    path: '/relatorios/funcionarios',
-    name: 'relatorios.funcionarios',
-    component: () => import('../views/relatorios-views/RelatoriosFuncionarios.vue')
+    path: '/relatorios/cadastros/beneficiarios',
+    name: 'relatorios.cadastros.beneficiarios',
+    component: () => import('../views/relatorios-views/relatorios-cadastros/RelatoriosCadastroBeneficiarios.vue')
   },
   {
-    path: '/relatorios/emprestimos',
-    name: 'relatorios.emprestimos',
-    component: () => import('../views/relatorios-views/RelatoriosEmprestimo.vue')
+    path: '/relatorios/cadastros/categorias',
+    name: 'relatorios.cadastros.categorias',
+    component: () => import('../views/relatorios-views/relatorios-cadastros/RelatoriosCadastroCategorias.vue')
+  },
+  {
+    path: '/relatorios/cadastros/ativos',
+    name: 'relatorios.cadastros.ativos',
+    component: () => import('../views/relatorios-views/relatorios-cadastros/RelatoriosCadastroAtivos.vue')
+  },
+  {
+    path: '/relatorios/cadastros/empréstimos',
+    name: 'relatorios.cadastros.empréstimos',
+    component: () => import('../views/relatorios-views/relatorios-cadastros/RelatoriosCadastroEmprestimos.vue')
   },
   {
     path: '/relatorios/listadeespera',

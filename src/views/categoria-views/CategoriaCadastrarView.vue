@@ -6,18 +6,18 @@
             <div class="row d-flex align-items-center align-self-start">
                 <div class="col d-flex flex-column align-self-start">
                     <label for="categoria-id">Nome da Categoria</label>
-                    <input type="text" class="form-control" id="categoria-nome" placeholder="Nome da Categoria" v-model="nomeCategoria"/>
+                    <input type="text" class="form-control" id="categoria-nome" placeholder="Nome da Categoria" v-model="categoria.nomeCategoria"/>
                 </div>
             </div>
 
             <div class="d-flex flex-column">
                 <label for="patrimonio-id">Número para acusar alerta amarelo</label>
-                <input type="number" class="form-control" id="alerta-amarelo" placeholder="Alerta Amarelo" v-model="maximoAmarelo"/>
+                <input type="number" class="form-control" id="alerta-amarelo" placeholder="Alerta Amarelo" v-model="categoria.maximoAmarelo"/>
             </div>
 
             <div class="d-flex flex-column">
                 <label for="patrimonio-id">Número para acusar alerta vermelho</label>
-                <input type="number" class="form-control" id="alerta-vermelho" placeholder="Alerta vermelho" v-model="minimoAmarelo"/>
+                <input type="number" class="form-control" id="alerta-vermelho" placeholder="Alerta vermelho" v-model="categoria.minimoAmarelo"/>
             </div>
 
                     

@@ -18,11 +18,25 @@ export class MovimentacoesClient {
       return Promise.reject(error.response)
     }
   }
-  public async save(movimentacao: Movimentacao): Promise<Movimentacao> {
+  public async novaMovimentacao(movimentacao: Movimentacao): Promise<Movimentacao> {
     try {
-        return (await this.axiosClient.post<Movimentacao>('', movimentacao)).data
+      return (await this.axiosClient.post<Movimentacao>('', movimentacao)).data
     } catch (error: any) {
-        return Promise.reject(error.response)
+      return Promise.reject(error.response)
     }
-}
+  }
+  public async deletar(id: number): Promise<Movimentacao> {
+    try {
+      return (await this.axiosClient.delete<Movimentacao>(`?id=${id}`,)).data
+    } catch (error: any) {
+      return Promise.reject(error.response)
+    }
+  }
+  public async filtrar(params: {}): Promise<Movimentacao[]>{
+    try{
+      return (await this.axiosClient.get<Movimentacao[]>('/filtrar', {params})).data
+    }catch(error: any){
+      return []
+    }
+  }
 }

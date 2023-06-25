@@ -71,7 +71,7 @@ export class CategoriaClient{
 
     public async save(Categoria: Categoria): Promise<Categoria> {
         try {
-            return (await this.axiosClient.post('/', Categoria)).data
+            return (await this.axiosClient.post('', Categoria)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -79,7 +79,7 @@ export class CategoriaClient{
 
     public async update(Categoria: Categoria): Promise<Categoria> {
         try {
-            return (await this.axiosClient.put<Categoria>('/', Categoria)).data
+            return (await this.axiosClient.put<Categoria>('', Categoria)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }

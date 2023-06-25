@@ -145,7 +145,7 @@ export default defineComponent({
       movimentacao.descricao = this.movimentacao.descricao
       console.log(movimentacao.isDevolvido)
       this.movimentacaoClient
-        .save(movimentacao)
+        .novaMovimentacao(movimentacao)
         .then((response: any) => {
           console.log(response)
         })
