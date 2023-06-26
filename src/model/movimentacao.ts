@@ -9,4 +9,5 @@ export class Movimentacao extends AbstractEntity {
     beneficiario! : Beneficiario
     ativo! : Ativo
     descricao! : string
+    isAtrasado! : boolean
 }
