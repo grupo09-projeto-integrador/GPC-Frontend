@@ -39,9 +39,9 @@
         <th scope="col">Ativos em atraso</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody v-for="ativo in ativosLista" :key="ativo.id">
       <tr>
-        <th scope="row">1</th>
+        <th scope="row"><span v-if ativo.atrasado></span>1</th>
         <td>Ativo</td>
         
       </tr>
@@ -87,10 +87,8 @@
       </tr>
     </tbody>
   </table>
-</div>
-
-
-        </div> 
+  </div>
+</div> 
      
   
   
@@ -105,10 +103,18 @@
 
 thead th {
   background-color: #007bff;
+  color: #fff;
 }
 
 </style>
+<script lang="ts">
 
+
+
+
+
+
+</script>
 
 
 
