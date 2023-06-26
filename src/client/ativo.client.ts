@@ -42,7 +42,7 @@ export class AtivoClient {
             requestPath += `page=${pageRequest.currentPage}`
             requestPath += `&size=${pageRequest.pageSize}`
 
-            return (await this.axiosClient.get<PageResponse<Ativo>>(`/ativos/${startDate}/${endDate}?${requestPath}`)).data
+            return (await this.axiosClient.get<PageResponse<Ativo>>(`/ativos/dataCriacao/${startDate}/${endDate}?${requestPath}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
