@@ -11,3 +11,5 @@ export class Movimentacao extends AbstractEntity {
     descricao! : string
     isAtrasado! : boolean
 }
+
+export default new Movimentacao();

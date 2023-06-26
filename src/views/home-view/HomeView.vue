@@ -39,9 +39,27 @@
         <th scope="col">Ativos em atraso</th>
       </tr>
     </thead>
-    <tbody v-for="ativo in ativosLista" :key="ativo.id">
+    <!--<tbody v-for="ativo in AtivosLista" :key="ativo.id">
       <tr>
-        <th scope="row"><span v-if ativo.atrasado></span>1</th>
+        <th scope="row"><span v-if="ativo.atrasado"></span>1</th>
+        <td>{{ativo.nome}}Ativo</td>
+        
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Ativo</td>
+        
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Ativo</td>
+        
+      </tr>
+    </tbody>
+    -->
+    <tbody>
+      <tr>
+        <th scope="row"><span></span>1</th>
         <td>Ativo</td>
         
       </tr>
@@ -108,10 +126,26 @@ thead th {
 
 </style>
 <script lang="ts">
+import { defineComponent } from 'vue';
+import { MovimentacoesClient } from '@/client/movimentacao.client';
+import {Movimentacao} from '@/model/movimentacao'
+
+export default defineComponent({
+  name: 'AtivosLista',
+  data(){
+    return {
+      ativosList: new Array <Movimentacao>(),
+      movimentacao: new Movimentacao(),
+      
 
 
 
+    }
+  }
 
+
+
+})
 
 
 </script>
