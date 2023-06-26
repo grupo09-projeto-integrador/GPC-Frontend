@@ -61,23 +61,28 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Ativos em atraso</th>
+        <th scope="col">Últimos empréstimos</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <th scope="row">1</th>
         <td>Ativo</td>
-        
+    
+        <td><router-link type="button" to="/movimentacoes"><i class="bi bi-box-arrow-up-right"> </i></router-link></td>
       </tr>
       <tr>
         <th scope="row">2</th>
         <td>Ativo</td>
+        <td><router-link type="button" to="/movimentacoes"><i class="bi bi-box-arrow-up-right"> </i></router-link></td>
+        
         
       </tr>
       <tr>
         <th scope="row">3</th>
         <td>Ativo</td>
+        <td><router-link type="button" to="/movimentacoes"><i class="bi bi-box-arrow-up-right"> </i></router-link></td>
         
       </tr>
     </tbody>
