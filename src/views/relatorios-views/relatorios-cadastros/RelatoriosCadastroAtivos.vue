@@ -7,7 +7,7 @@
                 <p class="fromTo">De {{ from }} Até {{ to }}</p>
             </div>
             <div class="download">
-                <button class="btn btn-danger d-flex align-items-center gap-2"
+                <button class="btn btn-danger d-flex align-items-center gap-2" id="downloadButton" @click="downloadPDF"
                     style="background-color: #DC3545;color: #fff; margin-right: 30px;">
                     <i class="bi bi-download"></i>
                     <span>Download</span>
@@ -66,9 +66,16 @@ import { AtivoClient } from '@/client/ativo.client';
 import { Ativo } from '@/model/ativo';
 import { PageRequest } from '@/model/page/page-request';
 import { PageResponse } from '@/model/page/page-response';
-import { defineComponent } from 'vue';
+import { createApp, defineComponent } from 'vue';
+import pdfRelatorioAtivo from '@/components/pdfRelatorioAtivo.vue';
+import jsPDF from 'jspdf';
+import { Vue } from 'vue-facing-decorator';
 export default defineComponent({
     name: 'RelatoriosCadastroAtivosView',
+    components: {
+        pdfRelatorioAtivo
+    },
+
     data() {
         return {
             ativos: [] as Ativo[],
@@ -105,6 +112,44 @@ export default defineComponent({
         this.fetchAtivos();
     },
     methods: {
+
+        downloadPDF() {
+            const pdf = new jsPDF();
+
+            // Create a Vue app instance
+            const app = createApp(pdfRelatorioAtivo);
+
+            // Create a component instance
+            const additionalContentComponentInstance = app.mount(document.createElement('div'));
+
+            // Get the HTML content of the AdditionalContentComponent
+            const additionalContent = document.createElement('div');
+            additionalContent.appendChild(additionalContentComponentInstance.$el);
+
+            // Set the desired width and height for the PDF page
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            // Calculate the scaling factors based on the element's dimensions
+            const widthRatio = pdfWidth / additionalContent.offsetWidth;
+            const heightRatio = pdfHeight / additionalContent.offsetHeight;
+            const scale = Math.min(widthRatio, heightRatio);
+
+            // Convert HTML to PDF using jsPDF
+            pdf.html(additionalContent, {
+                callback: function (pdf) {
+                    // Save the PDF file
+                    const pageNumber = 1; // Set the desired page number
+                    pdf.save(`report_page_${pageNumber}.pdf`);
+                },
+                x: 0,
+                y: 0,
+                html2canvas: {
+                    scale: 1,
+                },
+            });
+        },
+
         formatDate(dateString: string | number | Date) {
             const dateTime = new Date(dateString);
             const formattedDate = dateTime.toLocaleDateString();
