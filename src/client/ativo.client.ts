@@ -35,20 +35,6 @@ export class AtivoClient {
         }
     }
 
-    public async findByDate(pageRequest: PageRequest,startDate: string, endDate: string): Promise<PageResponse<Ativo>> {
-        try {
-            let requestPath = ''
-
-            requestPath += `page=${pageRequest.currentPage}`
-            requestPath += `&size=${pageRequest.pageSize}`
-
-            return (await this.axiosClient.get<PageResponse<Ativo>>(`/ativos/dataCriacao/${startDate}/${endDate}?${requestPath}`)).data
-        } catch (error: any) {
-            return Promise.reject(error.response)
-        }
-    }
-
-
 
     public async findAll(): Promise<Ativo[]> {
         try {

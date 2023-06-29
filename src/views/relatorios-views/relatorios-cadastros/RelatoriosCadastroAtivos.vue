@@ -38,9 +38,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="download align-self-center">
-            <button class="btn btn-danger d-flex align-items-center gap-2" id="downloadButton" @click="downloadPDF"
-                style="background-color: #DC3545;color: #fff; margin-right: 30px;">
+        <div class="download align-self-center m-0">
+            <button class="btn btn-danger d-flex align-items-center gap-2 mb-4" id="downloadButton" @click="downloadPDF"
+                style="background-color: #DC3545;color: #fff;">
                 <i class="bi bi-download"></i>
                 <span>Download</span>
             </button>

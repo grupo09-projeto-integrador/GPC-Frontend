@@ -18,6 +18,15 @@ export class MovimentacoesClient {
       return Promise.reject(error.response)
     }
   }
+
+  public async findByDatePdf(dataEntrada: string, dataDevolucao: string): Promise<Movimentacao[]> {
+    try {
+      return (await this.axiosClient.get<Movimentacao[]>(`pdf/${dataEntrada}/${dataDevolucao}`)).data
+    } catch (error: any) {
+      return Promise.reject(error.response)
+    }
+  }
+
   public async novaMovimentacao(movimentacao: Movimentacao): Promise<Movimentacao> {
     try {
       return (await this.axiosClient.post<Movimentacao>('', movimentacao)).data
@@ -32,10 +41,10 @@ export class MovimentacoesClient {
       return Promise.reject(error.response)
     }
   }
-  public async filtrar(params: {}): Promise<Movimentacao[]>{
-    try{
-      return (await this.axiosClient.get<Movimentacao[]>('/filtrar', {params})).data
-    }catch(error: any){
+  public async filtrar(params: {}): Promise<Movimentacao[]> {
+    try {
+      return (await this.axiosClient.get<Movimentacao[]>('/filtrar', { params })).data
+    } catch (error: any) {
       return []
     }
   }
