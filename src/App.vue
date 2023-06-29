@@ -44,16 +44,18 @@ $body-bg: white;
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   display: flex;
   width: 100%;
   height: 100vh;
+  position: relative; 
 }
 
 .main-content {
+  margin-left: 270px; 
   flex: 1;
-  margin-left: 30px;
   margin-top: 20px;
   margin-right: 1rem;
-}</style>
+}
+
+</style>
   
