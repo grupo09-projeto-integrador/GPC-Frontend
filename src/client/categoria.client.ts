@@ -34,6 +34,13 @@ export class CategoriaClient{
       }
 
 
+      public async findByDatePdf(startDate: string, endDate: string): Promise<Categoria[]> {
+        try {
+            return (await this.axiosClient.get<Categoria[]>(`/pdf/dataCriacao/${startDate}/${endDate}`)).data
+        } catch (error: any) {
+            return Promise.reject(error.response)
+        }
+    }
 
     public async findById(id: number): Promise<Categoria> {
         try {
