@@ -1,7 +1,7 @@
 <template>
   <div class="navbar bg-primary d-flex flex-column justify-content-start p-4 text-white h-100">
-    <a href="/" class="d-flex align-items-center">
-      <img alt="Logo Empresa" src="../assets/logo.png" />
+    <a href="/inicio" class="d-flex align-items-center">
+      <a href="/inicio"><img alt="Logo Empresa" src="../assets/logo.png" /></a>
     </a>
     <ul class="nav nav-pills d-flex flex-column justify-content-center align-items-start pt-5">
       <li class="nav-item d-flex align-items-center justify-content-center">
