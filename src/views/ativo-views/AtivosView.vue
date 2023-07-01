@@ -15,7 +15,7 @@
 
         <div class="col d-flex flex-column align-self-start">
           <label for="condicao_id">Condição</label>
-          <select class="form-select" v-model="selectedCondicao" style="width: 300px">
+          <select class="form-select" v-model="selectedCondicao" style="width: 230px">
             <option value="" selected>Todas as condiçoes</option>
             <option v-for="condicao in availableCondicao" :value="condicao">{{ condicao }}</option>
           </select>
@@ -23,7 +23,7 @@
 
         <div class="col d-flex flex-column align-self-start">
           <label for="status_id">Status</label>
-          <select class="form-select" v-model="selectedStatus" style="width: 300px">
+          <select class="form-select" v-model="selectedStatus" style="width: 230px">
             <option value="" selected>Todas as status</option>
             <option v-for="status in availableStatus" :value="status">{{ status }}</option>
           </select>
@@ -33,7 +33,15 @@
 
           <div class="d-flex flex-column">
             <label for="dt_entrada">Data de Entrada</label>
-            <input type="date" class="form-control" id="dt_entrada" style="width: 300px" v-model="selectedDate" />
+            <input type="date" class="form-control" id="dt_entrada" style="width: 230px" v-model="selectedDate" />
+          </div>
+        </div>
+        <div class="col d-flex align-self-center align-items-center gap-2 ml-2 mt-4">
+          <div class="d-flex flex-column">
+            <input class="form-check-input" type="checkbox" id="flexCheckIndeterminate" v-model="checked" />
+            <label class="form-check-label p-0" for="flexCheckIndeterminate">
+              Ativos Emprestados
+            </label>
           </div>
         </div>
       </div>
@@ -61,18 +69,17 @@
             <td>{{ ativo.status }}</td>
             <td>{{ formatDate(ativo.dataEntrada) }}</td>
 
-            <td>
-              <div class="d-flex justify-content-center align-items-start actions">
-                <button class="btn btn-sm btn-primary" @click="editItem(ativo)">
-                  <i class="bi bi-pencil-square"></i> Editar </button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(ativo)"
-                  style="background-color: #dc3545;color: #fff;">
-                  <i class="bi bi-trash"></i> Excluir </button>
-                <button class="btn btn-sm btn-warning d-flex align-items-center gap-2" @click="emprestarAtivo(ativo)" style="color: #fff;">
-                  <i :class="ativo.status === 'USANDO' ? 'bi bi-lock-fill' : 'bi bi-unlock-fill'"></i>
-                  {{ ativo.status === 'USANDO' ? 'Emprestado' : 'Emprestar' }}
-                </button>
-              </div>
+            <td class="d-flex align-items-center mt-2 actions" style="border: none;">
+              <button class="btn btn-sm btn-primary" @click="editItem(ativo)">
+                <i class="bi bi-pencil-square"></i> Editar </button>
+              <button class="btn btn-sm btn-danger" @click="deleteItem(ativo)"
+                style="background-color: #dc3545;color: #fff;">
+                <i class="bi bi-trash"></i> Excluir </button>
+              <button class="btn btn-sm btn-warning d-flex align-items-center gap-2" @click="emprestarAtivo(ativo)"
+                style="color: #fff;">
+                <i :class="ativo.status === 'USANDO' ? 'bi bi-lock-fill' : 'bi bi-unlock-fill'"></i>
+                {{ ativo.status === 'USANDO' ? 'Emprestado' : 'Emprestar' }}
+              </button>
             </td>
           </tr>
         </tbody>
@@ -121,12 +128,13 @@ export default defineComponent({
       selectedDate: null as string | null,
       currentPage: 0,
       pageSize: 6,
+      checked: false,
     };
   },
   computed: {
     ativosFilter(): Ativo[] {
-      if (!this.searchQuery && !this.selectedStatus && !this.selectedCondicao && !this.selectedDate) {
-        return this.ativos.sort((a, b) => a.id - b.id); // Sort by ID in ascending order
+      if (!this.searchQuery && !this.selectedStatus && !this.selectedCondicao && !this.selectedDate && !this.checked) {
+        return this.ativos.sort((a, b) => a.id - b.id);
       } else {
         const lowerCaseQuery = this.searchQuery.toLowerCase();
         return this.ativos.filter((ativo: Ativo) => {
@@ -137,10 +145,16 @@ export default defineComponent({
 
           const matchesStatus = !this.selectedStatus || ativo.status === this.selectedStatus;
           const matchesCondicao = !this.selectedCondicao || ativo.condicao === this.selectedCondicao;
-          const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
 
-          return matchesQuery && matchesStatus && matchesCondicao && matchesDate;
-        }).sort((a, b) => a.id - b.id); // Sort filtered rows by ID in ascending order
+
+          const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
+          const matchesEmprestado = ativo.status === Status.USANDO;
+
+          return matchesQuery && matchesStatus && matchesCondicao && matchesDate && matchesEmprestado;
+          ;
+        }).sort((a, b) => a.id - b.id);
+
+
       }
     },
     availableStatus(): string[] {
