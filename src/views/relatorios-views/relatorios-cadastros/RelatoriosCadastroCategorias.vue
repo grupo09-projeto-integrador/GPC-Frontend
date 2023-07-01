@@ -7,6 +7,17 @@
                     <p class="nowDate">Data de geração : {{ nowsDate }}</p>
                     <p class="fromTo">De {{ from }} Até {{ to }}</p>
                 </div>
+                <div class="actions d-flex align-items-center align-self-start mt-3">
+                    <div class="search-container ">
+                    <input type="text" class="search-input" placeholder="Buscar por Nome Categoria ..."
+                        v-model="searchQuery" />
+                    <i class="bi bi-search search-icon"></i>
+                </div>
+                    <button class="download btn btn-danger d-flex align-items-center gap-2" id="downloadButton" @click="downloadPDF"
+                style="background-color: #DC3545;color: #fff;">
+                <i class="bi bi-download"></i>
+            </button>
+                </div>
             </div>
             <div class="data">
                 <div class="summary-section">
@@ -29,20 +40,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="categoria in categorias" :key="categoria.id">
+                    <tr v-for="categoria in categoriasFilter" :key="categoria.id">
                         <td> {{ formatDate(categoria.dataCriacao) }} </td>
                         <td>{{ categoria.nomeCategoria }}</td>
                         <td>{{ categoria.qtdeAtivos }}</td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="download align-self-center m-0">
-            <button class="btn btn-danger d-flex align-items-center gap-2 mb-4" id="downloadButton" @click="downloadPDF"
-                style="background-color: #DC3545;color: #fff;">
-                <i class="bi bi-download"></i>
-                <span>Download</span>
-            </button>
         </div>
     </div>
 </template> 
@@ -60,6 +64,7 @@ export default defineComponent({
             nowsDate: '',
             from: '',
             to: '',
+            searchQuery: '',
         }
     },
     computed: {
@@ -75,7 +80,18 @@ export default defineComponent({
             } else {
                 return '';
             }
-        }
+        },
+        categoriasFilter(): Categoria[] {
+            if (this.searchQuery) {
+                return this.categorias.filter((categoria) =>
+                    categoria.nomeCategoria
+                        .toLowerCase()
+                        .includes(this.searchQuery.toLowerCase())
+                );
+            } else {
+                return this.categorias;
+            }
+        },
 
     },
     created() {
@@ -89,30 +105,58 @@ export default defineComponent({
     methods: {
 
         downloadPDF() {
-            const pdf = new jsPDF();
+    const pdf = new jsPDF();
+    const element = document.querySelector('.printable') as HTMLElement;
 
-            const element = document.querySelector('.printable') as HTMLElement;
+    // Hide the .search-container element
+    const searchElement = element.querySelector('.search-container') as HTMLElement;
+    if (searchElement) {
+        searchElement.style.display = 'none';
+    }
 
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+    const downloadButton = document.querySelector('.btn-danger') as HTMLElement;
+if (downloadButton) {
+    downloadButton.style.setProperty('display', 'none', 'important');
+    console.log(downloadButton);
+}
 
-            const widthRatio = pdfWidth / element.offsetWidth;
-            const heightRatio = pdfHeight / element.offsetHeight;
-            const scale = Math.min(widthRatio, heightRatio);
 
-            const elementa = document.querySelector('.data') as HTMLElement;
+    // Hide the form elements
+    const formElements = element.querySelectorAll('form label, form input, form select') as NodeListOf<HTMLElement>;
+    formElements.forEach((formElement) => {
+        formElement.style.display = 'none';
+    });
 
-            pdf.html(element, {
-                callback: function (pdf) {
-                    pdf.save(`ReportCategoria.pdf`);
-                },
-                x: 0,
-                y: 0,
-                html2canvas: {
-                    scale: scale,
-                },
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const widthRatio = pdfWidth / element.offsetWidth;
+    const heightRatio = pdfHeight / element.offsetHeight;
+    const scale = Math.min(widthRatio, heightRatio);
+
+    pdf.html(element, {
+        callback: function (pdf) {
+            pdf.save(`ReportCategoria.pdf`);
+
+            // Show the .search-container element and form elements after saving the PDF
+            if (searchElement) {
+                searchElement.style.display = '';
+            }
+            if (downloadButton) {
+                downloadButton.style.display = '';
+            }
+
+            formElements.forEach((formElement) => {
+                formElement.style.display = '';
             });
         },
+        x: 0,
+        y: 0,
+        html2canvas: {
+            scale: scale,
+        },
+    });
+},
+
         formatDate(dateString: string | number | Date) {
             const dateTime = new Date(dateString);
             const formattedDate = dateTime.toLocaleDateString();
@@ -145,6 +189,43 @@ export default defineComponent({
     color: #777;
 }
 
+.search-container {
+    position: relative;
+    margin-right: 30px;
+}
+
+.search-input {
+    position: relative;
+    width: 350px;
+    height: 36px;
+    padding: 0.5rem 1rem 0.5rem 2rem;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    background: #f5f5f5;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #aaa;
+}
+
+.search-input::placeholder {
+    font-family: "Raleway", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    color: #3c3c43;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    color: #888;
+}
+
 td,
 th,
 tr {
@@ -154,27 +235,28 @@ tr {
 th {
     text-align: center;
     height: 30px;
-    font-family: "Inter";
-    font-weight: 200;
-    font-size: 18px;
-    color: #ffffff !important;
-    background-color: #0067c8 !important;
-}
-
-.summary-section {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
+    background: #0067c8;
+    color: #fff;
+    font-weight: 300;
 }
 
 .summary-item {
-    flex-basis: 50%;
     display: flex;
-    gap: 20px;
-    margin-bottom: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
 }
 
-.summary-item span:first-child {
-    font-weight: bold;
+.data {
+    margin-bottom: 20px;
 }
-</style>
+
+.table {
+    border-collapse: collapse;
+}
+
+td {
+    height: 30px;
+}</style>
