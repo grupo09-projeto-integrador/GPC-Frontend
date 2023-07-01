@@ -4,8 +4,7 @@
       <LinkDinamicoComponent routeList="/ativos" routeRegister="/ativos/cadastrar" />
 
       <div class="search-container mt-3">
-        <input type="text" class="search-input" placeholder="Buscar por Id Património ou Nome ..."
-          v-model="searchQuery" />
+        <input type="text" class="search-input" placeholder="Buscar por Id Património ..." v-model="searchQuery" />
         <i class="bi bi-search search-icon"></i>
       </div>
     </div>
@@ -134,29 +133,24 @@ export default defineComponent({
   computed: {
     ativosFilter(): Ativo[] {
       if (!this.searchQuery && !this.selectedStatus && !this.selectedCondicao && !this.selectedDate && !this.checked) {
-        return this.ativos.sort((a, b) => a.id - b.id);
+        return this.ativos;
       } else {
         const lowerCaseQuery = this.searchQuery.toLowerCase();
-        return this.ativos.filter((ativo: Ativo) => {
-          const matchesQuery =
-            ativo.categoria.nomeCategoria.toLowerCase().includes(lowerCaseQuery) ||
-            ativo.idPatrimonio.toString().toLocaleLowerCase().includes(this.searchQuery) ||
-            ativo.id.toString().toLowerCase().includes(lowerCaseQuery);
-
+        const filteredAtivos = this.ativos.filter((ativo: Ativo) => {
+          const matchesQuery = ativo.idPatrimonio.toString().toLocaleLowerCase().includes(lowerCaseQuery);
           const matchesStatus = !this.selectedStatus || ativo.status === this.selectedStatus;
           const matchesCondicao = !this.selectedCondicao || ativo.condicao === this.selectedCondicao;
-
-
           const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
-          const matchesEmprestado = ativo.status === Status.USANDO;
+          const matchesEmprestado = !this.checked || ativo.status === Status.USANDO;
 
           return matchesQuery && matchesStatus && matchesCondicao && matchesDate && matchesEmprestado;
-          ;
-        }).sort((a, b) => a.id - b.id);
+        });
 
-
+        const startIndex = this.currentPage * this.pageSize;
+        return filteredAtivos.slice(startIndex, startIndex + this.pageSize);
       }
     },
+
     availableStatus(): string[] {
       const status = Object.values(Status);
       return status.map((st) => st.toUpperCase());
