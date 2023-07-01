@@ -62,12 +62,16 @@
             <td>{{ formatDate(ativo.dataEntrada) }}</td>
 
             <td>
-              <div class="d-flex justify-content-center actions">
-                <button class="btn btn-sm btn-primary me-2" @click="editItem(ativo)">
+              <div class="d-flex justify-content-center align-items-start actions">
+                <button class="btn btn-sm btn-primary" @click="editItem(ativo)">
                   <i class="bi bi-pencil-square"></i> Editar </button>
-                <button class="btn btn-sm btn-danger me-2" @click="deleteItem(ativo)"
+                <button class="btn btn-sm btn-danger" @click="deleteItem(ativo)"
                   style="background-color: #dc3545;color: #fff;">
                   <i class="bi bi-trash"></i> Excluir </button>
+                <button class="btn btn-sm btn-warning d-flex align-items-center gap-2" @click="emprestarAtivo(ativo)" style="color: #fff;">
+                  <i :class="ativo.status === 'USANDO' ? 'bi bi-lock-fill' : 'bi bi-unlock-fill'"></i>
+                  {{ ativo.status === 'USANDO' ? 'Emprestado' : 'Emprestar' }}
+                </button>
               </div>
             </td>
           </tr>
@@ -199,6 +203,21 @@ export default defineComponent({
       }
 
     },
+
+    async emprestarAtivo(ativo: Ativo) {
+      if (ativo.status == Status.USANDO) {
+        alert("Ativo já emprestado")
+        return;
+      } else {
+        try {
+          const emprestarAtivoId = ativo.id;
+          await this.$router.push({ name: "movimentacoes.cadastrar", params: { ativoId: emprestarAtivoId } });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    },
+
 
     previousPage() {
       if (this.currentPage > 0) {
