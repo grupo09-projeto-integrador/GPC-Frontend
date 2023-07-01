@@ -10,7 +10,7 @@
                 <input type="date" class="form-control" id="dt_inicio" style="width: 300px" v-model="inicio_data" />
             </div>
             <div class="d-flex flex-column">
-                <label for="dt_fim">Para</label>
+                <label for="dt_fim">Até</label>
                 <input type="date" class="form-control" id="dt_fim" style="width: 300px" v-model="fim_data" />
             </div>
         </form>
