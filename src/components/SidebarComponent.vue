@@ -43,9 +43,13 @@ export default defineComponent({
 
 <style scoped>
 .navbar {
-  height: 100%;
   width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh; 
 }
+
 
 a {
   font-size: 16px;

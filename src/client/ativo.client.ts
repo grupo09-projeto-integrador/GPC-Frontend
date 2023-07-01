@@ -27,27 +27,13 @@ export class AtivoClient {
         }
     }
 
-    // public async findByDate(startDate: string, endDate: string): Promise<Ativo[]> {
-    //     try {
-    //         return (await this.axiosClient.get<Ativo[]>(`/ativos/${startDate}/${endDate}`)).data
-    //     } catch (error: any) {
-    //         return Promise.reject(error.response)
-    //     }
-    // }
-
-    public async findByDate(pageRequest: PageRequest,startDate: string, endDate: string): Promise<PageResponse<Ativo>> {
+    public async findByDatePdf(startDate: string, endDate: string): Promise<Ativo[]> {
         try {
-            let requestPath = ''
-
-            requestPath += `page=${pageRequest.currentPage}`
-            requestPath += `&size=${pageRequest.pageSize}`
-
-            return (await this.axiosClient.get<PageResponse<Ativo>>(`/ativos/${startDate}/${endDate}?${requestPath}`)).data
+            return (await this.axiosClient.get<Ativo[]>(`/ativos/pdf/dataCriacao/${startDate}/${endDate}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
     }
-
 
 
     public async findAll(): Promise<Ativo[]> {
