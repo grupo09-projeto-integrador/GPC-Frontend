@@ -47,7 +47,7 @@
       </div>
     </form>
 
-    <div class="table-display w-100 mt-4">
+    <div class="table-display w-100 mt-4 d-flex flex-column">
       <table class="table table-sm table-bordered w-100">
         <thead>
           <tr>
