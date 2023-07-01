@@ -7,10 +7,16 @@
                     <p class="nowDate">Data de geração : {{ nowsDate }}</p>
                     <p class="fromTo">De {{ from }} Até {{ to }}</p>
                 </div>
-                <div class="search-container align-self-start mt-3">
+                <div class="actions d-flex align-items-center align-self-start mt-3">
+                    <div class="search-container ">
                     <input type="text" class="search-input" placeholder="Buscar por Id Património ..."
                         v-model="searchQuery" />
                     <i class="bi bi-search search-icon"></i>
+                </div>
+                    <button class="download btn btn-danger d-flex align-items-center gap-2" id="downloadButton" @click="downloadPDF"
+                style="background-color: #DC3545;color: #fff;">
+                <i class="bi bi-download"></i>
+            </button>
                 </div>
             </div>
             <form class="form-app mt-2 h-auto flex-row d-flex align-itens-cemter gap-4 align-self-start">
@@ -97,13 +103,6 @@
                 </tbody>
             </table>
         </div>
-        <div class="download align-self-center m-0">
-            <button class="btn btn-danger d-flex align-items-center gap-2 mb-4" id="downloadButton" @click="downloadPDF"
-                style="background-color: #DC3545;color: #fff;">
-                <i class="bi bi-download"></i>
-                <span>Download</span>
-            </button>
-        </div>
     </div>
 </template> 
 
@@ -183,48 +182,57 @@ export default defineComponent({
     },
     methods: {
         downloadPDF() {
-            const pdf = new jsPDF();
+    const pdf = new jsPDF();
+    const element = document.querySelector('.printable') as HTMLElement;
 
-            const element = document.querySelector('.printable') as HTMLElement;
+    // Hide the .search-container element
+    const searchElement = element.querySelector('.search-container') as HTMLElement;
+    if (searchElement) {
+        searchElement.style.display = 'none';
+    }
 
-            // Hide the .search-container element
-            const searchElement = element.querySelector('.search-container') as HTMLElement;
+    const downloadButton = document.querySelector('.btn-danger') as HTMLElement;
+if (downloadButton) {
+    downloadButton.style.setProperty('display', 'none', 'important');
+    console.log(downloadButton);
+}
+
+
+    // Hide the form elements
+    const formElements = element.querySelectorAll('form label, form input, form select') as NodeListOf<HTMLElement>;
+    formElements.forEach((formElement) => {
+        formElement.style.display = 'none';
+    });
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const widthRatio = pdfWidth / element.offsetWidth;
+    const heightRatio = pdfHeight / element.offsetHeight;
+    const scale = Math.min(widthRatio, heightRatio);
+
+    pdf.html(element, {
+        callback: function (pdf) {
+            pdf.save(`ReportAtivo.pdf`);
+
+            // Show the .search-container element and form elements after saving the PDF
             if (searchElement) {
-                searchElement.style.display = 'none';
+                searchElement.style.display = '';
+            }
+            if (downloadButton) {
+                downloadButton.style.display = '';
             }
 
-            // Hide the form elements
-            const formElements = element.querySelectorAll('form label ,form input, form select') as NodeListOf<HTMLElement>;
             formElements.forEach((formElement) => {
-                formElement.style.display = 'none';
-            });
-
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-
-            const widthRatio = pdfWidth / element.offsetWidth;
-            const heightRatio = pdfHeight / element.offsetHeight;
-            const scale = Math.min(widthRatio, heightRatio);
-
-            pdf.html(element, {
-                callback: function (pdf) {
-                    pdf.save(`ReportAtivo.pdf`);
-
-                    // Show the .search-container element and form elements after saving the PDF
-                    if (searchElement) {
-                        searchElement.style.display = '';
-                    }
-                    formElements.forEach((formElement) => {
-                        formElement.style.display = '';
-                    });
-                },
-                x: 0,
-                y: 0,
-                html2canvas: {
-                    scale: scale,
-                },
+                formElement.style.display = '';
             });
         },
+        x: 0,
+        y: 0,
+        html2canvas: {
+            scale: scale,
+        },
+    });
+},
 
 
         formatDate(dateString: string | number | Date) {
