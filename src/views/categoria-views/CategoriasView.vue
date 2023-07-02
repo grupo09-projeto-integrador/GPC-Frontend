@@ -32,9 +32,9 @@
 
             <td>
               <div class="d-flex justify-content-center actions">
-                <button class="btn btn-sm btn-primary me-2">
-                  <i class="bi bi-pencil-square"></i> Editar </button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(categoria)">
+                <router-link class="btn btn-sm btn-primary me-1" :to="{name: 'categorias editar', query: { id: categoria.id } }">
+                  <i class="bi bi-pencil-square"></i> Editar </router-link>
+                <button class="btn btn-sm btn-danger bg-danger text-white" @click="deleteItem(categoria.id)">
                   <i class="bi bi-trash"></i> Excluir </button>
               </div>
             </td>
@@ -89,32 +89,30 @@ data(){
     async fetchAtivos() {
       try {
         const categoriaClient = new CategoriaClient();
-        this.categoria = await categoriaClient.findAll();
+        this.categoria = await categoriaClient.findByAtivos();
       } catch (error) {
         console.error(error);
       }
     },
     
-    async deleteItem(categoria: Categoria) {
-      const confirmation = confirm("Você tem certeza de que deseja excluir este ativo?");
+    async deleteItem(id: number) {
+      const confirmation = confirm("Você tem certeza de que deseja excluir essa categoria?");
       if (!confirmation) {
         return;
       }
 
       try {
         const categoriaClient = new CategoriaClient();
-        await categoriaClient.delete(categoria.id);
-        this.categoria = this.categoria.filter((item) => item.id !== categoria.id);
+        await categoriaClient.delete(id);
+        window.location.reload();
+
       } catch (error) {
         console.error(error);
       }
-    }
-  },
-}
+    },
 
 
-
-);
+}});
 </script> 
 
 <style scoped>
