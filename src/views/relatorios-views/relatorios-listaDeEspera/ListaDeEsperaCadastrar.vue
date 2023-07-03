@@ -6,7 +6,7 @@
             <div class="d-flex align-items-center align-self-start gap-4">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="beneficiario">CPF do Beneficiario</label>
-                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px"
+                    <input class="form-control" list="datalistOptions" id="beneficiario" data-maska="###.###.###-##"  style="width: 300px"
                         v-model="beneficiario.cpf" />
                     <datalist id="datalistOptions">
                         <option v-for="option in datalistOptions" :value="option"></option>
@@ -44,6 +44,7 @@ import { Beneficiario } from '@/model/beneficiario';
 import { Categoria } from '@/model/categoria';
 import { Pessoa } from '@/model/pessoa';
 import { defineComponent, ref } from 'vue';
+import { vMaska } from "maska"
 export default defineComponent({
     name: 'ListaDeEsperaCadastrar',
     components: {

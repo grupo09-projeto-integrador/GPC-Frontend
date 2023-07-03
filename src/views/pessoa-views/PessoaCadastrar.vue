@@ -1,14 +1,14 @@
 <template>
-  <div v-if="this.form == undefined" class="main-content d-flex flex-column align-items-start">
+  <div v-if="form == undefined" class="main-content d-flex flex-column align-items-start">
     <div class="page-header d-flex justify-content-between align-items-center">
       <LinkDinamicoComponent routeList="/pessoas" routeRegister="/pessoa/cadastro" defaultActive="register" />
     </div>
     <div class="row mt-5">
       <div class="col-md-12 text-center">
-        <p v-if="this.form == undefined" class="fs-5">Dados Pessoais</p>
-        <p v-if="this.form == 'editar'" class="fs-5">Editar Condutor</p>
-        <p v-if="this.form == 'toggle' && condutor.ativo" class="fs-5">Desativar Condutor</p>
-        <p v-if="this.form == 'toggle' && !condutor.ativo" class="fs-5">Ativar Condutor</p>
+        <p v-if="form == undefined" class="fs-5">Dados Pessoais</p>
+        <p v-if="form == 'editar'" class="fs-5">Editar Condutor</p>
+        <p v-if="form == 'toggle' && condutor.ativo" class="fs-5">Desativar Condutor</p>
+        <p v-if="form == 'toggle' && !condutor.ativo" class="fs-5">Ativar Condutor</p>
       </div>
       <div class="col-md-2"></div>
     </div>

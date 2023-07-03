@@ -223,7 +223,7 @@ th {
     font-weight: 200;
     font-size: 18px;
     color: #ffffff !important;
-    background-color: #0067c8 !important;
+    background-color: #0d6efd !important;
 }
 
 td {
