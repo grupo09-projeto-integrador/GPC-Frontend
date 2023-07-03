@@ -9,7 +9,7 @@
         <router-link class="nav-link text-white" to="/inicio">Inicio</router-link>
       </li>
       <li class="nav-item d-flex align-items-center justify-content-center">
-        <i class="bi bi-people-fill"></i><router-link class="nav-link text-white" to="/usuarios">Pessoas</router-link>
+        <i class="bi bi-people-fill"></i><router-link class="nav-link text-white" to="/pessoas">Pessoas</router-link>
       </li>
       <li class="nav-item d-flex align-items-center justify-content-center">
         <i class="bi bi-bookmark-fill"></i><router-link class="nav-link text-white"

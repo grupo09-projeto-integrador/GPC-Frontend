@@ -105,7 +105,7 @@ export default defineComponent({
           if (datadevoluco.getTime() === oneDayBeforeToday.getTime()) {
             const notification = {
               title: 'Aviso de Devolução Próxima',
-              body: `O ativo com o ID de patrimônio ${movimentaco.ativo.idPatrimonio} atribuído ao beneficiário ${movimentaco.beneficiario.perfil.nome} tem a data de devolução prevista para amanhã.`,
+              body: `O ativo com o ID de patrimônio ${movimentaco.ativo.idPatrimonio} atribuído ao beneficiário ${movimentaco.beneficiario.nome} tem a data de devolução prevista para amanhã.`,
               date: new Date(),
               read: false,
             };
