@@ -1,7 +1,7 @@
 <template>
   <div class="main-content d-flex flex-column align-items-start">
     <div class="page-header d-flex justify-content-between align-items-center">
-      <LinkDinamicoComponent routeList="/movimentacoes" routeRegister="/movimentacoes/cadastrar" />
+      <LinkDinamicoComponent routeList="/pessoas" routeRegister="/pessoa/cadastro" />
     </div>
     <!-- <form
       class="form-app d-flex flex-column align-items-start gap-3 mt-4 h-auto"
