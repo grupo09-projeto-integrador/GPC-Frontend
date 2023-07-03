@@ -43,7 +43,7 @@
                     <tr v-for="categoria in categoriasFilter" :key="categoria.id">
                         <td> {{ formatDate(categoria.dataCriacao) }} </td>
                         <td>{{ categoria.nomeCategoria }}</td>
-                        <td>{{ categoria.qtdeAtivos }}</td>
+                        <td>{{ findAtivosCategoria(categoria.id)  }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -56,6 +56,7 @@ import { defineComponent } from 'vue';
 import jsPDF from 'jspdf';
 import { Categoria } from '@/model/categoria';
 import { CategoriaClient } from '@/client/categoria.client';
+import { AtivoClient } from '@/client/ativo.client';
 export default defineComponent({
     name: 'RelatoriosCadastroAtivosView',
     data() {
@@ -65,6 +66,7 @@ export default defineComponent({
             from: '',
             to: '',
             searchQuery: '',
+            qtdeAtivos: new Array<number>(),
         }
     },
     computed: {
@@ -172,6 +174,24 @@ if (downloadButton) {
                 console.error(error);
             }
         },
+        findAtivosCategoria(id: number): number {
+      
+     
+      const AClient = new AtivoClient()
+
+
+      AClient.findByIdCategoria(id).then( sucess => {
+
+      this.qtdeAtivos[id] = sucess.length
+
+
+      }).catch(error => {
+      console.log(error);
+    });
+
+    return this.qtdeAtivos[id]
+    
+    },
     }
 });
 </script>
