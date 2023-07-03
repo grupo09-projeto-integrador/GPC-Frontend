@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 import {Pessoa} from "@/model/pessoa";
 
-export class AtivoClient {
+export class PessoaClient {
 
     private axiosClient: AxiosInstance
 
@@ -24,7 +24,7 @@ export class AtivoClient {
     }
     public async findAll(): Promise<Pessoa[]> {
         try {
-            const response = await this.axiosClient.get<Pessoa[]>('/pessoas');
+            const response = await this.axiosClient.get<Pessoa[]>('/pessoas/todos');
             return response.data;
         } catch (error) {
             console.error(error);
@@ -39,86 +39,37 @@ export class AtivoClient {
             return Promise.reject(error);
         }
     }
-    
-
-    // public async findByDatePdf(startDate: string, endDate: string): Promise<Ativo[]> {
-    //     try {
-    //         return (await this.axiosClient.get<Ativo[]>(`/ativos/pdf/dataCriacao/${startDate}/${endDate}`)).data
-    //     } catch (error: any) {
-    //         return Promise.reject(error.response)
-    //     }
-    // }
-
-
-    // public async save(ativo: Ativo): Promise<Ativo> {
-    //     try {
-    //         const response = await this.axiosClient.post<Ativo>('/ativos', ativo);
-    //         return response.data;
-    //     } catch (error) {
-    //         return Promise.reject(error);
-    //     }
-    // }
-
-    // public async update(ativo: Ativo): Promise<Ativo> {
-    //     try {
-    //         const response = await this.axiosClient.put<Ativo>('http://localhost:8080/ativos', ativo);
-    //         return response.data;
-    //     } catch (error) {
-    //         return Promise.reject(error);
-    //     }
-    // }
-
-    // public async delete(id: number): Promise<void> {
-    //     try {
-    //         await this.axiosClient.delete(`/ativos?id=${id}`)
-    //     } catch (error: any) {
-    //         return Promise.reject(error.response)
-    //     }
-    // }
-
-    // public async findByFiltrosPaginado(pageRequest: PageRequest): Promise<PageResponse<Ativo>> {
-    //     try {
-    //         let requestPath = ''
-
-    //         requestPath += `page=${pageRequest.currentPage}`
-    //         requestPath += `&size=${pageRequest.pageSize}`
-
-    //         return (await this.axiosClient.get<PageResponse<Ativo>>(`/ativos?${requestPath}`)).data
-    //     } catch (error: any) {
-    //         return Promise.reject(error.response)
-    //     }
-    // }
-
-    // public async findByCondicao(condicao: Condicao): Promise<Ativo[]> {
-    //     try {
-    //         return (await this.axiosClient.get<Ativo[]>(`/ativos/condicao?condicao=${condicao}`)).data
-    //     } catch (error: any) {
-    //         return Promise.reject(error.response)
-    //     }
-    // }
-
-    // public async findByStatus(status: Status): Promise<Ativo[]> {
-    //     try {
-    //         return (await this.axiosClient.get<Ativo[]>(`/ativos/status?status=${status}`)).data
-    //     } catch (error: any) {
-    //         return Promise.reject(error.response)
-    //     }
-    // }
-
-    // public async findByIdPatrimonio(idPatrimonio: string): Promise<Ativo[]> {
-    //     try {
-    //         return (await this.axiosClient.get<Ativo[]>(`/ativos/idPatrimonio?idPatrimonio=${idPatrimonio}`)).data
-    //     } catch (error: any) {
-    //         return Promise.reject(error.response)
-    //     }
-    // }
-
-    // public async findByNomeCategoria(nomeCategoria: string): Promise<Ativo[]> {
-    //     try {
-    //         return (await this.axiosClient.get<Ativo[]>(`/ativos/nomeCategoria?nomeCategoria=${nomeCategoria}`)).data
-    //     } catch (error: any) {
-    //         return Promise.reject(error.response)
-    //     }
-    // }
-
+    public async findByAtivo(): Promise<Pessoa[]> {
+        try {
+            const response = await this.axiosClient.get<Pessoa[]>('/pessoas/ativos');
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+    public async cadastrarPessoa(pessoa: Pessoa): Promise<string> {
+        try {
+            const response = await this.axiosClient.post<string>('/pessoas', pessoa);
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+    public async editar(pessoa: Pessoa): Promise<string> {
+        try {
+            const response = await this.axiosClient.put<string>(`/pessoas?id=${pessoa.id}`, pessoa);
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+    public async deletar(id: number): Promise<string> {
+        try {
+            const response = await this.axiosClient.delete<string>(`/pessoas?id=${id}`);
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
 }
