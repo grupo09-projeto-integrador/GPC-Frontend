@@ -204,7 +204,7 @@ export default defineComponent({
       }).catch(err => {
         console.log(err)
         this.errorMessage.status = "error";
-        this.errorMessage.message = err.response.data;
+        this.errorMessage.message = err.data;
       })
     },
     findById(id: number) {
