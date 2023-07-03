@@ -1,42 +1,37 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
-  // {
-  //   path: '/inicio',
-  //   name: 'home',
-  //   component: () => import('../views/home-view/HomeView.vue')
-  // },
-  // {
-  //   path: '/pessoas',
-  //   name: 'pessoas',
-  //   component: () => import('../views/pessoa-views/PessoasView.vue')
-  // },
-  // {
-  //   path: '/pessoa',
-  //   name: 'pessoa.listar',
-  //   component: () => import('../views/pessoa-views/PessoaInfo.vue')
-  // },
-  // {
-  //   path: '/pessoa/cadastro',
-  //   name: 'pessoa.cadastro',
-  //   component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
-  //   children: [
-  //     {
-  //       path: '/pessoa/cadastro',
-  //       name: 'pessoa.cadastro.editar',
-  //       component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
-  //     },
-  //     {
-  //       path: '/pessoa/cadastro',
-  //       name: 'pessoa.cadastro.toggle',
-  //       component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
-  //     }
-  //   ]
-  // },
   {
-    path: '/notifications',
-    name: 'notifications',
-    component: () => import('../views/NotificationsView.vue')
+    path: '/inicio',
+    name: 'home',
+    component: () => import('../views/home-view/HomeView.vue')
+  },
+  {
+    path: '/pessoas',
+    name: 'pessoas',
+    component: () => import('../views/pessoa-views/PessoasView.vue')
+  },
+  {
+    path: '/pessoa',
+    name: 'pessoa.listar',
+    component: () => import('../views/pessoa-views/PessoaInfo.vue')
+  },
+  {
+    path: '/pessoa/cadastro',
+    name: 'pessoa.cadastro',
+    component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+    children: [
+      {
+        path: '/pessoa/cadastro',
+        name: 'pessoa.cadastro.editar',
+        component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+      },
+      {
+        path: '/pessoa/cadastro',
+        name: 'pessoa.cadastro.toggle',
+        component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+      }
+    ]
   },
   {
     path: '/categorias',

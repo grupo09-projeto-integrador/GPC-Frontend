@@ -24,7 +24,7 @@ export class PessoaClient {
     }
     public async findAll(): Promise<Pessoa[]> {
         try {
-            const response = await this.axiosClient.get<Pessoa[]>('/pessoa/all');
+            const response = await this.axiosClient.get<Pessoa[]>('/pessoas/todos');
             return response.data;
         } catch (error) {
             console.error(error);
@@ -33,7 +33,7 @@ export class PessoaClient {
     }
     public async findByCPF(cpf: string): Promise<Pessoa> {
         try {
-            const response = await this.axiosClient.get<Pessoa>(`/pessoa/${cpf}`);
+            const response = await this.axiosClient.get<Pessoa>(`/pessoas/cpf?cpf=${cpf}`);
             return response.data;
         } catch (error) {
             return Promise.reject(error);

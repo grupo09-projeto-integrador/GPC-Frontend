@@ -109,6 +109,15 @@ export class AtivoClient {
         }
     }
 
+    public async findByIdCategoria(id: number): Promise<Ativo[]> {
+        try {
+            return (await this.axiosClient.get<Ativo[]>(`/ativos/idcategoria?id=${id}`)).data
+        } catch (error: any) {
+            return Promise.reject(error.response)
+        }
+    }
+
+
     public async findByNomeCategoria(nomeCategoria: string): Promise<Ativo[]> {
         try {
             return (await this.axiosClient.get<Ativo[]>(`/ativos/nomeCategoria?nomeCategoria=${nomeCategoria}`)).data
