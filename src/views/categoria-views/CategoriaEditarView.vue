@@ -1,7 +1,6 @@
 <template>
     <div class="main-content d-flex flex-column align-items-start">
-        <LinkDinamicoComponent routeList="/categorias" routeRegister="/categorias/cadastrar" default-active="register" />
-
+        <p class="fs-5">Editar Categoria</p>
         <form class="form-app d-flex flex-column align-items-start mt-4 h-100"  @submit.prevent="submitForm">
             <div class="row d-flex align-items-center align-self-start">
                 <div class="col d-flex flex-column align-self-start">
@@ -21,8 +20,22 @@
             </div>
 
                     
-            <div class="col-12 p-0">
-                <button type="submit" class="btn btn-primary" @submit="submitForm">Editar</button>
+            <div class="mt-3 d-flex align-items-center gap-3">
+
+                <router-link type="button" class="btn btn-secondary text-white" to="/categorias">Voltar
+                </router-link>
+
+
+                <button type="submit" class="btn btn-primary" @submit="submitForm">Editar Categoria</button>
+                <p :class="[
+          'error-message',
+          errorMessage.status === 'success'
+            ? 'text-success'
+            : 'text-danger',
+        ]">
+          {{ errorMessage.message }}
+        </p>
+
                 </div>
         </form>
     </div>
@@ -49,7 +62,12 @@ export default defineComponent({
   data() {
         return {
             categoriaModel: new Categoria,
-            categoriaClient: new CategoriaClient
+            categoriaClient: new CategoriaClient,
+            errorMessage: {
+        status: "",
+        message: "",
+      },
+
 
         };
     },
@@ -86,9 +104,16 @@ export default defineComponent({
             this.categoriaClient.update(this.categoriaModel)
                 .then((response) => {
                     console.log(response);
+                    this.errorMessage.status = "success";
+                    this.errorMessage.message = "Categoria editada com sucesso!";
+
                 })
                 .catch((error) => {
                     console.log(error);
+
+                    this.errorMessage.status = "error";
+                    this.errorMessage.message = error.data;
+
                 });
         }
 
@@ -100,6 +125,18 @@ export default defineComponent({
   
 
   <style scoped>
+
+  p{
+
+    margin-bottom: 10px;
+  }
+
+.error-message{
+
+margin-top: 15px;
+
+}
+
 form {
     width: 100%;
     height: 100%;
