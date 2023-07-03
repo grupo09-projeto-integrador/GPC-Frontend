@@ -45,6 +45,15 @@ export class AtivoClient {
             return []; // Return an empty array if there's an error
         }
     }
+    public async findAllComum(): Promise<Ativo[]> {
+        try {
+            const response = await this.axiosClient.get<Ativo[]>('/ativos/all');
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            return []; // Return an empty array if there's an error
+        }
+    }
 
     public async save(ativo: Ativo): Promise<Ativo> {
         try {

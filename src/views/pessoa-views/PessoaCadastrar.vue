@@ -1,19 +1,20 @@
 <template>
-  <div v-if="form == undefined" class="main-content d-flex flex-column align-items-start">
-    <div class="page-header d-flex justify-content-between align-items-center">
+  <div class="main-content d-flex flex-column align-items-start">
+    <div v-if="this.form == undefined" class="page-header d-flex justify-content-between align-items-center">
       <LinkDinamicoComponent routeList="/pessoas" routeRegister="/pessoa/cadastro" defaultActive="register" />
     </div>
-    <div class="row mt-5">
+    <div class="row">
       <div class="col-md-12 text-center">
-        <p v-if="form == undefined" class="fs-5">Dados Pessoais</p>
-        <p v-if="form == 'editar'" class="fs-5">Editar Condutor</p>
-        <p v-if="form == 'toggle' && condutor.ativo" class="fs-5">Desativar Condutor</p>
-        <p v-if="form == 'toggle' && !condutor.ativo" class="fs-5">Ativar Condutor</p>
+        <p v-if="this.form == undefined" class="fs-5 mt-5">Dados Pessoais</p>
+        <p v-if="this.form == 'editar'" class="fs-5">Editar Pessoa</p>
+        <p v-if="this.form == 'toggle' && condutor.ativo" class="fs-5">Desativar Pessoa</p>
+        <p v-if="this.form == 'toggle' && !condutor.ativo" class="fs-5">Ativar Pessoa</p>
       </div>
       <div class="col-md-2"></div>
     </div>
 
-    <form class="form-app d-flex flex-column align-items-start w-75 h-100 needs-validation" @submit.prevent="onClickCadastrar()">
+    <form class="form-app d-flex flex-column align-items-start w-75 h-100 needs-validation"
+      @submit.prevent="submitForm()">
       <div class="row w-100 d-flex justify-content-start m-0 mb-2">
         <div class="mb-3 mt-3 w-50 text-start">
           <label for="nome-completo" class="form-label">Nome Completo <span style="color: red"> *</span></label>
@@ -40,7 +41,7 @@
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="rg">RG <span style="color: red"> *</span></label>
           <input type="text" v-maska data-maska="##.###.###-#" class="form-control" id="rg" v-model="pessoa.rg"
-            placeholder="_ _._ _ _._ _ _-_" required/>
+            placeholder="_ _._ _ _._ _ _-_" required />
         </div>
         <div class="mb-3 mt-3 w-50 text-start">
           <label for="email">E-mail</label>
@@ -54,8 +55,8 @@
       <div class="row w-100 d-flex justify-content-start m-0 mb-2">
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="cep">CEP <span style="color: red"> *</span></label>
-          <input type="text" v-on:change="buscaCep()" class="form-control" id="cep"
-            v-model="endereco.cep" maxlength="10" required />
+          <input type="text" v-on:change="buscaCep()" class="form-control" id="cep" v-model="endereco.cep" maxlength="10"
+            required />
         </div>
         <div class="mb-3 mt-3 w-50 text-start">
           <label for="logradouro">Logradouro <span style="color: red"> *</span></label>
@@ -88,9 +89,21 @@
           <input type="text" class="form-control" id="pais" v-model="endereco.complemento" />
         </div>
       </div>
-      <div class="col-12 pb-5">
-        <button type="submit" class="btn btn-primary d-flex gap-2">Cadastrar Pessoa
+      <div class="col-12 pb-5 d-flex gap-2">
+        <router-link v-if="this.form != undefined" type="button" class="btn btn-secondary" to="/pessoas">Voltar
+        </router-link>
+        <button v-if="this.form == undefined" type="submit" class="btn btn-primary d-flex gap-2">Cadastrar
+          Pessoa</button>
+        <button v-if="this.form == 'editar'" type="submit" class="btn btn-primary d-flex gap-2">Editar Pessoa
         </button>
+        <p :class="[
+          'error-message',
+          errorMessage.status === 'success'
+            ? 'text-success'
+            : 'text-danger',
+        ]">
+          {{ errorMessage.message }}
+        </p>
       </div>
     </form>
   </div>
@@ -114,7 +127,11 @@ export default defineComponent({
     return {
       pessoa: new Pessoa(),
       endereco: new Endereco(),
-      enderecoId: null
+      enderecoId: null,
+      errorMessage: {
+        status: "",
+        message: "",
+      },
     }
   },
   components: {
@@ -134,36 +151,61 @@ export default defineComponent({
     }
   },
   methods: {
+    submitForm() {
+      if (this.form === undefined) {
+        this.onClickCadastrar()
+      } else if (this.form === 'editar') {
+        this.onClickEditar()
+      } else if (this.form === 'toggle') {
+        if (this.pessoa.isSuspenso) {
+          this.onClickAtivar()
+        } else {
+          this.onClickExcluir()
+        }
+      }
+    },
     buscaCep() {
       const viaCepClient = new ViaCepClient()
       if (this.endereco.cep.length == 8) {
         viaCepClient.getByCep(this.endereco.cep)
           .then(response => {
             this.endereco.pais = "BRASIL",
-            this.endereco.logradouro = response.logradouro
+              this.endereco.logradouro = response.logradouro
             this.endereco.bairro = response.bairro
             this.endereco.cidade = response.localidade
             this.endereco.uf = response.uf
           })
-          .catch(error => console.log(error))
+          .catch(error => {
+            this.errorMessage.status = "error";
+            this.errorMessage.message = "CEP Inválido";
+          })
       }
     },
     onClickCadastrar() {
       const enderecoClient = new EnderecoClient()
       const pessoaClient = new PessoaClient()
-      console.log(this.endereco)
-      console.log(this.pessoa)
-      enderecoClient.cadastrarEndereco(this.endereco).then(sucess =>{
+      enderecoClient.cadastrarEndereco(this.endereco).then(sucess => {
         this.pessoa.endereco = sucess
         pessoaClient
           .cadastrarPessoa(this.pessoa)
           .then(sucess => {
             this.pessoa = new Pessoa()
+            this.errorMessage.status = "success";
+            this.errorMessage.message = sucess
           })
           .catch(error => {
-            console.log(error)
+            if (typeof error.response.data == 'object') {
+              this.errorMessage.message = Object.values(error.response.data)[0]
+            } else {
+              this.errorMessage.message = error.response.data;
+            }
+            this.errorMessage.status = "error";
           })
-      }).catch(err => {console.log(err)})
+      }).catch(err => {
+        console.log(err)
+        this.errorMessage.status = "error";
+        this.errorMessage.message = err.response.data;
+      })
     },
     findById(id: number) {
       const pessoaClient = new PessoaClient()
@@ -171,6 +213,7 @@ export default defineComponent({
         .findById(id)
         .then(sucess => {
           this.pessoa = sucess
+          this.endereco = sucess.endereco
         })
         .catch(error => {
           console.log(error)
@@ -181,10 +224,16 @@ export default defineComponent({
       pessoaClient
         .editar(this.pessoa)
         .then(sucess => {
-          console.log(sucess)
+          this.errorMessage.status = "success";
+          this.errorMessage.message = sucess
         })
         .catch(error => {
-          console.log(error)
+          if (typeof error.response.data == 'object') {
+            this.errorMessage.message = Object.values(error.response.data)[0]
+          } else {
+            this.errorMessage.message = error.response.data;
+          }
+          this.errorMessage.status = "error";
         })
     },
     onClickAtivar() {
@@ -225,6 +274,11 @@ export default defineComponent({
 
 .w-10 {
   width: 10%;
+}
+
+.error-message {
+  margin: 0 !important;
+  padding-top: 5px;
 }
 
 .w-15 {

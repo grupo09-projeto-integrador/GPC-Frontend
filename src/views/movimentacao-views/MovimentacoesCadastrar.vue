@@ -14,13 +14,19 @@
       <div class="row d-flex align-items-center align-self-start">
         <div class="col d-flex flex-column align-self-start">
           <label for="ativo-id">Ativo</label>
-          <input
+          <!-- <input
             type="number"
             class="form-control"
             id="ativo-id"
             placeholder="ID do Ativo"
             v-model="movimentacao.ativo"
-          />
+          /> -->
+          <select class="form-select" aria-label="Default select example" id="condicao" v-model="movimentacao.ativo">
+            <option selected>Selecione um Ativo</option>
+            <option v-for="ativo in ativos" :key="ativo.id" :value="ativo">
+              {{ ativo.categoria.nomeCategoria }} - {{ ativo.idPatrimonio }}
+            </option>
+          </select>
         </div>
         <button class="col-md-2 btn-search btn btn-primary align-self-end">
           <i class="bi bi-search"></i>
@@ -28,13 +34,19 @@
 
         <div class="col d-flex flex-column align-self-start">
           <label for="beneficario_id">Beneficário</label>
-          <input
+          <!-- <input
             type="number"
             class="form-control"
             id="beneficario_id"
             placeholder="ID do Beneficiário"
             v-model="movimentacao.beneficiario"
-          />
+          /> -->
+          <select class="form-select" aria-label="Default select example" id="beneficario_id" v-model="movimentacao.beneficiario">
+            <option selected>Selecione um Beneficiario</option>
+            <option v-for="beneficiario in beneficiarios" :key="beneficiario.id" :value="beneficiario">
+              {{ beneficiario.nome }} - {{ beneficiario.cpf }}  
+            </option>
+          </select>
         </div>
         <button class="col-md-2 btn-search btn btn-primary align-self-end">
           <i class="bi bi-search"></i>
@@ -102,7 +114,8 @@ import { MovimentacoesClient } from '@/client/movimentacao.client'
 import { AtivoClient } from '@/client/ativo.client'
 import { BeneficiarioClient } from '@/client/beneficiario.client'
 import { Ativo } from '@/model/ativo'
-import { Beneficiario } from '@/model/beneficiario'
+import { Pessoa } from '@/model/pessoa'
+import { PessoaClient } from '@/client/pessoa.client'
 
 export default defineComponent({
   name: 'MovimentacoesView',
@@ -114,15 +127,43 @@ export default defineComponent({
       movimentacao: new Movimentacao(),
       movimentacaoClient: new MovimentacoesClient(),
       ativo: Ativo,
-      beneficiario: Beneficiario
+      beneficiarios: [] as Pessoa[],
+      ativos: [] as Ativo[],
+        errorMessage: {
+        status: "",
+        message: "",
+      },
     }
   },
+  mounted() {
+    this.fetchBeneficiarios()
+    this.fetchAtivos()
+  },
   methods: {
+    fetchBeneficiarios(){
+      const pessoaClient = new PessoaClient()
+      pessoaClient.findByAtivo().then(sucess => {
+        console.log(sucess)
+        this.beneficiarios = sucess
+      }).catch(error => {
+        this.errorMessage.status = "error";
+        this.errorMessage.message = error;
+      })
+    },
+    fetchAtivos(){
+      const ativoClient = new AtivoClient()
+      ativoClient.findAllComum().then(sucess => {
+        console.log(sucess)
+        this.ativos = sucess
+      }).catch(error => {
+        this.errorMessage.status = "error";
+        this.errorMessage.message = error;
+      })
+    },
     async cadastrar() {
       const ativoClient = new AtivoClient()
       const beneficiarioClient = new BeneficiarioClient()
       const movimentacao = new Movimentacao()
-
       try {
         this.ativo = await ativoClient.findById(this.movimentacao.ativo)
         movimentacao.ativo = this.ativo
