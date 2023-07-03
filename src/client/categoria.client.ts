@@ -7,14 +7,14 @@ export class CategoriaClient{
     
     constructor() {
         this.axiosClient = axios.create({
-            baseURL: 'http://localhost:8080/categorias',
+            baseURL: 'http://localhost:8080',
             headers: { 'Content-type': 'application/json' }
         })
     }
 
     public async findAll(): Promise<Categoria[]> {
         try {
-          const response = await this.axiosClient.get<Categoria[]>('/listar');
+          const response = await this.axiosClient.get<Categoria[]>('categorias/listar');
           return response.data;
         } catch (error) {
           console.error(error);
@@ -36,7 +36,7 @@ export class CategoriaClient{
 
       public async findByDatePdf(startDate: string, endDate: string): Promise<Categoria[]> {
         try {
-            return (await this.axiosClient.get<Categoria[]>(`/pdf/dataCriacao/${startDate}/${endDate}`)).data
+            return (await this.axiosClient.get<Categoria[]>(`categorias/pdf/dataCriacao/${startDate}/${endDate}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -44,15 +44,15 @@ export class CategoriaClient{
 
     public async findById(id: number): Promise<Categoria> {
         try {
-            return (await this.axiosClient.get<Categoria>(`/id?${id}`)).data
+            return (await this.axiosClient.get<Categoria>(`categorias?id=${id}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
     }
 
-    public async findByAtivos(): Promise<Categoria> {
+    public async findByAtivos(): Promise<Categoria[]> {
         try {
-            return (await this.axiosClient.get<Categoria>(`/ativos`)).data
+            return (await this.axiosClient.get<Categoria[]>(`categorias/ativo`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -60,7 +60,7 @@ export class CategoriaClient{
 
     public async findByCategoria(nome: string): Promise<Categoria> {
         try {
-            return (await this.axiosClient.get<Categoria>(`?nome=${nome}`)).data
+            return (await this.axiosClient.get<Categoria>(`categorias?nome=${nome}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -68,7 +68,7 @@ export class CategoriaClient{
 
     public async findByListaEspera(nome: string): Promise<Categoria> {
         try {
-            return (await this.axiosClient.get<Categoria>(`/listaespera?nome=${nome}`)).data
+            return (await this.axiosClient.get<Categoria>(`categorias/listaespera?nome=${nome}`)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -78,7 +78,7 @@ export class CategoriaClient{
 
     public async save(Categoria: Categoria): Promise<Categoria> {
         try {
-            return (await this.axiosClient.post('', Categoria)).data
+            return (await this.axiosClient.post('categorias', Categoria)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -86,7 +86,7 @@ export class CategoriaClient{
 
     public async update(Categoria: Categoria): Promise<Categoria> {
         try {
-            return (await this.axiosClient.put<Categoria>('', Categoria)).data
+            return (await this.axiosClient.put<Categoria>(`categorias?id=${Categoria.id}`, Categoria)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
@@ -94,7 +94,7 @@ export class CategoriaClient{
 
     public async delete(id: number): Promise<void> {
         try {
-            await this.axiosClient.delete(`?id=${id}`)
+            await this.axiosClient.delete(`categorias?id=${id}`)
         } catch (error: any) {
             return Promise.reject(error.response)
         }
