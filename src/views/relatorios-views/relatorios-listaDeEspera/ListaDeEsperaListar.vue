@@ -118,6 +118,7 @@ export default defineComponent({
         }); 
 
         this.tamanhoLista = this.categoriaFiltrada.listaEspera.length
+        console.log(this.tamanhoLista)
 
         },
 

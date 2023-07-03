@@ -52,6 +52,8 @@ import { defineComponent } from 'vue';
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'; // @ is an alias to /src
 import { Categoria } from '@/model/categoria';
 import { CategoriaClient } from '@/client/categoria.client';
+import { AtivoClient } from '@/client/ativo.client';
+import { Ativo } from '@/model/ativo';
 
 export default defineComponent({
   name: 'Categoria',
@@ -63,6 +65,7 @@ data(){
     return {
       categoriaList: new Array<Categoria>(),
       searchQuery: '',
+      ativosList: new Ativo
     };
   },
 
@@ -83,6 +86,21 @@ data(){
     }).catch(error => {
       console.log(error);
     });
+    },
+
+    async findAtivosCategoria(id: number){
+
+      const AClient = new AtivoClient()
+
+      AClient.findByIdCategoria(id).then( sucess => {
+
+        this.ativosList = sucess
+
+      }).catch(error => {
+      console.log(error);
+    });
+
+
     },
     
     async excluir(id: number) {
