@@ -19,6 +19,15 @@ export class MovimentacoesClient {
     }
   }
 
+  public async findAll(): Promise<Movimentacao[]> {
+    try {
+      return (await this.axiosClient.get<Movimentacao[]>('/listar')).data
+    } catch (error: any) {
+      return Promise.reject(error.response)
+    }
+  }
+
+
   public async findByDatePdf(dataEntrada: string, dataDevolucao: string): Promise<Movimentacao[]> {
     try {
       return (await this.axiosClient.get<Movimentacao[]>(`pdf/${dataEntrada}/${dataDevolucao}`)).data

@@ -18,4 +18,13 @@ export class BeneficiarioClient {
       return Promise.reject(error.response)
     }
   }
+
+  public async findAll(): Promise<Beneficiario[]> {
+    try {
+      return (await this.axiosClient.get<Beneficiario[]>('/listar')).data
+    } catch (error: any) {
+      return Promise.reject(error.response)
+    }
+  }
+  
 }

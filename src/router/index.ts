@@ -12,15 +12,26 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/UsuariosView.vue')
   },
   {
+    path: '/notifications',
+    name: 'notifications',
+    component: () => import('../views/NotificationsView.vue')
+  },
+  {
     path: '/categorias',
     name: 'categorias',
     component: () => import('../views/categoria-views/CategoriasView.vue')
   },
   {
     path: '/categorias/cadastrar',
-    name: 'categorias cadastrar',
+    name: 'categorias-cadastrar',
     component: () => import('../views/categoria-views/CategoriaCadastrarView.vue')
   },
+  {
+    path: '/categorias/editar',
+    name: 'categorias editar',
+    component: () => import('../views/categoria-views/CategoriaEditarView.vue')
+  },
+
 
   {
     path: '/ativos',

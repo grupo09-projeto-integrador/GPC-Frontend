@@ -69,10 +69,10 @@
             <td>{{ formatDate(ativo.dataEntrada) }}</td>
 
             <td class="d-flex align-items-center mt-2 actions" style="border: none;">
-              <button class="btn btn-sm btn-primary" @click="editItem(ativo)">
+              <button class="btn btn-sm btn-primary" @click="editItem(ativo)" style="width: 90px;">
                 <i class="bi bi-pencil-square"></i> Editar </button>
-              <button class="btn btn-sm btn-danger" @click="deleteItem(ativo)"
-                style="background-color: #dc3545;color: #fff;">
+              <button class="btn btn-sm btn-danger" @click="deleteItem(ativo)" 
+                style="background-color: #dc3545;color: #fff;width: 90px;">
                 <i class="bi bi-trash"></i> Excluir </button>
               <button class="btn btn-sm btn-warning d-flex align-items-center gap-2" @click="emprestarAtivo(ativo)"
                 style="color: #fff;">
@@ -163,6 +163,7 @@ export default defineComponent({
 
   mounted() {
     this.fetchAtivos();
+  
   },
   methods: {
     async fetchAtivos() {

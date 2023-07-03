@@ -26,6 +26,10 @@
         <i class="bi bi-clipboard2-data-fill"></i><router-link class="nav-link text-white"
           to="/relatorios">Relatórios</router-link>
       </li>
+      <li class="nav-item d-flex align-items-center justify-content-center">
+        <i class="bi bi-bell-fill"></i><router-link class="nav-link text-white" to="/notifications"
+          style="cursor: pointer;">Notificações</router-link>
+      </li>
     </ul>
     <div class="mt-auto d-flex align-items-center justify-content-center gap-3">
       <i class="logout bi bi-box-arrow-right"></i>
@@ -37,7 +41,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 export default defineComponent({
-  name: 'SidebarComponent'
+  name: 'SidebarComponent',
+  data() {
+    return {
+      showComponent: false
+    };
+  },
+  methods: {
+    showModal() {
+      this.showComponent = true;
+    }
+  }
 })
 </script>
 
@@ -47,7 +61,7 @@ export default defineComponent({
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh; 
+  height: 100vh;
 }
 
 
