@@ -303,7 +303,7 @@ thead {
 th {
   text-align: center;
   height: 30px;
-  background-color: #0067c8;
+  background-color: #0d6efd !important;
   font-family: "Inter";
   font-weight: 200;
   font-size: 18px;

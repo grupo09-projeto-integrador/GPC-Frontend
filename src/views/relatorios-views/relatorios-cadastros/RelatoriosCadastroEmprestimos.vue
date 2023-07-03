@@ -310,7 +310,7 @@ tr {
 th {
     text-align: center;
     height: 30px;
-    background: #0067c8;
+    background: #0d6efd;
     color: #fff;
     font-weight: 300;
 }
