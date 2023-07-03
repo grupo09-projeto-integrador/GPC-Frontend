@@ -97,7 +97,7 @@ export default defineComponent({
 
         for (const movimentaco of this.movimentacoes) {
           const datadevoluco = new Date(movimentaco.dataDevolucao);
-          datadevoluco.setDate(datadevoluco.getDate() + 1);
+          datadevoluco.setDate(datadevoluco.getDate());
           datadevoluco.setHours(0, 0, 0, 0);
 
           console.log(datadevoluco);
@@ -110,6 +110,7 @@ export default defineComponent({
               read: false,
             };
 
+        
             this.notifications.push(notification);
           }
         }
