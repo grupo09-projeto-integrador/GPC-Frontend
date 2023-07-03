@@ -33,7 +33,7 @@ export class PessoaClient {
     }
     public async findByCPF(cpf: string): Promise<Pessoa> {
         try {
-            const response = await this.axiosClient.get<Pessoa>(`/pessoas?cpf=${cpf}`);
+            const response = await this.axiosClient.get<Pessoa>(`/pessoas/cpf?cpf=${cpf}`);
             return response.data;
         } catch (error) {
             return Promise.reject(error);
