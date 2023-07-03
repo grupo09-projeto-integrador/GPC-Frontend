@@ -5,8 +5,13 @@
       <div class="d-flex align-items-center align-self-start gap-5">
         <div class="d-flex flex-column align-self-start">
           <label for="categoria">Nome Categoria</label>
-          <input class="form-control" list="datalistOptions" id="categoria" style="width: 300px"
-            v-model="ativo.categoria.nomeCategoria" />
+          <select class="form-control" list="datalistOptions" id="categoria" style="width: 300px"
+            v-model="ativo.categoria"> 
+            <option selected>Selecione uma Categoria</option>
+            <option v-for="categorias in categoriaList" :key="categorias.id" :value="categorias">
+              {{ categorias.nomeCategoria }}
+            </option>
+          </select> 
         </div>
         <datalist id="datalistOptions">
           <option v-for="option in datalistOptions" :value="option"></option>
@@ -81,6 +86,8 @@ export default defineComponent({
       statuses: Object.values(Status),
       ativo: new Ativo(),
       datalistOptions: [] as string[],
+      categoriaList: new Array<Categoria>(),
+      categoriaModel: new Categoria,
       errorMessage: {
         status: "",
         message: "",
@@ -101,8 +108,25 @@ export default defineComponent({
     } catch (error) {
       console.error("Failed to fetch categoria data:", this.datalistOptions);
     }
+
+    this.findCategoriaAtivo()
+
   },
   methods: {
+
+    async findCategoriaAtivo() {
+      
+      const categoriaClient = new CategoriaClient();
+
+    categoriaClient.findByAtivos().then(sucess => {
+     
+      this.categoriaList = sucess
+    
+  }).catch(error => {
+    console.log(error);
+  });
+    },
+
     async submitForm() {
 
       if (!this.ativo.categoria.nomeCategoria) {
@@ -112,7 +136,7 @@ export default defineComponent({
       }
 
       try {
-        await this.fetchCategoriaId();
+        // await this.fetchCategoriaId();
         const response = await this.ativoClient.save(this.ativo);
         const data = response;
         // Set success message
@@ -129,24 +153,25 @@ export default defineComponent({
       }
 
     },
-    async fetchCategoriaId() {
-      try {
-        console.log(this.ativo.categoria.nomeCategoria);
-        const categoriaClient = new CategoriaClient();
-        const categoriaData = await categoriaClient.findByNome(this.ativo.categoria.nomeCategoria);
 
-        if (categoriaData && categoriaData.id) {
-          this.ativo.categoria = categoriaData;
-        } else {
-          this.errorMessage.status = "error";
-          this.errorMessage.message = "A categoria não foi encontrada no banco de dados.";
-        }
-      } catch (error) {
-        console.error("Failed to fetch Categoria ID:", error);
-        this.errorMessage.status = "error";
-        this.errorMessage.message = "Ocorreu um erro ao buscar a categoria.";
-      }
-    },
+    // async fetchCategoriaId() {
+    //   try {
+    //     console.log(this.ativo.categoria.nomeCategoria);
+    //     const categoriaClient = new CategoriaClient();
+    //     const categoriaData = await categoriaClient.findByNome(this.ativo.categoria.nomeCategoria);
+
+    //     if (categoriaData && categoriaData.id) {
+    //       this.ativo.categoria = categoriaData;
+    //     } else {
+    //       this.errorMessage.status = "error";
+    //       this.errorMessage.message = "A categoria não foi encontrada no banco de dados.";
+    //     }
+    //   } catch (error) {
+    //     console.error("Failed to fetch Categoria ID:", error);
+    //     this.errorMessage.status = "error";
+    //     this.errorMessage.message = "Ocorreu um erro ao buscar a categoria.";
+    //   }
+    // },
 
 
 

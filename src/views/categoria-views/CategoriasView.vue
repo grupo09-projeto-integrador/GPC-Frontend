@@ -105,7 +105,6 @@ data(){
 
       this.qtdeAtivos[id] = sucess.length
 
-      console.log(this.qtdeAtivos)
 
       }).catch(error => {
       console.log(error);
