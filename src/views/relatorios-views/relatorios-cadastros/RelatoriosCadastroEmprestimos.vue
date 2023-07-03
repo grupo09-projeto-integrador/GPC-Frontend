@@ -66,11 +66,11 @@
                 <tbody>
                     <tr v-for="move in moveFilter" :key="move.id">
                         <td> {{ move.ativo.idPatrimonio }} </td>
-                        <td>{{ move.ativo.categoria.nomeCategoria }}</td>
-                        <td>{{ move.beneficiario.perfil.nome }}</td>
-                        <td>{{ move.beneficiario.perfil.cpf }}</td>
-                        <td>{{ move.beneficiario.responsavel.nome }}</td>
-                        <td>{{ move.beneficiario.responsavel.cpf }}</td>
+                        <td>{{ move.ativo && move.ativo.categoria && move.ativo.categoria.nomeCategoria }}</td>
+                        <td>{{ move.beneficiario.nome }}</td>
+                        <td>{{ move.beneficiario.cpf }}</td>
+                        <td>{{ move.responsavel.nome }}</td>
+                        <td>{{ move.responsavel.cpf }}</td>
                         <td>{{ formatDate(move.dataEmprestimo) }}</td>
                         <td>{{ formatDate(move.dataDevolucao) }}</td>
                     </tr>
@@ -86,6 +86,8 @@ import { Movimentacao } from '@/model/movimentacao';
 import { MovimentacoesClient } from '@/client/movimentacao.client';
 import { Categoria } from '@/model/categoria';
 import { CategoriaClient } from '@/client/categoria.client';
+import { BeneficiarioClient } from '@/client/beneficiario.client';
+import { PessoaClient } from '@/client/pessoa.client';
 export default defineComponent({
     name: 'RelatoriosCadastroAtivosView',
     data() {
@@ -100,10 +102,19 @@ export default defineComponent({
             checked: false,
             categorias: [] as Categoria[],
             selectedCategory: '',
+            bNome: '',
+            bCPF: '',
+            rNome: '',
+            rCPF: '',
+            idBene: 0,
+
+            idRes: 0,
+        
         }
     },
     mounted() {
         this.fetchCategories();
+        console.log(this.moves);
     },
     computed: {
         calculateAverageDuration() {
@@ -238,15 +249,35 @@ if (downloadButton) {
             const formattedTime = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             return `${formattedDate} ${formattedTime}`;
         },
+   
         async fetchMoves() {
             try {
                 const moveClient = new MovimentacoesClient();
                 const response = await moveClient.findByDatePdf(this.from, this.to)
                 this.moves = response;
+                console.log(response);
+                response.map((move: Movimentacao) => {
+                    this.idBene = move.beneficiario.id;
+                    const client = new PessoaClient();
+                    client.findById(this.idBene).then((res) => {
+                        this.bNome = res.nome;
+                        this.bCPF = res.cpf;
+                    });
+                    this.idRes = move.responsavel.id;
+                    const client2 = new PessoaClient();
+                    client2.findById(this.idRes).then((res) => {
+                        this.rNome = res.nome;
+                        this.rCPF = res.cpf;
+                    });
+                
+                });
+                console.log(response);
             } catch (error) {
                 console.error(error);
             }
         },
+        
+
     }
 });
 </script>
