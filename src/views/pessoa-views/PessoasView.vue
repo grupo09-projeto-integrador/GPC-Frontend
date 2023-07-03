@@ -1,12 +1,9 @@
 <template>
   <div class="main-content d-flex flex-column align-items-start">
     <div class="page-header d-flex justify-content-between align-items-center">
-      <LinkDinamicoComponent
-        routeList="/movimentacoes"
-        routeRegister="/movimentacoes/cadastrar"
-      />
+      <LinkDinamicoComponent routeList="/movimentacoes" routeRegister="/movimentacoes/cadastrar" />
     </div>
-    <form
+    <!-- <form
       class="form-app d-flex flex-column align-items-start gap-3 mt-4 h-auto"
     >
       <div class="row d-flex align-items-center align-self-start">
@@ -60,7 +57,6 @@
             style="width: 300px"
           />
         </div>
-        <!-- <div class="d-flex align-items-center gap-3"> -->
         <div class="d-flex flex-column">
           <label for="dt_devolucao">Data de Devolução</label>
           <input
@@ -86,64 +82,51 @@
           <i class="bi bi-funnel"></i>Filtrar
         </button>
       </div>
-    </form>
+    </form> -->
 
     <!-- ---------------------------------------------------->
-    <div class="table-display w-100 mt-4">
-      <table class="table table-sm table-bordered w-100">
-        <thead>
-          <tr class="text-center">
-            <th class="bg-primary text-white" scope="col">ID</th>
-            <th class="bg-primary text-white" scope="col">Beneficiário</th>
-            <th class="bg-primary text-white" scope="col">Patrimônio</th>
-            <th class="bg-primary text-white" scope="col">Categoria</th>
-            <th class="bg-primary text-white" scope="col">Data Entrada</th>
-            <th class="bg-primary text-white" scope="col">Data de Devolução</th>
-            <th class="bg-primary text-white" scope="col">Devolvido</th>
-            <th class="bg-primary text-white" scope="col">Ação</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="movimentacao in movimentacoesFilter"
-            :key="movimentacao.id"
-          >
-            <td>{{ movimentacao.id }}</td>
-            <td>{{ movimentacao.beneficiario.perfil.nome }}</td>
-            <td>{{ movimentacao.ativo.idPatrimonio }}</td>
-            <td>{{ movimentacao.ativo.categoria.nomeCategoria }}</td>
-            <td>{{ formatDate(movimentacao.dataEmprestimo) }}</td>
-            <td>{{ formatDate(movimentacao.dataDevolucao) }}</td>
-            <td>{{ movimentacao.isDevolvido }}</td>
-            <td>
-              <div class="d-flex justify-content-center actions">
-                <button
-                  class="btn btn-sm btn-primary me-2"
-                  @click="editItem(movimentacao)"
-                >
-                  <i class="bi bi-pencil-square"></i> Editar
-                </button>
-                <button
-                  class="btn btn-sm btn-danger me-2"
-                  @click="deleteItem(movimentacao)"
-                  style="background-color: #dc3545; color: #fff"
-                >
-                  <i class="bi bi-trash"></i> Excluir
-                </button>
+    <table class="table-sm table-bordered table w-100 mt-4">
+      <thead>
+        <tr class="text-center">
+          <th class="bg-primary col-md-1 text-white">ID</th>
+          <th class="bg-primary col-md-2 text-white">Nome</th>
+          <th class="bg-primary col-md-2 text-white">CPF</th>
+          <th class="bg-primary col-md-2 text-white">Telefone</th>
+          <th class="bg-primary col-md-1 text-white">Status</th>
+          <th class="bg-primary col-md-2 text-white">Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="pessoa in pessoasList" :key="pessoa.id">
+          <th class="align-middle text-center col-md-1">{{ pessoa.id }}</th>
+          <th class="align-middle text-center col-md-2">{{ pessoa.nome }}</th>
+          <th class="align-middle text-center col-md-2">{{ pessoa.cpf }}</th>
+          <th class="align-middle text-center col-md-2">{{ pessoa.telefone }}</th>
+          <th class="align-middle text-center col-md-1">
+            <span v-if="!pessoa.isSuspenso" class="badge text-bg-success"> Ativo </span>
+            <span v-if="pessoa.isSuspenso" class="badge text-bg-danger">
+              Inativo
+            </span>
+          </th>
+          <th class="align-middle text-center col-md-2">
+            <div class="d-flex justify-content-center actions">
+                <router-link class="btn btn-sm btn-primary me-1" :to="{name: 'pessoa.cadastro.editar', query: { id: pessoa.id, form: 'editar' } }">
+                  <i class="bi bi-pencil-square"></i> Editar </router-link>
+                <router-link class="btn btn-sm btn-danger bg-danger text-white" :to="{name: 'pessoa.cadastro.toggle', query: { id: pessoa.id, form: 'toggle' } }">
+                  <i class="bi bi-trash"></i> Excluir </router-link>
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
+          </th>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'
-import {Pessoa} from "@/model/pessoa";
+import { Pessoa } from "@/model/pessoa";
+import { PessoaClient } from '@/client/pessoa.client';
 export default defineComponent({
   name: 'PessoasView',
   data() {
@@ -160,14 +143,14 @@ export default defineComponent({
   methods: {
     findAll() {
       const pessoaClient = new PessoaClient()
-      condutorClient
-          .lista()
-          .then(sucess => {
-            this.condutoresList = sucess
-          })
-          .catch(error => {
-            console.log(error)
-          })
+      pessoaClient
+        .findAll()
+        .then(sucess => {
+          this.pessoasList = sucess
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 })
