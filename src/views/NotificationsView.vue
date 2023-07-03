@@ -6,14 +6,12 @@
         <div class="subtitle">Você tem {{ nbNotifications }} notificações para resolver.</div>
       </div>
       <div class="leftHeader">
-        <button class="btn btn-primary" style="border-radius: 30px; padding: 6px 14px;" @click="resetNotifications">Marcar
-          como lido</button>
+        <button class="btn btn-primary" style="border-radius: 30px; padding: 6px 14px;" @click="resetNotifications">Marcar como lido</button>
       </div>
     </div>
     <div class="body p-3">
       <template v-for="(notification, index) in notifications" :key="notification.id">
-        <div v-if="shouldDisplayDate(notification, index)" class="notification-date">{{
-          getFormattedDate(notification.date) }}</div>
+        <div v-if="shouldDisplayDate(notification, index)" class="notification-date">{{ getFormattedDate(notification.date) }}</div>
         <div :class="['notification', { 'notification-read': notification.read }]" class="d-flex flex-column">
           <div class="notification-title">{{ notification.title }}</div>
           <div class="notification-body">{{ notification.body }}</div>
@@ -85,32 +83,31 @@ export default defineComponent({
       });
       this.updateNotificationCount();
     },
-    dataDeliveryAlert() {
-      const move = new MovimentacoesClient();
-      const today = new Date(); // Get today's date
-      const oneDayBeforeToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1); // Calculate one day before today
-      console.log(oneDayBeforeToday);
+    async dataDeliveryAlert() {
+      try {
+        const move = new MovimentacoesClient();
+        const today = new Date();
+        const oneDayBeforeToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+        console.log(oneDayBeforeToday);
 
-      move.findAll().then((res) => {
+        const res = await move.findAll();
         this.movimentacoes = res;
 
         console.log(this.movimentacoes);
 
-        // Check each movimentaco for the condition
         for (const movimentaco of this.movimentacoes) {
           const datadevoluco = new Date(movimentaco.dataDevolucao);
           datadevoluco.setDate(datadevoluco.getDate() + 1);
-          datadevoluco.setHours(0, 0, 0, 0)
+          datadevoluco.setHours(0, 0, 0, 0);
 
-
-          console.log(datadevoluco)
+          console.log(datadevoluco);
 
           if (datadevoluco.getTime() === oneDayBeforeToday.getTime()) {
             const notification = {
               title: 'Aviso de Devolução Próxima',
-              body: "O ativo com o ID de patrimônio " + movimentaco.ativo.idPatrimonio + " atribuído ao beneficiário " + movimentaco.beneficiario.perfil.nome + " tem a data de devolução prevista para amanhã.",
+              body: `O ativo com o ID de patrimônio ${movimentaco.ativo.idPatrimonio} atribuído ao beneficiário ${movimentaco.beneficiario.perfil.nome} tem a data de devolução prevista para amanhã.`,
               date: new Date(),
-              read: false
+              read: false,
             };
 
             this.notifications.push(notification);
@@ -118,29 +115,32 @@ export default defineComponent({
         }
 
         this.updateNotificationCount();
-      });
+      } catch (error) {
+        console.error('Error retrieving movimentacoes:', error);
+      }
     },
-    qtdeAtivos() {
-      const categoria = new CategoriaClient();
-      categoria.findAll().then((res) => {
+    async qtdeAtivos() {
+      try {
+        const categoria = new CategoriaClient();
+        const res = await categoria.findAll();
         this.categories = res;
 
         this.categories.forEach((cat) => {
           if (cat.ativos && cat.ativos.length < cat.minimoAmarelo) {
             const notification = {
               title: 'Categoria com poucos Ativos',
-              body: "A categoria " + cat.nomeCategoria + " está com poucos ativos",
+              body: `A categoria ${cat.nomeCategoria} está com poucos ativos.`,
               date: new Date(),
-              read: false
+              read: false,
             };
 
             this.notifications.push(notification);
           }
         });
-      });
-    }
-
-
+      } catch (error) {
+        console.error('Error retrieving categories:', error);
+      }
+    },
   },
 });
 </script>
@@ -203,4 +203,3 @@ export default defineComponent({
   background-color: #f1f1f1;
 }
 </style>
-  

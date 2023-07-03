@@ -66,6 +66,7 @@
 import { defineComponent } from 'vue';
 import jsPDF from 'jspdf';
 import { Beneficiario } from '@/model/beneficiario';
+import { BeneficiarioClient } from '@/client/beneficiario.client';
 export default defineComponent({
     name: 'RelatoriosCadastroAtivosView',
     data() {
@@ -76,6 +77,9 @@ export default defineComponent({
             to: '',
             searchQuery: '',
         }
+    },
+    mounted() {
+        this.fetchPessoas();
     },
     computed: {
         countBeneficiariosCadastrados(): number {
@@ -160,6 +164,15 @@ export default defineComponent({
             const formattedDate = dateTime.toLocaleDateString();
             const formattedTime = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             return `${formattedDate} ${formattedTime}`;
+        },
+        async fetchPessoas() {
+            try {
+                const BClient = new BeneficiarioClient();
+                const response = await BClient.findByDatePdf(this.from, this.to)
+                this.beneficiarios = response;
+            } catch (error) {
+                console.error(error);
+            }
         },
     }
 });
