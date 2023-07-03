@@ -4,12 +4,34 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/inicio',
     name: 'home',
-    component: () => import('../views/HomeView.vue')
+    component: () => import('../views/home-view/HomeView.vue')
   },
   {
-    path: '/usuarios',
-    name: 'usuarios',
-    component: () => import('../views/UsuariosView.vue')
+    path: '/pessoas',
+    name: 'pessoas',
+    component: () => import('../views/pessoa-views/PessoasView.vue')
+  },
+  {
+    path: '/pessoa',
+    name: 'pessoa.listar',
+    component: () => import('../views/pessoa-views/PessoaInfo.vue')
+  },
+  {
+    path: '/pessoa/cadastro',
+    name: 'pessoa.cadastro',
+    component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+    children: [
+      {
+        path: '/pessoa/cadastro',
+        name: 'pessoa.cadastro.editar',
+        component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+      },
+      {
+        path: '/pessoa/cadastro',
+        name: 'pessoa.cadastro.toggle',
+        component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+      }
+    ]
   },
   {
     path: '/notifications',
@@ -55,6 +77,11 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/movimentacoes/cadastrar/:ativoId',
+    name: 'movimentacoes.cadastrar',
+    component: () => import('../views/movimentacao-views/MovimentacoesCadastrar.vue')
+  },
+  {
+    path: '/movimentacoes/cadastrar',
     name: 'movimentacoes.cadastrar',
     component: () => import('../views/movimentacao-views/MovimentacoesCadastrar.vue')
   },
