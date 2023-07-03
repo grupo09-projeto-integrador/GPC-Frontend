@@ -65,7 +65,7 @@ data(){
     return {
       categoriaList: new Array<Categoria>(),
       searchQuery: '',
-      ativosList: new Ativo
+      ativosList: new Array<Ativo>()
     };
   },
 
