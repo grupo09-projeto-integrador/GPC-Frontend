@@ -75,6 +75,8 @@ export default defineComponent({
 
         this.findCategoria();
 
+
+
     },
 //     async mounted() {
 //     try {
