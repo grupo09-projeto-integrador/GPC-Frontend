@@ -60,9 +60,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Ativo</td>
+      <tr v-for="item in ativosList" :key="item.id">
+        <th scope="row">{{ item.id }}</th>
+        <td v-if="item.dataDevolucao < today">{{item.ativo.categoria.nomeCategoria}}</td>
     
         <td><router-link type="button" to="/movimentacoes"><i class="bi bi-box-arrow-up-right"> </i></router-link></td>
       </tr>
@@ -94,15 +94,20 @@ thead th {
 import { defineComponent } from 'vue';
 import { MovimentacoesClient } from '@/client/movimentacao.client';
 import {Movimentacao} from '@/model/movimentacao'
-
+import { Categoria } from '@/model/categoria';
+import { CategoriaClient } from '@/client/categoria.client';
 
 export default defineComponent({
   name: 'AtivosLista',
   data(){
     return {
       ativosList: new Array <Movimentacao>(),
+      categoriasList: new Array <Categoria>(),
       movimentacao: new Movimentacao(),
+      categorias: new Categoria(),
       movimentacoesClient : new MovimentacoesClient(),
+      categoriasClient : new CategoriaClient(),
+      today : new Date(),
     }
   },
   mounted() {
