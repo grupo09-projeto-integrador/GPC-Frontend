@@ -8,13 +8,6 @@
       <div class="row d-flex align-items-center align-self-start">
         <div class="col d-flex flex-column align-self-start">
           <label for="ativo-id">Ativo</label>
-          <!-- <input
-            type="number"
-            class="form-control"
-            id="ativo-id"
-            placeholder="ID do Ativo"
-            v-model="movimentacao.ativo"
-          /> -->
           <select class="form-select" aria-label="Default select example" id="condicao" v-model="movimentacao.ativo">
             <option selected>Selecione um Ativo</option>
             <option v-for="ativo in ativos" :key="ativo.id" :value="ativo">
@@ -22,19 +15,10 @@
             </option>
           </select>
         </div>
-        <!-- <button class="col-md-2 btn-search btn btn-primary align-self-end">
-          <i class="bi bi-search"></i>
-        </button> -->
 
         <div class="col d-flex flex-column align-self-start">
           <label for="beneficario_id">Beneficário</label>
-          <!-- <input
-            type="number"
-            class="form-control"
-            id="beneficario_id"
-            placeholder="ID do Beneficiário"
-            v-model="movimentacao.beneficiario"
-          /> -->
+
           <select class="form-select" aria-label="Default select example" id="beneficario_id"
             v-model="movimentacao.beneficiario">
             <option selected>Selecione um Beneficiario</option>
@@ -45,13 +29,6 @@
         </div>
         <div class="col d-flex flex-column align-self-start">
           <label for="beneficario_id">Responsável</label>
-          <!-- <input
-            type="number"
-            class="form-control"
-            id="beneficario_id"
-            placeholder="ID do Beneficiário"
-            v-model="movimentacao.beneficiario"
-          /> -->
           <select class="form-select" aria-label="Default select example" id="beneficario_id"
             v-model="movimentacao.responsavel">
             <option selected>Selecione um Responsável</option>
@@ -60,9 +37,6 @@
             </option>
           </select>
         </div>
-        <!-- <button class="col-md-2 btn-search btn btn-primary align-self-end">
-          <i class="bi bi-search"></i>
-        </button> -->
       </div>
       <div class="flex-row d-flex align-itens-cemter gap-4 align-self-start">
         <div class="d-flex flex-column">

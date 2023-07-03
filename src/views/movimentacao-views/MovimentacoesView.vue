@@ -97,17 +97,22 @@
         </thead>
         <tbody>
           <tr
-            v-for="movimentacao in movimentacoesFilter"
+            v-for="movimentacao in movimentacoes"
             :key="movimentacao.id"
           >
-            <td>{{ movimentacao.id }}</td>
-            <td>{{ movimentacao.beneficiario.nome }}</td>
-            <td>{{ movimentacao.ativo.idPatrimonio }}</td>
-            <td>{{ movimentacao.ativo.categoria.nomeCategoria }}</td>
-            <td>{{ formatDate(movimentacao.dataEmprestimo) }}</td>
-            <td>{{ formatDate(movimentacao.dataDevolucao) }}</td>
-            <td>{{ movimentacao.isDevolvido }}</td>
-            <td>
+            <td class="text-center align-middle">{{ movimentacao.id }}</td>
+            <td class="text-center align-middle">{{ movimentacao.beneficiario.nome }}</td>
+            <td class="text-center align-middle">{{ movimentacao.ativo.idPatrimonio }}</td>
+            <td class="text-center align-middle">{{ movimentacao.ativo.categoria.nomeCategoria }}</td>
+            <td class="text-center align-middle">{{ formatDate(movimentacao.dataEmprestimo) }}</td>
+            <td class="text-center align-middle">{{ formatDate(movimentacao.dataDevolucao) }}</td>
+            <td class="align-middle text-center col-md-1">
+            <span v-if="movimentacao.isDevolvido" class="badge text-bg-success"> Sim </span>
+            <span v-if="!movimentacao.isDevolvido" class="badge text-bg-danger">
+              Não
+            </span>
+          </td>
+            <td class="text-center align-middle">
               <div class="d-flex justify-content-center actions">
                 <button
                   class="btn btn-sm btn-primary me-2"
@@ -127,26 +132,6 @@
           </tr>
         </tbody>
       </table>
-      <!-- Add pagination controls -->
-      <!-- <div class="pagination-container align-self-end"> -->
-      <!-- <ul class="pagination">
-        <li class="page-item" :class="{ disabled: currentPage === 0 }">
-          <a
-            class="page-link"
-            href="#"
-            aria-label="Previous"
-            @click="previousPage"
-          >
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item" :disabled="movimentacoesFilter.length < pageSize">
-          <a class="page-link" href="#" aria-label="Next" @click="nextPage">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul> -->
-      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -175,59 +160,28 @@ export default defineComponent({
     }
   },
   
-  // mounted() {
-  //   this.fetchAtivos();
-  
-  // },
-  // computed: {
-  //   movimentacoesFilter(): Movimentacao[] {
-  //     const params = {
-  //       dataEntrada: this.movimentacao.dataEmprestimo || null,
-  //       dataDevolucao: this.movimentacao.dataDevolucao || null,
-  //       beneficiarioId: this.movimentacao.beneficiario || null,
-  //       categoriaId: this.movimentacao.ativo || null,
-  //       ativoId: this.movimentacao.ativo || null,
-  //       isDevolvido: this.movimentacao.isDevolvido || null
-  //     }
-  //     this.movimentacaoClient
-  //       .filtrar(params)
-  //       .then((response: any) => {
-  //         this.movimentacoes = response
-  //       })
-  //       .catch((error: any) => {
-  //         console.log(error)
-  //       })
-  //     return this.movimentacoes
-  //   }
-  // },
+  mounted() {
+    this.fetchMovimentacoes();
+  },
   methods: {
-    // movimentacaoFilter(): Movimentacao[] {
-    //   if (!this.searchQuery) {
-    //     return this.movimentacoes;
-    //   } else {
-    //     const lowerCaseQuery = this.searchQuery.toLowerCase();
-    //     const filteredAtivos = this.ativos.filter((ativo: Ativo) => {
-    //       const matchesQuery = ativo.idPatrimonio.toString().toLocaleLowerCase().includes(lowerCaseQuery);
-    //       const matchesStatus = !this.selectedStatus || ativo.status === this.selectedStatus;
-    //       const matchesCondicao = !this.selectedCondicao || ativo.condicao === this.selectedCondicao;
-    //       const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
-    //       const matchesEmprestado = !this.checked || ativo.status === Status.USANDO;
-
-    //       return matchesQuery && matchesStatus && matchesCondicao && matchesDate && matchesEmprestado;
-    //     });
-
-    //     const startIndex = this.currentPage * this.pageSize;
-    //     return filteredAtivos.slice(startIndex, startIndex + this.pageSize);
-    //   }
-    // },
+    filtrarMovimentacoes(){
+      console.log('ok')
+    },
+    fetchMovimentacoes(){
+      const movClient = new MovimentacoesClient()
+      movClient
+        .findAll()
+        .then(sucess => {
+          this.movimentacoes = sucess
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     formatDate(dateString: string | number | Date) {
       const dateTime = new Date(dateString)
       const formattedDate = dateTime.toLocaleDateString()
-      const formattedTime = dateTime.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-      return `${formattedDate} ${formattedTime}`
+      return `${formattedDate}`
     },
     async deleteItem(movimentacao: Movimentacao) {
       const confirmation = confirm(
