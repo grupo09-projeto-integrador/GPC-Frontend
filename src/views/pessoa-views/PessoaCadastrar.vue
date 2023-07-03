@@ -27,19 +27,20 @@
         </div>
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="data-nascimento">Telefone <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="telefone" placeholder="(45) 99876-5432" v-model="pessoa.telefone"
-            required />
+          <input type="text" class="form-control" id="telefone" v-maska data-maska="(##) #####-####"
+            placeholder="(45) 99876-5432" v-model="pessoa.telefone" required />
         </div>
       </div>
       <div class="row w-100 d-flex justify-content-start m-0 mb-2">
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="cpf">CPF <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="cpf" v-model="pessoa.cpf" placeholder="_ _ _._ _ _._ _ _-_ _"
-            required />
+          <input type="text" class="form-control" v-maska data-maska="###.###.###-##" id="cpf" v-model="pessoa.cpf"
+            placeholder="_ _ _._ _ _._ _ _-_ _" required />
         </div>
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="rg">RG</label>
-          <input type="text" class="form-control" id="rg" v-model="pessoa.rg" placeholder="_ _._ _ _._ _ _-_" />
+          <input type="text" v-maska data-maska="##.###.###-#" class="form-control" id="rg" v-model="pessoa.rg"
+            placeholder="_ _._ _ _._ _ _-_" />
         </div>
         <div class="mb-3 mt-3 w-50 text-start">
           <label for="email">E-mail</label>
@@ -53,40 +54,38 @@
       <div class="row w-100 d-flex justify-content-start m-0 mb-2">
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="cep">CEP <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="cep" v-model="endereco.cep" required/>
+          <input type="text" v-on:change="buscaCep()" class="form-control" id="cep"
+            v-model="endereco.cep" maxlength="10" required />
         </div>
         <div class="mb-3 mt-3 w-50 text-start">
           <label for="logradouro">Logradouro <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="logradouro" v-model="endereco.logradouro"
-            required />
+          <input type="text" class="form-control" id="logradouro" v-model="endereco.logradouro" required />
         </div>
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="bairro">Bairro <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="bairro" v-model="endereco.bairro" required/>
+          <input type="text" class="form-control" id="bairro" v-model="endereco.bairro" required />
         </div>
       </div>
       <div class="row w-100 d-flex justify-content-start m-0 mb-2">
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="pais">País <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="pais" v-model="endereco.pais" required/>
+          <input type="text" class="form-control" id="pais" v-model="endereco.pais" required />
         </div>
         <div class="mb-3 mt-3 w-10 text-start">
           <label for="uf">UF <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="uf" v-model="endereco.uf"
-            required />
+          <input type="text" class="form-control" id="uf" v-model="endereco.uf" required />
         </div>
         <div class="mb-3 mt-3 w-25 text-start">
           <label for="bairro">Cidade <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="bairro" v-model="endereco.cidade" required/>
+          <input type="text" class="form-control" id="bairro" v-model="endereco.cidade" required />
         </div>
         <div class="mb-3 mt-3 w-15 text-start">
           <label for="numero">Número <span style="color: red"> *</span></label>
-          <input type="text" class="form-control" id="numero" v-model="endereco.numero"
-            required />
+          <input type="text" class="form-control" id="numero" v-model="endereco.numero" required />
         </div>
         <div class="mb-3 mt-3 w-auto text-start">
           <label for="pais">Complemento</label>
-          <input type="text" class="form-control" id="pais" v-model="endereco.complemento"/>
+          <input type="text" class="form-control" id="pais" v-model="endereco.complemento" />
         </div>
       </div>
       <div class="col-12 pb-5">
@@ -96,13 +95,17 @@
     </form>
   </div>
 </template>
-
+<script lang="ts" setup>
+import { vMaska } from "maska"
+</script>
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'
 import { Pessoa } from '@/model/pessoa'
 import { Endereco } from '@/model/endereco'
 import { PessoaClient } from '@/client/pessoa.client'
+import { ViaCepClient } from '@/client/viacep.client'
+import { EnderecoClient } from '@/client/endereco.client'
 
 
 export default defineComponent({
@@ -110,7 +113,7 @@ export default defineComponent({
   data(): any {
     return {
       pessoa: new Pessoa(),
-      endereco: new Endereco()
+      endereco: new Endereco(),
     }
   },
   components: {
@@ -130,7 +133,26 @@ export default defineComponent({
     }
   },
   methods: {
+    buscaCep() {
+      console.log('oi')
+      const viaCepClient = new ViaCepClient()
+      if (this.endereco.cep.length == 8) {
+        viaCepClient.getByCep(this.endereco.cep)
+          .then(response => {
+            console.log(response)
+            this.endereco.pais = "BRASIL",
+            this.endereco.logradouro = response.logradouro
+            this.endereco.bairro = response.bairro
+            this.endereco.cidade = response.localidade
+            this.endereco.uf = response.uf
+          }
+
+          )
+          .catch(error => console.log(error))
+      }
+    },
     onClickCadastrar() {
+      const enderecoClient = new EnderecoClient()
       const pessoaClient = new PessoaClient()
       pessoaClient
         .cadastrarPessoa(this.pessoa)
@@ -139,13 +161,6 @@ export default defineComponent({
         })
         .catch(error => {
           console.log(error)
-          // if (typeof (error.response.data) == 'object') {
-          //   this.mensagem.mensagem = Object.values(error.response.data)[0]
-          // } else {
-          //   this.mensagem.mensagem = error.response.data
-          // }
-          // this.mensagem.status = false
-          // this.mensagem.ativo = true
         })
     },
     findById(id: number) {
@@ -165,16 +180,9 @@ export default defineComponent({
         .editar(this.pessoa)
         .then(sucess => {
           console.log(sucess)
-          // this.mensagem.mensagem = sucess
-          // this.mensagem.status = true
-          // this.mensagem.ativo = true
         })
         .catch(error => {
           console.log(error)
-
-          // this.mensagem.mensagem = error.response.data
-          // this.mensagem.status = false
-          // this.mensagem.ativo = true
         })
     },
     onClickAtivar() {
@@ -186,16 +194,9 @@ export default defineComponent({
           .editar(this.pessoa)
           .then(sucess => {
             console.log(sucess)
-
-            // this.mensagem.mensagem = "Condutor reativado com sucesso!"
-            // this.mensagem.status = true
-            // this.mensagem.ativo = true
           })
           .catch(error => {
             console.log(error)
-            // this.mensagem.mensagem = error.response.data
-            // this.mensagem.status = false
-            // this.mensagem.ativo = true
           })
       }
     },
@@ -206,16 +207,9 @@ export default defineComponent({
           .deletar(this.pessoa)
           .then(sucess => {
             console.log(sucess)
-            // this.condutor.ativo = false
-            // this.mensagem.mensagem = sucess
-            // this.mensagem.status = true
-            // this.mensagem.ativo = true
           })
           .catch(error => {
             console.log(error)
-            // this.mensagem.mensagem = error.response.data
-            // this.mensagem.status = false
-            // this.mensagem.ativo = true
           })
       }
     },
@@ -227,10 +221,11 @@ export default defineComponent({
   width: 52px;
 }
 
-.w-10{
+.w-10 {
   width: 10%;
 }
-.w-15{
+
+.w-15 {
   width: 15%;
 }
 </style>
