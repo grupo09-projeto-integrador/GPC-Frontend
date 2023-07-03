@@ -3,51 +3,55 @@
         <div class="page-header d-flex justify-content-between align-items-center">
             <LinkDinamicoComponent routeList="/relatorios/listadeespera"
                 routeRegister="/relatorios/listadeespera/cadastrar" />
-            <div class="search-container mt-3">
-                <input type="text" class="search-input" placeholder="Buscar Por Nome do Beneficiario..."
-                    v-model="searchQuery" />
-                <i class="bi bi-search search-icon"></i>
-            </div>
+            <button class="download btn btn-danger d-flex align-items-center mt-3 mr-3" id="downloadButton"
+                @click="downloadPDF" style="background-color: #DC3545;color: #fff;">
+                <i class="bi bi-download"></i>
+            </button>
         </div>
         <form class="form-app d-flex flex-column align-items-start gap-3 mt-4">
             <div class="d-flex align-items-center align-self-start gap-4">
 
                 <div class=" d-flex flex-column align-self-start">
                     <label for="dt_entrada">Categoria</label>
-                    <select class="form-select" style="width: 300px" v-model="categoriaModel">
-                    <option v-for="categoria in categoriaList" :value="categoria" >{{ categoria.nomeCategoria }}</option>
+                    <select class="form-select" style="width: 300px" v-model="selectedCategory">
+                        <option value="" selected>Todas as Categorias</option>
+                        <option v-for="categoria in categoriaList" :value="categoria.nomeCategoria">{{
+                            categoria.nomeCategoria }}</option>
                     </select>
+
                 </div>
             </div>
         </form>
-        <table class="table table-sm table-bordered w-100 mt-4">
+        <table class=" printable table table-sm table-bordered w-100 mt-4 ml-2">
             <thead>
                 <tr>
                     <th scope="col">Nome do Beneficiario</th>
                     <th scope="col">CPF do Beneficiario</th>
                     <th scope="col">Contato</th>
                     <th scope="col">Categoria</th>
-                    <th scope="col">Ações</th>
+                    <th scope="col" class="hide">Ações</th>
                 </tr>
             </thead>
             <tbody>
+                <tr v-for="categoria in filter" :key="categoria.id">
+                    <template v-for="pessoa in categoria.listaEspera">
+                        <td>{{ pessoa.nome }}</td>
+                        <td>{{ pessoa.cpf }}</td>
+                        <td>{{ pessoa.telefone }}</td>
+                        <td>{{ categoria.nomeCategoria }}</td>
+                        <td>
+                        <td class="actions-cell m-0" style="border: none;text-align: center;">
+                            <div class="d-flex justify-content-center actions ml-5" style="text-align: center;">
+                                <button class="btn btn-sm btn-danger" @click="excluir(categoria, pessoa)"
+                                    style="background-color: #dc3545;color: #fff;">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </button>
+                            </div>
+                        </td>
 
-                <tr v-for="list in categoriaFiltrada.listaEspera" :key="tamanhoLista">
-            <td> {{ list.nome }} </td>
-            <td>{{ list.cpf }}</td>
-            <td>{{ list.telefone }}</td>
-            <td>{{ categoriaFiltrada.nomeCategoria }}</td>
-            <td>
-              <div class="d-flex justify-content-center actions">
-                <button class="btn btn-sm btn-primary me-2">
-                  <i class="bi bi-pencil-square"></i> Editar </button>
-                <button class="btn btn-sm btn-danger" @click="excluir(list.id)">
-                  <i class="bi bi-trash"></i> Excluir </button>
-              </div>
-            </td>
-
-          </tr>
-
+                        </td>
+                    </template>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -59,6 +63,8 @@ import LinkDinamicoComponent from "@/components/LinkDinamicoComponent.vue";
 import { Categoria } from '@/model/categoria';
 import { Pessoa } from '@/model/pessoa';
 import { CategoriaClient } from '@/client/categoria.client';
+import jsPDF from 'jspdf';
+
 export default defineComponent({
     name: "ListaDeEsperaListar",
     components: {
@@ -68,85 +74,104 @@ export default defineComponent({
         return {
             searchQuery: "",
             categoriaList: [] as Categoria[],
-            categoriaFiltrada: new Categoria,
             tamanhoLista: 0 as number,
-
-            categoriaModel: new Categoria,
+            categoriaModel: new Categoria(),
+            selectedCategory: '',
             pessoa: [] as Pessoa[],
-            nivelUrgencia: [
-                { id: 1, nome: 'Alta' },
-                { id: 2, nome: 'Média' },
-                { id: 3, nome: 'Baixa' },
-            ],
         };
     },
-
-    mounted(){
-
-        this.findCategorias()
-
+    mounted() {
+        // Fetch the categoriaList data
+        this.fetchCategoriaList();
+    },
+    computed: {
+        filter() {
+            if (this.selectedCategory === '') {
+                return this.categoriaList;
+            } else {
+                return this.categoriaList.filter((categoria) => {
+                    return categoria.nomeCategoria === this.selectedCategory;
+                });
+            }
+        }
     },
 
     methods: {
+        downloadPDF() {
+            const pdf = new jsPDF();
+            const element = document.querySelector('.printable') as HTMLElement;
 
-        async findCategorias(){
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const widthRatio = pdfWidth / element.offsetWidth;
+            const heightRatio = pdfHeight / element.offsetHeight;
+            const scale = Math.min(widthRatio, heightRatio);
 
-        const categoriaClient = new CategoriaClient
+            // Hide the actions cells
+    const actionsCells = element.querySelectorAll('.actions-cell') as NodeListOf<HTMLElement>;
+    actionsCells.forEach((cell) => {
+        cell.style.display = 'none';
+    });
+    const hide = element.querySelectorAll('.hide') as NodeListOf<HTMLElement>;
+        hide.forEach((cell) => {    
+            cell.style.display = 'none';
+        });
 
-        categoriaClient.findAll()
-        .then(sucess => {
 
-        this.categoriaList = sucess
 
-        }
-        )
-        .catch(error => {
-        console.log(error);
-        }); 
+            pdf.html(element, {
+                callback: function (pdf) {
+                    pdf.save(`ListaDeEspera.pdf`);
+
+                    actionsCells.forEach((cell) => {
+        cell.style.display = '';
+    });
+    const hide = element.querySelectorAll('.hide') as NodeListOf<HTMLElement>;
+        hide.forEach((cell) => {    
+            cell.style.display = '';
+        });
+                },
+                x: 0,
+                y: 0,
+                html2canvas: {
+                    scale: scale,
+                },
+            });
         },
 
-        async findLista(){
-
-        const categoriaClient = new CategoriaClient
-
-        categoriaClient.findById(this.categoriaModel.id).then(sucess => {
-
-            this.categoriaFiltrada = sucess
-
-        }).catch(error => {
-        console.log(error);
-        }); 
-
-        this.tamanhoLista = this.categoriaFiltrada.listaEspera.length
-        console.log(this.tamanhoLista)
-
+        fetchCategoriaList() {
+            const cliente = new CategoriaClient();
+            cliente.findAll().then((response) => {
+                this.categoriaList = response;
+            }).catch((error) => {
+                console.error(error);
+            });
         },
-
-
-
-async excluir(id: number){
-  const confirmation = confirm("Você tem certeza de que deseja remover essa pessoa da lista de espera?");
-    if (!confirmation) {
-      return;
+        editar() {
+            
+        },
+        excluir(categoria : Categoria, pessoa : Pessoa) {
+  const categoriaIndex = this.categoriaList.findIndex((cat) => cat.id === categoria.id);
+  if (categoriaIndex > -1) {
+    // Find the pessoa object within the categoria's listaEspera array
+    const pessoaIndex = this.categoriaList[categoriaIndex].listaEspera.findIndex((p) => p.id === pessoa.id);
+    if (pessoaIndex > -1) {
+      this.categoriaList[categoriaIndex].listaEspera.splice(pessoaIndex, 1);
+      this.updateCategoria(this.categoriaList[categoriaIndex]);
     }
-
-    try {
-
-      const categoriaClient = new CategoriaClient();
-      await categoriaClient.delete(id);
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-
-
-
+  }
+},
+updateCategoria(categoria: Categoria) {
+    const client = new CategoriaClient();
+    client.update(categoria);
 }
 
-    }
 
+    },
 });
+
 </script>
+
 
 <style>
 .page-header {
@@ -205,4 +230,5 @@ td {
     border: 1px solid #dddddd;
     text-align: center;
     padding: 8px;
-}</style>
+}
+</style>
