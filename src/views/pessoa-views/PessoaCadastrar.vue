@@ -38,9 +38,9 @@
             placeholder="_ _ _._ _ _._ _ _-_ _" required />
         </div>
         <div class="mb-3 mt-3 w-25 text-start">
-          <label for="rg">RG</label>
+          <label for="rg">RG <span style="color: red"> *</span></label>
           <input type="text" v-maska data-maska="##.###.###-#" class="form-control" id="rg" v-model="pessoa.rg"
-            placeholder="_ _._ _ _._ _ _-_" />
+            placeholder="_ _._ _ _._ _ _-_" required/>
         </div>
         <div class="mb-3 mt-3 w-50 text-start">
           <label for="email">E-mail</label>
