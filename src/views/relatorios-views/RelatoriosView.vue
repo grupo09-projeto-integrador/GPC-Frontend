@@ -45,7 +45,7 @@ export default defineComponent({
 
 .nav a {
   text-decoration: none;
-  background-color: #0067c8;
+  background-color: #0d6efd;
   color: #fff;
   font-weight: 600;
   font-size: 18px;

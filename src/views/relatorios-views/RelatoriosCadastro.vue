@@ -1,5 +1,5 @@
 <template>
-    <div class="container main-content d-flex flex-column justify-content-start rounded">
+    <div class="main-content">
         <div class="header p-3">
             <div class="title">Relatórios de Cadastro</div>
             <div class="subtitle">Selecione uma data e uma opção abaixo:</div>
@@ -39,12 +39,12 @@ export default defineComponent({
 </script>
   
 <style scoped>
-.container {
+/* .container {
     max-width: 1000px;
     height: 90vh;
     background-color: #fff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .header {
     border-bottom: 1px solid #e6e6e6;
@@ -64,7 +64,7 @@ export default defineComponent({
 
 .nav a {
     text-decoration: none;
-    background-color: #0067c8;
+    background-color: #0d6efd;
     color: #fff;
     font-weight: 600;
     font-size: 18px;
