@@ -6,23 +6,27 @@
             <div class="d-flex align-items-center align-self-start gap-4">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="beneficiario">CPF do Beneficiario</label>
-                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px"  />
+                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px" v-maska data-maska="###.###.###-##" v-model="beneficiario"/>
                 </div>
+                <button class="col-md-1 btn-search btn btn-primary align-self-end">
+          <i class="bi bi-search"></i>
+        </button>
+
                 <datalist id="datalistOptions">
                     <option v-for="option in datalistOptions" :value="option"></option>
                 </datalist>
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="Nomebeneficiario">Nome do Beneficiario</label>
                     <input class="form-control" list="datalistOptions" id="Nomebeneficiario" readonly
-                        style="width: 300px" />
+                        style="width: 300px" v-model="beneficiarioModel" />
                 </div>
-                <router-link to="" class="btn btn-primary align-self-end">Ou Cadastrar Novo Beneficiario</router-link>
+                <router-link to="" class="btn btn-primary align-self-end col-md-4">Ou Cadastrar Novo Beneficiario</router-link>
             </div>
 
             <div class="d-flex align-items-center align-self-start gap-5">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="categoria">Categoria do Ativo</label>
-                    <select class="form-select"  id="categoria" style="width: 300px">
+                    <select class="form-select"  id="categoria" style="width: 300px" v-model="categoriaModel">
                         <option v-for="categoria in categoriaList" :value="categoria">{{ categoria.nomeCategoria }}</option>
 
                     </select>
@@ -35,6 +39,11 @@
     </div>
 </template>
 
+<script setup lang="ts">
+import { vMaska } from "maska";
+</script>
+
+
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LinkDinamicoComponent from "@/components/LinkDinamicoComponent.vue";
@@ -42,6 +51,7 @@ import { Categoria } from '@/model/categoria';
 import { Pessoa } from '@/model/pessoa';
 import { CategoriaClient } from '@/client/categoria.client';
 import { Beneficiario } from '@/model/beneficiario';
+
 import { BeneficiarioClient } from '@/client/beneficiario.client';
 export default defineComponent({
     name: "ListaDeEsperaCadastrar",
@@ -53,8 +63,10 @@ export default defineComponent({
             datalistOptions: [] as string[],
             datalistOptionsCategoria: [] as string[],
             categoriaList: [] as Categoria[],
+            categoriaModel: new Categoria,
             listaDeEspera: [],
-            beenficiario: [] as Beneficiario[],
+            beneficiario:  new Beneficiario   ,
+            beneficiarioModel: new Beneficiario,
             nivelUrgencia: [
                 { id: 1, nome: 'Alta' },
                 { id: 2, nome: 'Média' },
@@ -75,6 +87,8 @@ export default defineComponent({
 
         this.findCategoria();
 
+
+
     },
 //     async mounted() {
 //     try {
@@ -88,10 +102,30 @@ export default defineComponent({
 //   },
     methods: {
         async submitForm() {
+
+            
             
         },
-        async fetchBeneficiario() {
-        },
+
+//        async fetchBeneficiario(cpf: string) {
+//
+//          const pessoaClient = new PessoaClient
+//
+//          pessoaClient.findByCPF(cpf)
+//    .then(sucess => {
+//
+//      this.pessoaModel = sucess
+//
+//      }
+//        )
+//    .catch(error => {
+//  console.log(error);
+//}); 
+//},
+
+
+
+        
 
         async findCategoria(){
 
