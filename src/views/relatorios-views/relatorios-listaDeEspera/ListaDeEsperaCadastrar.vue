@@ -18,9 +18,9 @@
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="Nomebeneficiario">Nome do Beneficiario</label>
                     <input class="form-control" list="datalistOptions" id="Nomebeneficiario" readonly
-                        style="width: 300px" />
+                        style="width: 300px" v-model="pessoaModel.nome" />
                 </div>
-                <router-link to="" class="btn btn-primary align-self-end">Ou Cadastrar Novo Beneficiario</router-link>
+                <router-link to="" class="btn btn-primary align-self-end col-md-4">Ou Cadastrar Novo Beneficiario</router-link>
             </div>
 
             <div class="d-flex align-items-center align-self-start gap-5">
@@ -115,7 +115,7 @@ export default defineComponent({
             pessoaClient.findByCPF(cpf)
         .then(sucess => {
 
-        this.pessoa = sucess
+        this.pessoaModel = sucess
 
         }
         )
