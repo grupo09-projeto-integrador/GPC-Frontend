@@ -42,7 +42,7 @@
                         <td>
                         <td class="actions-cell m-0" style="border: none;text-align: center;">
                             <div class="d-flex justify-content-center actions ml-5" style="text-align: center;">
-                                <button class="btn btn-sm btn-danger" @click="excluir()"
+                                <button class="btn btn-sm btn-danger" @click="excluir(categoria, pessoa)"
                                     style="background-color: #dc3545;color: #fff;">
                                     <i class="bi bi-trash"></i> Excluir
                                 </button>
@@ -150,9 +150,23 @@ export default defineComponent({
         editar() {
             
         },
-        excluir() {
-            // Delete logic
-        },
+        excluir(categoria : Categoria, pessoa : Pessoa) {
+  const categoriaIndex = this.categoriaList.findIndex((cat) => cat.id === categoria.id);
+  if (categoriaIndex > -1) {
+    // Find the pessoa object within the categoria's listaEspera array
+    const pessoaIndex = this.categoriaList[categoriaIndex].listaEspera.findIndex((p) => p.id === pessoa.id);
+    if (pessoaIndex > -1) {
+      this.categoriaList[categoriaIndex].listaEspera.splice(pessoaIndex, 1);
+      this.updateCategoria(this.categoriaList[categoriaIndex]);
+    }
+  }
+},
+updateCategoria(categoria: Categoria) {
+    const client = new CategoriaClient();
+    client.update(categoria);
+}
+
+
     },
 });
 
