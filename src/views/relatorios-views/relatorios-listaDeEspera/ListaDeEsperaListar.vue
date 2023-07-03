@@ -40,11 +40,8 @@
                         <td>{{ pessoa.telefone }}</td>
                         <td>{{ categoria.nomeCategoria }}</td>
                         <td>
-                        <td class="actions-cell" style="border: none;text-align: center;">
-                            <div class="d-flex justify-content-center actions ml-5">
-                                <button class="btn btn-sm btn-primary me-2">
-                                    <i class="bi bi-pencil-square" @click="editar()"></i> Editar
-                                </button>
+                        <td class="actions-cell m-0" style="border: none;text-align: center;">
+                            <div class="d-flex justify-content-center actions ml-5" style="text-align: center;">
                                 <button class="btn btn-sm btn-danger" @click="excluir()"
                                     style="background-color: #dc3545;color: #fff;">
                                     <i class="bi bi-trash"></i> Excluir
@@ -151,7 +148,7 @@ export default defineComponent({
             });
         },
         editar() {
-            // Edit logic
+            
         },
         excluir() {
             // Delete logic
