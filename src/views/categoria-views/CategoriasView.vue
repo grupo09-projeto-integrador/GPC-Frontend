@@ -26,7 +26,7 @@
           <tr v-for="categoria in categoriaList" :key="categoria.id">
             <td> {{ categoria.id }} </td>
             <td>{{ categoria.nomeCategoria }}</td>
-            <td>{{  findAtivosCategoria(categoria.id) }}</td>
+            <td>{{ findAtivosCategoria(categoria.id) }}</td>
             <td>{{ categoria.maximoAmarelo }}</td>
             <td>{{ categoria.minimoAmarelo }}</td>
 
@@ -54,6 +54,7 @@ import { Categoria } from '@/model/categoria';
 import { CategoriaClient } from '@/client/categoria.client';
 import { AtivoClient } from '@/client/ativo.client';
 import { Ativo } from '@/model/ativo';
+import { calculatePaddingBoxPath } from 'html2canvas/dist/types/render/bound-curves';
 
 export default defineComponent({
   name: 'Categoria',
@@ -66,13 +67,13 @@ data(){
       categoriaList: new Array<Categoria>(),
       searchQuery: '',
       ativosList: new Array<Ativo>(),
-      qtde: 0 as number
-
+      qtdeAtivos: new Array<number>()
     };
   },
 
   mounted() {
     this.fetchCatAtivos();
+
   },
 
   methods: {
@@ -88,23 +89,30 @@ data(){
     }).catch(error => {
       console.log(error);
     });
+
+
+    
+
     },
 
-    async findAtivosCategoria(id: number){
-
+     findAtivosCategoria(id: number): number {
+      
+     
       const AClient = new AtivoClient()
+
 
       AClient.findByIdCategoria(id).then( sucess => {
 
-        this.ativosList = sucess
+      this.qtdeAtivos[id] = sucess.length
+
+      console.log(this.qtdeAtivos)
 
       }).catch(error => {
       console.log(error);
     });
 
-
-      this.qtde = this.ativosList.length
-      return this.qtde
+    return this.qtdeAtivos[id]
+    
     },
     
     async excluir(id: number) {

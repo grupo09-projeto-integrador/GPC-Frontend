@@ -21,8 +21,17 @@
             </div>
 
                     
-            <div class="col-12 p-0">
+            <div class="mt-3 d-flex align-items-center gap-3">
                 <button type="submit" class="btn btn-primary" @submit="submitForm">Cadastrar</button>
+                <p :class="[
+          'error-message',
+          errorMessage.status === 'success'
+            ? 'text-success'
+            : 'text-danger',
+        ]">
+          {{ errorMessage.message }}
+        </p>
+
                 </div>
         </form>
     </div>
@@ -52,7 +61,12 @@ export default defineComponent({
             categoriaClient: new CategoriaClient(),
             nomeCategoria: String,
             maximoAmarelo: Number,
-            minimoAmarelo: Number
+            minimoAmarelo: Number,
+            errorMessage: {
+        status: "",
+        message: "",
+      },
+
         };
     },
     methods: {
@@ -61,9 +75,15 @@ export default defineComponent({
             this.categoriaClient.save(this.categoriaModel)
                 .then((response) => {
                     console.log(response);
+                    this.errorMessage.status = "success";
+        this.errorMessage.message = "Categoria cadastrada com sucesso!";
+
                 })
                 .catch((error) => {
                     console.log(error);
+                    this.errorMessage.status = "error";
+                    this.errorMessage.message = error.data;
+
                 });
         }
 
@@ -75,6 +95,12 @@ export default defineComponent({
   
 
   <style scoped>
+
+.error-message{
+
+    margin-top: 15px;
+
+}
 form {
     width: 100%;
     height: 100%;
