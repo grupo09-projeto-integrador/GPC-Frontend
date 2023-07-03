@@ -20,10 +20,6 @@
             v-model="movimentacao.ativo"
           />
         </div>
-        <button class="col-md-2 btn-search btn btn-primary align-self-end">
-          <i class="bi bi-search"></i>
-        </button>
-
         <div class="col d-flex flex-column align-self-start">
           <label for="beneficario_id">Beneficário</label>
           <input
@@ -34,10 +30,6 @@
             v-model="movimentacao.beneficiario"
           />
         </div>
-        <button class="col-md-2 btn-search btn btn-primary align-self-end">
-          <i class="bi bi-search"></i>
-        </button>
-
         <div class="col d-flex flex-column align-self-start">
           <label for="categoria">Categoria</label>
           <input
@@ -81,11 +73,11 @@
           <label class="m-0" for="isDevolvido">Mostrar devolvidos</label>
         </div>
       </div>
-      <div class="col-12 p-0">
+      <!-- <div class="col-12 p-0">
         <button type="submit" class="btn btn-primary d-flex gap-1">
           <i class="bi bi-funnel"></i>Filtrar
         </button>
-      </div>
+      </div> -->
     </form>
 
     <!-- ---------------------------------------------------->
@@ -164,6 +156,8 @@ import { defineComponent } from 'vue'
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'
 import { Movimentacao } from '@/model/movimentacao'
 import { MovimentacoesClient } from '@/client/movimentacao.client'
+import { Pessoa } from '@/model/pessoa'
+import { Ativo } from '@/model/ativo'
 
 export default defineComponent({
   name: 'MovimentacoesView',
@@ -172,35 +166,60 @@ export default defineComponent({
   },
   data() {
     return {
-      currentPage: 0,
-      pageSize: 6,
       movimentacoes: [] as Movimentacao[],
+      beneficiarios: [] as Pessoa[],
+      ativos: [] as Ativo[],
+      searchQuery: "",
       movimentacao: new Movimentacao(),
       movimentacaoClient: new MovimentacoesClient()
     }
   },
-  computed: {
-    movimentacoesFilter(): Movimentacao[] {
-      const params = {
-        dataEntrada: this.movimentacao.dataEmprestimo || null,
-        dataDevolucao: this.movimentacao.dataDevolucao || null,
-        beneficiarioId: this.movimentacao.beneficiario || null,
-        categoriaId: this.movimentacao.ativo || null,
-        ativoId: this.movimentacao.ativo || null,
-        isDevolvido: this.movimentacao.isDevolvido || null
-      }
-      this.movimentacaoClient
-        .filtrar(params)
-        .then((response: any) => {
-          this.movimentacoes = response
-        })
-        .catch((error: any) => {
-          console.log(error)
-        })
-      return this.movimentacoes
-    }
-  },
+  
+  // mounted() {
+  //   this.fetchAtivos();
+  
+  // },
+  // computed: {
+  //   movimentacoesFilter(): Movimentacao[] {
+  //     const params = {
+  //       dataEntrada: this.movimentacao.dataEmprestimo || null,
+  //       dataDevolucao: this.movimentacao.dataDevolucao || null,
+  //       beneficiarioId: this.movimentacao.beneficiario || null,
+  //       categoriaId: this.movimentacao.ativo || null,
+  //       ativoId: this.movimentacao.ativo || null,
+  //       isDevolvido: this.movimentacao.isDevolvido || null
+  //     }
+  //     this.movimentacaoClient
+  //       .filtrar(params)
+  //       .then((response: any) => {
+  //         this.movimentacoes = response
+  //       })
+  //       .catch((error: any) => {
+  //         console.log(error)
+  //       })
+  //     return this.movimentacoes
+  //   }
+  // },
   methods: {
+    // movimentacaoFilter(): Movimentacao[] {
+    //   if (!this.searchQuery) {
+    //     return this.movimentacoes;
+    //   } else {
+    //     const lowerCaseQuery = this.searchQuery.toLowerCase();
+    //     const filteredAtivos = this.ativos.filter((ativo: Ativo) => {
+    //       const matchesQuery = ativo.idPatrimonio.toString().toLocaleLowerCase().includes(lowerCaseQuery);
+    //       const matchesStatus = !this.selectedStatus || ativo.status === this.selectedStatus;
+    //       const matchesCondicao = !this.selectedCondicao || ativo.condicao === this.selectedCondicao;
+    //       const matchesDate = !this.selectedDate || ativo.dataEntrada.toString().includes(this.selectedDate);
+    //       const matchesEmprestado = !this.checked || ativo.status === Status.USANDO;
+
+    //       return matchesQuery && matchesStatus && matchesCondicao && matchesDate && matchesEmprestado;
+    //     });
+
+    //     const startIndex = this.currentPage * this.pageSize;
+    //     return filteredAtivos.slice(startIndex, startIndex + this.pageSize);
+    //   }
+    // },
     formatDate(dateString: string | number | Date) {
       const dateTime = new Date(dateString)
       const formattedDate = dateTime.toLocaleDateString()
