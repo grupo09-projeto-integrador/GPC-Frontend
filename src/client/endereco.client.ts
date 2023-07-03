@@ -6,13 +6,13 @@ export class EnderecoClient {
   
     constructor() {
       this.axiosClient = axios.create({
-        baseURL: 'https://localhost:8080',
+        baseURL: 'http://localhost:8080',
         headers: { 'Content-type': 'application/json' }
       })
     }
-    public async cadastrarEndereco(endereco: Endereco): Promise<string> {
+    public async cadastrarEndereco(endereco: Endereco): Promise<Endereco> {
         try {
-          return (await this.axiosClient.get<string>('/enderecos')).data
+          return (await this.axiosClient.post<Endereco>('/enderecos', endereco)).data
         } catch (error: any) {
           return Promise.reject(error.response)
         }
