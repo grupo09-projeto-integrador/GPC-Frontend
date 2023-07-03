@@ -34,6 +34,23 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
+    path: '/movimentacao/cadastro',
+    name: 'movimentacao.cadastro',
+    component: () => import('../views/movimentacao-views/MovimentacoesCadastrar.vue'),
+    children: [
+      {
+        path: '/movimentacao/cadastro',
+        name: 'movimentacao.cadastro.editar',
+        component: () => import('../views/movimentacao-views/MovimentacoesCadastrar.vue'),
+      },
+      {
+        path: '/movimentacao/cadastro',
+        name: 'movimentacao.cadastro.toggle',
+        component: () => import('../views/movimentacao-views/MovimentacoesCadastrar.vue'),
+      }
+    ]
+  },
+  {
     path: '/notifications',
     name: 'notifications',
     component: () => import('../views/NotificationsView.vue')
