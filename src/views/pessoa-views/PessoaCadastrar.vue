@@ -1,20 +1,20 @@
 <template>
-  <div v-if="this.form == undefined" class="main-content d-flex flex-column align-items-start">
-    <div class="page-header d-flex justify-content-between align-items-center">
+  <div class="main-content d-flex flex-column align-items-start">
+    <div v-if="this.form == undefined" class="page-header d-flex justify-content-between align-items-center">
       <LinkDinamicoComponent routeList="/pessoas" routeRegister="/pessoa/cadastro" defaultActive="register" />
     </div>
-    <div class="row mt-5">
+    <div class="row">
       <div class="col-md-12 text-center">
-        <p v-if="this.form == undefined" class="fs-5">Dados Pessoais</p>
-        <p v-if="this.form == 'editar'" class="fs-5">Editar Condutor</p>
-        <p v-if="this.form == 'toggle' && condutor.ativo" class="fs-5">Desativar Condutor</p>
-        <p v-if="this.form == 'toggle' && !condutor.ativo" class="fs-5">Ativar Condutor</p>
+        <p v-if="this.form == undefined" class="fs-5 mt-5">Dados Pessoais</p>
+        <p v-if="this.form == 'editar'" class="fs-5">Editar Pessoa</p>
+        <p v-if="this.form == 'toggle' && condutor.ativo" class="fs-5">Desativar Pessoa</p>
+        <p v-if="this.form == 'toggle' && !condutor.ativo" class="fs-5">Ativar Pessoa</p>
       </div>
       <div class="col-md-2"></div>
     </div>
 
     <form class="form-app d-flex flex-column align-items-start w-75 h-100 needs-validation"
-      @submit.prevent="onClickCadastrar()">
+      @submit.prevent="submitForm()">
       <div class="row w-100 d-flex justify-content-start m-0 mb-2">
         <div class="mb-3 mt-3 w-50 text-start">
           <label for="nome-completo" class="form-label">Nome Completo <span style="color: red"> *</span></label>
@@ -90,7 +90,11 @@
         </div>
       </div>
       <div class="col-12 pb-5 d-flex gap-2">
-        <button type="submit" class="btn btn-primary d-flex gap-2">Cadastrar Pessoa
+        <router-link v-if="this.form != undefined" type="button" class="btn btn-secondary" to="/pessoas">Voltar
+        </router-link>
+        <button v-if="this.form == undefined" type="submit" class="btn btn-primary d-flex gap-2">Cadastrar
+          Pessoa</button>
+        <button v-if="this.form == 'editar'" type="submit" class="btn btn-primary d-flex gap-2">Editar Pessoa
         </button>
         <p :class="[
           'error-message',
@@ -147,6 +151,19 @@ export default defineComponent({
     }
   },
   methods: {
+    submitForm() {
+      if (this.form === undefined) {
+        this.onClickCadastrar()
+      } else if (this.form === 'editar') {
+        this.onClickEditar()
+      } else if (this.form === 'toggle') {
+        if (this.pessoa.isSuspenso) {
+          this.onClickAtivar()
+        } else {
+          this.onClickExcluir()
+        }
+      }
+    },
     buscaCep() {
       const viaCepClient = new ViaCepClient()
       if (this.endereco.cep.length == 8) {
@@ -196,6 +213,7 @@ export default defineComponent({
         .findById(id)
         .then(sucess => {
           this.pessoa = sucess
+          this.endereco = sucess.endereco
         })
         .catch(error => {
           console.log(error)
@@ -206,10 +224,16 @@ export default defineComponent({
       pessoaClient
         .editar(this.pessoa)
         .then(sucess => {
-          console.log(sucess)
+          this.errorMessage.status = "success";
+          this.errorMessage.message = sucess
         })
         .catch(error => {
-          console.log(error)
+          if (typeof error.response.data == 'object') {
+            this.errorMessage.message = Object.values(error.response.data)[0]
+          } else {
+            this.errorMessage.message = error.response.data;
+          }
+          this.errorMessage.status = "error";
         })
     },
     onClickAtivar() {
