@@ -8,5 +8,6 @@ export class Categoria extends AbstractEntity {
     minimoAmarelo!: number
     maximoAmarelo!: number
     listaEspera!: Array<Pessoa>
+    ativos!: Array<Ativo>
     qtdeAtivos!: number
 }
