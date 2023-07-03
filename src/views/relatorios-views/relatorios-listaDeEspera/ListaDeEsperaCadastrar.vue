@@ -6,14 +6,15 @@
             <div class="d-flex align-items-center align-self-start gap-4">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="beneficiario">CPF do Beneficiario</label>
-                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px" />
+                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px"
+                        v-model="beneficiario.cpf" />
+                    <datalist id="datalistOptions">
+                        <option v-for="option in datalistOptions" :value="option"></option>
+                    </datalist>
                 </div>
-                <datalist id="datalistOptions">
-                    <option v-for="option in datalistOptions" :value="option"></option>
-                </datalist>
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="Nomebeneficiario">Nome do Beneficiario</label>
-                    <input class="form-control" list="datalistOptions" id="Nomebeneficiario" readonly
+                    <input class="form-control" list="datalistOptions" id="Nomebeneficiario" readonly v-model="ascNome"
                         style="width: 300px" />
                 </div>
                 <router-link to="" class="btn btn-primary align-self-end">Ou Cadastrar Novo Beneficiario</router-link>
@@ -22,9 +23,8 @@
             <div class="d-flex align-items-center align-self-start gap-5">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="categoria">Categoria do Ativo</label>
-                    <select class="form-select"  id="categoria" style="width: 300px">
+                    <select class="form-select" id="categoria" style="width: 300px" v-model="selectedCategoria">
                         <option v-for="categoria in categoriaList" :value="categoria">{{ categoria.nomeCategoria }}</option>
-
                     </select>
                 </div>
             </div>
@@ -41,81 +41,52 @@ import LinkDinamicoComponent from "@/components/LinkDinamicoComponent.vue";
 import { Categoria } from '@/model/categoria';
 import { Pessoa } from '@/model/pessoa';
 import { CategoriaClient } from '@/client/categoria.client';
-import { Beneficiario } from '@/model/beneficiario';
-import { BeneficiarioClient } from '@/client/beneficiario.client';
 export default defineComponent({
     name: "ListaDeEsperaCadastrar",
     components: {
-        LinkDinamicoComponent,
+        LinkDinamicoComponent
     },
     data() {
         return {
-            datalistOptions: [] as string[],
-            datalistOptionsCategoria: [] as string[],
             categoriaList: [] as Categoria[],
-            listaDeEspera: [],
-            beenficiario: [] as Beneficiario[],
-            nivelUrgencia: [
-                { id: 1, nome: 'Alta' },
-                { id: 2, nome: 'Média' },
-                { id: 3, nome: 'Baixa' },
-            ],
-        };
-    },
-    computed:{
-        categoriaClient(){
-            return new CategoriaClient();
-        },
-        beneficiarioClient(){
-            return new BeneficiarioClient();
+            pessoaList: [] as Pessoa[],
+            beneficiario: new Pessoa(),
+            datalistOptions: [] as string[],
+            searchQuery: "",
+            ascNome: "",
+            selectedCategoria: "",
+            id: 0,
         }
     },
-
-    mounted(){
-
-        this.findCategoria();
-
-
-
+    mounted() {
+        this.loadCategoria();
+        this.loadDatalistOptions();
     },
-//     async mounted() {
-//     try {
-//       const beneficiarioClient = new BeneficiarioClient();
-//       const data = await beneficiarioClient.findAll();
-//       this.datalistOptions = data.map((beneficiario: { perfil: { cpf: string; }; }) => beneficiario.perfil.cpf);
-//       console.log(this.datalistOptions);
-//     } catch (error) {
-//       console.error("Failed to fetch cpf data:", this.datalistOptions);
-//     }
-//   },
     methods: {
         async submitForm() {
-            
+            const categoria = new CategoriaClient();
+
+            const respo = await categoria.findAll();
+            respo.forEach(async (element) => {
+                if (element.nomeCategoria === this.selectedCategoria) {
+                    this.id = element.id;
+                    const define = await categoria.findById(this.id);
+                    define.listaEspera.push(this.beneficiario);
+                    await categoria.update(define);
+                }
+            });
         },
-        async fetchBeneficiario() {
 
-
-
+        async loadCategoria() {
+            const client = new CategoriaClient();
+            this.categoriaList = await client.findAll();
         },
-
-        async findCategoria(){
-
-            const categoriaClient = new CategoriaClient
-
-            categoriaClient.findByAtivos()
-            .then(sucess => {
-
-            this.categoriaList = sucess
-
-            }
-            )
-            .catch(error => {
-            console.log(error);
-            }); 
+        async loadDatalistOptions() {
+            this.datalistOptions = this.pessoaList.map(pessoa => pessoa.cpf);
+        }
     },
+})
 
-
-}});
 </script>
 
 <style></style>
