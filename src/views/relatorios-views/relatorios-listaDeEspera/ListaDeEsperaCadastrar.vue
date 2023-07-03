@@ -1,5 +1,5 @@
 <template>
-    <div class="main-content">
+        <div class="main-content">
         <LinkDinamicoComponent routeList="/relatorios/listadeespera" routeRegister="/relatorios/listadeespera/cadastrar"
             default-active="register" />
         <form class="form-app d-flex flex-column align-items-start mt-4 gap-4" @submit.prevent="submitForm">
@@ -36,57 +36,92 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { BeneficiarioClient } from '@/client/beneficiario.client';
+import { CategoriaClient } from '@/client/categoria.client';
+import { PessoaClient } from '@/client/pessoa.client';
 import LinkDinamicoComponent from "@/components/LinkDinamicoComponent.vue";
+import { Beneficiario } from '@/model/beneficiario';
 import { Categoria } from '@/model/categoria';
 import { Pessoa } from '@/model/pessoa';
-import { CategoriaClient } from '@/client/categoria.client';
+import { defineComponent, ref } from 'vue';
 export default defineComponent({
-    name: "ListaDeEsperaCadastrar",
+    name: 'ListaDeEsperaCadastrar',
     components: {
-        LinkDinamicoComponent
+        LinkDinamicoComponent,
     },
     data() {
         return {
-            categoriaList: [] as Categoria[],
-            pessoaList: [] as Pessoa[],
             beneficiario: new Pessoa(),
             datalistOptions: [] as string[],
-            searchQuery: "",
-            ascNome: "",
-            selectedCategoria: "",
-            id: 0,
-        }
+            ascNome: '',
+            categoriaList: [] as Categoria[],
+            selectedCategoria: new Categoria(),
+        };
     },
-    mounted() {
-        this.loadCategoria();
-        this.loadDatalistOptions();
+    watch: {
+    'beneficiario.cpf': {
+      immediate: true,
+      handler: 'getNome',
     },
-    methods: {
-        async submitForm() {
-            const categoria = new CategoriaClient();
+  },
+    async mounted() {
+    try {
+      const BClient = new PessoaClient();
+      const pessoaData = await BClient.findAll();
+      this.datalistOptions = pessoaData.map((pessoa) => pessoa.cpf);
+      this.loadCategoria();
 
-            const respo = await categoria.findAll();
-            respo.forEach(async (element) => {
-                if (element.nomeCategoria === this.selectedCategoria) {
-                    this.id = element.id;
-                    const define = await categoria.findById(this.id);
-                    define.listaEspera.push(this.beneficiario);
-                    await categoria.update(define);
-                }
-            });
-        },
+    } catch (error) {
+      console.error("Failed to fetch pessoa data:", this.datalistOptions);
+    }
+  },
+    methods: {
+        submitForm() {
+  console.log(this.selectedCategoria);
+  console.log(this.beneficiario);
+
+  const beneficiarioClient = new PessoaClient();
+  beneficiarioClient.findByCPF(this.beneficiario.cpf)
+    .then((pessoa) => {
+      console.log(pessoa);
+      this.selectedCategoria.listaEspera.push(pessoa);
+        const categoriaClient = new CategoriaClient();
+        categoriaClient.update(this.selectedCategoria)
+        console.log(categoriaClient)
+    })
+    .catch((error) => {
+      console.error("Failed to fetch pessoa:", error);
+    });
+},
 
         async loadCategoria() {
             const client = new CategoriaClient();
             this.categoriaList = await client.findAll();
         },
-        async loadDatalistOptions() {
-            this.datalistOptions = this.pessoaList.map(pessoa => pessoa.cpf);
+        async getNome(){
+            const BClient = new PessoaClient();
+      const associatedcpf = this.datalistOptions.find(
+        (cpf) => cpf === this.beneficiario.cpf
+      );
+      if (associatedcpf) {
+        try {
+          const nomesData = await BClient.findByCPF(associatedcpf);
+          console.log(associatedcpf);
+          if (nomesData && nomesData.nome && nomesData.cpf) {
+            this.ascNome = nomesData.nome;
+            this.beneficiario.cpf = nomesData.cpf;
+          } else {
+            console.error("nome not found");
+          }
+        } catch (error) {
+          console.error("Failed to fetch nome data:", this.ascNome);
         }
-    },
-})
+      }
+        }
 
+    },
+});
 </script>
+
 
 <style></style>
