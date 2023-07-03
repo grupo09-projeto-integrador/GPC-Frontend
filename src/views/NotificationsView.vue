@@ -125,13 +125,21 @@ export default defineComponent({
       categoria.findAll().then((res) => {
         this.categories = res;
 
-        console.log(this.categories);
+        this.categories.forEach((cat) => {
+          if (cat.ativos && cat.ativos.length < cat.minimoAmarelo) {
+            const notification = {
+              title: 'Categoria com poucos Ativos',
+              body: "A categoria " + cat.nomeCategoria + " está com poucos ativos",
+              date: new Date(),
+              read: false
+            };
 
-      
-          
-        
+            this.notifications.push(notification);
+          }
+        });
       });
     }
+
 
   },
 });
