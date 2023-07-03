@@ -31,7 +31,6 @@
 </div>
     </div>
   </div>
-  
 </div>
    
           <hr>
@@ -46,21 +45,10 @@
     </thead>
    
     <tbody>
-      <tr>
-        <th scope="row"><span></span>1</th>
-        <td>Ativo</td>
-        
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Ativo</td>
-        
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Ativo</td>
-        
-      </tr>
+      <tr v-for="item in ativosList" :key="item.id">
+        <th scope="row"><span></span>{{ item.id }}</th>
+        <td v-if="item.isAtrasado">{{ item.ativo.categoria.nomeCategoria }}</td>
+        </tr>
     </tbody>
   </table>
   <table class="table caption-top col-md-6 table-bordered ">
@@ -77,19 +65,6 @@
         <td>Ativo</td>
     
         <td><router-link type="button" to="/movimentacoes"><i class="bi bi-box-arrow-up-right"> </i></router-link></td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Ativo</td>
-        <td><router-link type="button" to="/movimentacoes"><i class="bi bi-box-arrow-up-right"> </i></router-link></td>
-        
-        
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Ativo</td>
-        <td><router-link type="button" to="/movimentacoes"><i class="bi bi-box-arrow-up-right"> </i></router-link></td>
-        
       </tr>
     </tbody>
   </table>
@@ -126,9 +101,25 @@ export default defineComponent({
   data(){
     return {
       ativosList: new Array <Movimentacao>(),
-      movimentacao: new Movimentacao()
+      movimentacao: new Movimentacao(),
+      movimentacoesClient : new MovimentacoesClient(),
     }
   },
+  mounted() {
+    this.findAll();
+  },
+  methods: {
+    findAll() {
+      this.movimentacoesClient.findAll()
+      .then (sucess =>{
+        this.ativosList = sucess;
+      })
+      .catch(error =>{
+        console.log(error);
+      });
+    },
+
+  }
 })
 
 
