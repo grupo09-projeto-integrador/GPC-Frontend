@@ -18,12 +18,4 @@ export class BeneficiarioClient {
       return Promise.reject(error.response)
     }
   }
-
-  public async findByCPF(cpf: string): Promise<Beneficiario> {
-    try {
-      return (await this.axiosClient.get<Beneficiario>(`/cpf?cpf=${cpf}`)).data
-    } catch (error: any) {
-      return Promise.reject(error.response)
-    }
-  }
 }
