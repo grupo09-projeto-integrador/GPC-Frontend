@@ -109,7 +109,7 @@
             :key="movimentacao.id"
           >
             <td>{{ movimentacao.id }}</td>
-            <td>{{ movimentacao.beneficiario.perfil.nome }}</td>
+            <td>{{ movimentacao.beneficiario.nome }}</td>
             <td>{{ movimentacao.ativo.idPatrimonio }}</td>
             <td>{{ movimentacao.ativo.categoria.nomeCategoria }}</td>
             <td>{{ formatDate(movimentacao.dataEmprestimo) }}</td>

@@ -101,6 +101,14 @@
         >
           <i class="bi bi-calendar-plus"></i>Abrir Movimentação
         </button>
+        <p :class="[
+          'error-message',
+          errorMessage.status === 'success'
+            ? 'text-success'
+            : 'text-danger',
+        ]">
+          {{ errorMessage.message }}
+        </p>
       </div>
     </form>
   </div>
@@ -161,32 +169,26 @@ export default defineComponent({
       })
     },
     async cadastrar() {
-      const ativoClient = new AtivoClient()
-      const beneficiarioClient = new BeneficiarioClient()
-      const movimentacao = new Movimentacao()
-      try {
-        this.ativo = await ativoClient.findById(this.movimentacao.ativo)
-        movimentacao.ativo = this.ativo
-      } catch (error) {
-        console.error(error)
-      }
+      // const ativoClient = new AtivoClient()
+      // const beneficiarioClient = new BeneficiarioClient()
+      // try {
+      //   this.ativo = await ativoClient.findById(this.movimentacao.ativo)
+      //   movimentacao.ativo = this.ativo
+      // } catch (error) {
+      //   console.error(error)
+      // }
 
-      try {
-        this.beneficiario = await beneficiarioClient.findById(
-          this.movimentacao.beneficiario
-        )
-        movimentacao.beneficiario = this.beneficiario
-      } catch (error) {
-        console.error(error)
-      }
-
-      movimentacao.isDevolvido = this.movimentacao.isDevolvido
-      movimentacao.dataEmprestimo = this.movimentacao.dataEmprestimo
-      movimentacao.dataDevolucao = this.movimentacao.dataDevolucao
-      movimentacao.descricao = this.movimentacao.descricao
-      console.log(movimentacao.isDevolvido)
+      // try {
+      //   this.beneficiario = await beneficiarioClient.findById(
+      //     this.movimentacao.beneficiario
+      //   )
+      //   movimentacao.beneficiario = this.beneficiario
+      // } catch (error) {
+      //   console.error(error)
+      // }
+      console.log(this.movimentacao)
       this.movimentacaoClient
-        .novaMovimentacao(movimentacao)
+        .novaMovimentacao(this.movimentacao)
         .then((response: any) => {
           console.log(response)
         })
@@ -203,4 +205,9 @@ export default defineComponent({
 .btn-search {
   width: 52px;
 }
+.error-message {
+  margin: 0 !important;
+  padding-top: 5px;
+}
+
 </style>
