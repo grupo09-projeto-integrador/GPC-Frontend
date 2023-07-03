@@ -135,26 +135,7 @@
           </tr>
         </tbody>
       </table>
-      <!-- Add pagination controls -->
-      <!-- <div class="pagination-container align-self-end"> -->
-      <!-- <ul class="pagination">
-        <li class="page-item" :class="{ disabled: currentPage === 0 }">
-          <a
-            class="page-link"
-            href="#"
-            aria-label="Previous"
-            @click="previousPage"
-          >
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item" :disabled="movimentacoesFilter.length < pageSize">
-          <a class="page-link" href="#" aria-label="Next" @click="nextPage">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul> -->
-      <!-- </div> -->
+
     </div>
   </div>
 </template>
@@ -162,83 +143,37 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LinkDinamicoComponent from '@/components/LinkDinamicoComponent.vue'
-import { Movimentacao } from '@/model/movimentacao'
-import { MovimentacoesClient } from '@/client/movimentacao.client'
-
+import {Pessoa} from "@/model/pessoa";
 export default defineComponent({
-  name: 'MovimentacoesView',
+  name: 'PessoasView',
+  data() {
+    return {
+      pessoasList: new Array<Pessoa>()
+    }
+  },
+  mounted() {
+    this.findAll()
+  },
   components: {
     LinkDinamicoComponent
   },
-  data() {
-    return {
-      currentPage: 0,
-      pageSize: 6,
-      movimentacoes: [] as Movimentacao[],
-      movimentacao: new Movimentacao(),
-      movimentacaoClient: new MovimentacoesClient()
-    }
-  },
-  computed: {
-    movimentacoesFilter(): Movimentacao[] {
-      const params = {
-        dataEntrada: this.movimentacao.dataEmprestimo || null,
-        dataDevolucao: this.movimentacao.dataDevolucao || null,
-        beneficiarioId: this.movimentacao.beneficiario || null,
-        categoriaId: this.movimentacao.ativo || null,
-        ativoId: this.movimentacao.ativo || null,
-        isDevolvido: this.movimentacao.isDevolvido || null
-      }
-      this.movimentacaoClient
-        .filtrar(params)
-        .then((response: any) => {
-          this.movimentacoes = response
-        })
-        .catch((error: any) => {
-          console.log(error)
-        })
-      return this.movimentacoes
-    }
-  },
   methods: {
-    formatDate(dateString: string | number | Date) {
-      const dateTime = new Date(dateString)
-      const formattedDate = dateTime.toLocaleDateString()
-      const formattedTime = dateTime.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-      return `${formattedDate} ${formattedTime}`
-    },
-    async deleteItem(movimentacao: Movimentacao) {
-      const confirmation = confirm(
-        'Você tem certeza de que deseja excluir essa movimentação?'
-      )
-      if (!confirmation) {
-        return
-      }
-
-      try {
-        await this.movimentacaoClient.deletar(movimentacao.id)
-      } catch (error) {
-        console.error(error)
-      }
-    },
-
-    async editItem(movimentacao: Movimentacao) {
-      try {
-        const movimentacaoId = movimentacao.id
-        await this.$router.push({
-          name: 'ativos-editar',
-          params: { movimentacaoId: movimentacaoId }
-        })
-      } catch (error) {
-        console.error(error)
-      }
+    findAll() {
+      const pessoaClient = new PessoaClient()
+      condutorClient
+          .lista()
+          .then(sucess => {
+            this.condutoresList = sucess
+          })
+          .catch(error => {
+            console.log(error)
+          })
     }
   }
 })
+
 </script>
+
 <style scoped>
 .btn-search {
   width: 52px;
