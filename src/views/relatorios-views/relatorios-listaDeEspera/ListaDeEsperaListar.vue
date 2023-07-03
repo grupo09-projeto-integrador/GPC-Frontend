@@ -40,8 +40,8 @@
                         <td>{{ pessoa.telefone }}</td>
                         <td>{{ categoria.nomeCategoria }}</td>
                         <td>
-                        <td class="actions-cell">
-                            <div class="d-flex justify-content-center actions">
+                        <td class="actions-cell" style="border: none;text-align: center;">
+                            <div class="d-flex justify-content-center actions ml-5">
                                 <button class="btn btn-sm btn-primary me-2">
                                     <i class="bi bi-pencil-square" @click="editar()"></i> Editar
                                 </button>
