@@ -61,7 +61,7 @@ export class MovimentacoesClient {
   }
   public async findAll(): Promise<Movimentacao[]> {
     try {
-      return (await this.axiosClient.get<Movimentacao[]>(`movimentacao/lista`))
+      return (await this.axiosClient.get<Movimentacao[]>(`/listar`))
         .data;
     } catch (error: any) {
       return Promise.reject(error.response);

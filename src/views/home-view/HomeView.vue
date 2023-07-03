@@ -2,31 +2,31 @@
     
   <div class="main-content">
       <div class="container text-center">
-   <div v-for="cor in categoriasList" class="row align-items-start">
+   <div class="row align-items-start">
     <div class="col">
-      <div v-if="cor.qtdeAtivos > cor.maximoAmarelo" class="card text-bg-success mb-3" style="max-width: 18rem;">
+      <div v-if="categorias.qtdeAtivos > categorias.maximoAmarelo" class="card text-bg-success mb-3" style="max-width: 18rem;">
   <div class="card-header">Estoque adequado.</div>
   <div class="card-body">
-    <h5 class="card-title">{{cor.qtdeAtivos}}</h5>
-    <p class="card-text">{{ cor.nomeCategoria }}</p>
+    <h5 class="card-title">{{categorias.qtdeAtivos}}</h5>
+    <p class="card-text">{{ categorias.nomeCategoria }}</p>
   </div>
   </div>
     </div>
     <div class="col">
-     <div v-if="cor.qtdeAtivos >= cor.minimoAmarelo" class="card text-bg-warning mb-3" style="max-width: 18rem;">
+     <div v-if="categorias.qtdeAtivos >= categorias.minimoAmarelo" class="card text-bg-warning mb-3" style="max-width: 18rem;">
   <div class="card-header">Atenção</div>
   <div class="card-body">
-    <h5 class="card-title">{{cor.qtdeAtivos}}</h5>
-    <p class="card-text">{{ cor.nomeCategoria }}</p>
+    <h5 class="card-title">{{categorias.qtdeAtivos}}</h5>
+    <p class="card-text">{{ categorias.nomeCategoria }}</p>
   </div>
 </div>
     </div>
     <div class="col">
-      <div v-if="cor.qtdeAtivos < cor.minimoAmarelo" class="card text-bg-danger mb-3" style="max-width: 18rem;">
+      <div v-if="categorias.qtdeAtivos < categorias.minimoAmarelo" class="card text-bg-danger mb-3" style="max-width: 18rem;">
   <div class="card-header">Alerta de estoque</div>
   <div class="card-body">
-    <h5 class="card-title">{{ cor.qtdeAtivos }}</h5>
-    <p class="card-text">{{ cor.nomeCategoria }}</p>
+    <h5 class="card-title">{{ categorias.qtdeAtivos }}</h5>
+    <p class="card-text">{{ categorias.nomeCategoria }}</p>
   </div>
 </div>
     </div>
