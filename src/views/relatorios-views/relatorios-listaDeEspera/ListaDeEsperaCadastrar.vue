@@ -6,7 +6,7 @@
             <div class="d-flex align-items-center align-self-start gap-4">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="beneficiario">CPF do Beneficiario</label>
-                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px"  />
+                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px" />
                 </div>
                 <datalist id="datalistOptions">
                     <option v-for="option in datalistOptions" :value="option"></option>
@@ -91,6 +91,9 @@ export default defineComponent({
             
         },
         async fetchBeneficiario() {
+
+
+
         },
 
         async findCategoria(){
