@@ -6,7 +6,7 @@
             <div class="d-flex align-items-center align-self-start gap-4">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="beneficiario">CPF do Beneficiario</label>
-                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px" />
+                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px"  />
                 </div>
                 <datalist id="datalistOptions">
                     <option v-for="option in datalistOptions" :value="option"></option>
@@ -22,7 +22,10 @@
             <div class="d-flex align-items-center align-self-start gap-5">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="categoria">Categoria do Ativo</label>
-                    <select class="form-select"  id="categoria" style="width: 300px"></select>
+                    <select class="form-select"  id="categoria" style="width: 300px">
+                        <option v-for="categoria in categoriaList" :value="categoria">{{ categoria.nomeCategoria }}</option>
+
+                    </select>
                 </div>
             </div>
             <div class="mt-3 d-flex align-items-center gap-3">
@@ -49,7 +52,7 @@ export default defineComponent({
         return {
             datalistOptions: [] as string[],
             datalistOptionsCategoria: [] as string[],
-            categoria: [] as Categoria[],
+            categoriaList: [] as Categoria[],
             listaDeEspera: [],
             beenficiario: [] as Beneficiario[],
             nivelUrgencia: [
@@ -67,6 +70,12 @@ export default defineComponent({
             return new BeneficiarioClient();
         }
     },
+
+    mounted(){
+
+        this.findCategoria();
+
+    },
 //     async mounted() {
 //     try {
 //       const beneficiarioClient = new BeneficiarioClient();
@@ -83,8 +92,25 @@ export default defineComponent({
         },
         async fetchBeneficiario() {
         },
+
+        async findCategoria(){
+
+            const categoriaClient = new CategoriaClient
+
+            categoriaClient.findByAtivos()
+            .then(sucess => {
+
+            this.categoriaList = sucess
+
+            }
+            )
+            .catch(error => {
+            console.log(error);
+            }); 
     },
-});
+
+
+}});
 </script>
 
 <style></style>
