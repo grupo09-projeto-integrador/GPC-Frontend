@@ -6,7 +6,7 @@
             <div class="d-flex align-items-center align-self-start gap-4">
                 <div class="d-flex flex-column align-self-start gap-2">
                     <label for="beneficiario">CPF do Beneficiario</label>
-                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px" v-model="pessoaModel.cpf"/>
+                    <input class="form-control" list="datalistOptions" id="beneficiario" style="width: 300px" v-maska data-maska="###.###.###-##" v-model="pessoaModel.cpf"/>
                 </div>
                 <button class="col-md-1 btn-search btn btn-primary align-self-end">
           <i class="bi bi-search"></i>
@@ -38,6 +38,11 @@
         </form>
     </div>
 </template>
+
+<script setup lang="ts">
+import { vMaska } from "maska";
+</script>
+
 
 <script lang="ts">
 import { defineComponent } from 'vue';
