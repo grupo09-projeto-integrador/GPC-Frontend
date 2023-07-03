@@ -6,23 +6,23 @@
             <div class="row d-flex align-items-center align-self-start">
                 <div class="col d-flex flex-column align-self-start">
                     <label for="categoria-id">Nome da Categoria</label>
-                    <input type="text" class="form-control" id="categoria-nome" placeholder="Nome da Categoria" v-model="categoriaModel.nomeCategoria"/>
+                    <input type="text" class="form-control" id="categoria-nome" v-model="categoriaModel.nomeCategoria"/>
                 </div>
             </div>
 
             <div class="d-flex flex-column">
                 <label for="patrimonio-id">Número para acusar alerta amarelo</label>
-                <input type="number" class="form-control" id="alerta-amarelo" placeholder="Alerta Amarelo" v-model="categoriaModel.maximoAmarelo"/>
+                <input type="number" class="form-control" id="alerta-amarelo" v-model="categoriaModel.maximoAmarelo"/>
             </div>
 
             <div class="d-flex flex-column">
                 <label for="patrimonio-id">Número para acusar alerta vermelho</label>
-                <input type="number" class="form-control" id="alerta-vermelho" placeholder="Alerta vermelho" v-model="categoriaModel.minimoAmarelo"/>
+                <input type="number" class="form-control" id="alerta-vermelho" v-model="categoriaModel.minimoAmarelo"/>
             </div>
 
                     
             <div class="col-12 p-0">
-                <button type="submit" class="btn btn-primary" @submit="submitForm">Cadastrar</button>
+                <button type="submit" class="btn btn-primary" @submit="submitForm">Editar</button>
                 </div>
         </form>
     </div>
@@ -39,7 +39,7 @@ import { CategoriaClient } from '@/client/categoria.client';
 import { Categoria } from '@/model/categoria';
 
 export default defineComponent({
-  name: 'CategoriaCadastrar',
+  name: 'CategoriaEditar',
   components: {
     LinkDinamicoComponent,
   },
@@ -48,17 +48,42 @@ export default defineComponent({
   
   data() {
         return {
-            categoriaModel: new Categoria(),
-            categoriaClient: new CategoriaClient(),
-            nomeCategoria: String,
-            maximoAmarelo: Number,
-            minimoAmarelo: Number
+            categoriaModel: new Categoria,
+            categoriaClient: new CategoriaClient
+
         };
     },
+
+    mounted() {
+
+    this.findById(Number(this.id));
+
+    },
+
+    computed: {
+    id() {
+      return this.$route.query.id
+    },
+  },
+
+
     methods: {
+
+        findById(id: number) {
+      const categoriaClient = new CategoriaClient()
+
+      categoriaClient.findById(id).then(sucess => {
+          this.categoriaModel = sucess
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    },
+
         async submitForm() {
 
-            this.categoriaClient.save(this.categoriaModel)
+
+            this.categoriaClient.update(this.categoriaModel)
                 .then((response) => {
                     console.log(response);
                 })

@@ -14,7 +14,8 @@
 
                 <div class=" d-flex flex-column align-self-start">
                     <label for="dt_entrada">Categoria</label>
-                    <select class="form-select" style="width: 300px">
+                    <select class="form-select" style="width: 300px" v-model="categoriaModel">
+                    <option v-for="categoria in categoriaList" :value="categoria" >{{ categoria.nomeCategoria }}</option>
                     </select>
                 </div>
             </div>
@@ -30,6 +31,23 @@
                 </tr>
             </thead>
             <tbody>
+
+                <tr v-for="list in categoriaFiltrada.listaEspera" :key="tamanhoLista">
+            <td> {{ list.nome }} </td>
+            <td>{{ list.cpf }}</td>
+            <td>{{ list.telefone }}</td>
+            <td>{{ categoriaFiltrada.nomeCategoria }}</td>
+            <td>
+              <div class="d-flex justify-content-center actions">
+                <button class="btn btn-sm btn-primary me-2">
+                  <i class="bi bi-pencil-square"></i> Editar </button>
+                <button class="btn btn-sm btn-danger" @click="excluir(list.id)">
+                  <i class="bi bi-trash"></i> Excluir </button>
+              </div>
+            </td>
+
+          </tr>
+
             </tbody>
         </table>
     </div>
@@ -40,6 +58,7 @@ import { defineComponent } from 'vue';
 import LinkDinamicoComponent from "@/components/LinkDinamicoComponent.vue";
 import { Categoria } from '@/model/categoria';
 import { Pessoa } from '@/model/pessoa';
+import { CategoriaClient } from '@/client/categoria.client';
 export default defineComponent({
     name: "ListaDeEsperaListar",
     components: {
@@ -48,8 +67,11 @@ export default defineComponent({
     data() {
         return {
             searchQuery: "",
-            categoria: [] as Categoria[],
-            listaDeEspera: [],
+            categoriaList: [] as Categoria[],
+            categoriaFiltrada: new Categoria,
+            tamanhoLista: 0 as number,
+
+            categoriaModel: new Categoria,
             pessoa: [] as Pessoa[],
             nivelUrgencia: [
                 { id: 1, nome: 'Alta' },
@@ -58,6 +80,70 @@ export default defineComponent({
             ],
         };
     },
+
+    mounted(){
+
+        this.findCategorias()
+
+    },
+
+    methods: {
+
+        async findCategorias(){
+
+        const categoriaClient = new CategoriaClient
+
+        categoriaClient.findAll()
+        .then(sucess => {
+
+        this.categoriaList = sucess
+
+        }
+        )
+        .catch(error => {
+        console.log(error);
+        }); 
+        },
+
+        async findLista(){
+
+        const categoriaClient = new CategoriaClient
+
+        categoriaClient.findById(this.categoriaModel.id).then(sucess => {
+
+            this.categoriaFiltrada = sucess
+
+        }).catch(error => {
+        console.log(error);
+        }); 
+
+        this.tamanhoLista = this.categoriaFiltrada.listaEspera.length
+
+        },
+
+
+
+async excluir(id: number){
+  const confirmation = confirm("Você tem certeza de que deseja remover essa pessoa da lista de espera?");
+    if (!confirmation) {
+      return;
+    }
+
+    try {
+
+      const categoriaClient = new CategoriaClient();
+      await categoriaClient.delete(id);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+
+
+
+}
+
+    }
+
 });
 </script>
 
