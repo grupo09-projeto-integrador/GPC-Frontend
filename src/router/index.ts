@@ -7,9 +7,31 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/home-view/HomeView.vue')
   },
   {
-    path: '/usuarios',
-    name: 'usuarios',
-    component: () => import('../views/UsuariosView.vue')
+    path: '/pessoas',
+    name: 'pessoas',
+    component: () => import('../views/pessoa-views/PessoasView.vue')
+  },
+  {
+    path: '/pessoa',
+    name: 'pessoa.listar',
+    component: () => import('../views/pessoa-views/PessoaInfo.vue')
+  },
+  {
+    path: '/pessoa/cadastro',
+    name: 'pessoa.cadastro',
+    component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+    children: [
+      {
+        path: '/pessoa/cadastro',
+        name: 'pessoa.cadastro.editar',
+        component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+      },
+      {
+        path: '/pessoa/cadastro',
+        name: 'pessoa.cadastro.toggle',
+        component: () => import('../views/pessoa-views/PessoaCadastrar.vue'),
+      }
+    ]
   },
   {
     path: '/categorias',
