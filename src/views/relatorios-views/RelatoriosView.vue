@@ -1,5 +1,5 @@
 <template>
-  <div class="container main-content d-flex flex-column justify-content-start rounded">
+  <div class=" main-content  containerd-flex flex-column justify-content-start rounded">
     <div class="header p-3">
       <div class="title">Relatórios</div>
       <div class="subtitle">Selecione uma opção abaixo:</div>
@@ -21,7 +21,7 @@ export default defineComponent({
 
 <style scoped>
 .container {
-  max-width: 1000px;
+  max-width: 900px;
   height: 90vh;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
