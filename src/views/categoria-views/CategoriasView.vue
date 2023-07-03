@@ -26,7 +26,7 @@
           <tr v-for="categoria in categoriaList" :key="categoria.id">
             <td> {{ categoria.id }} </td>
             <td>{{ categoria.nomeCategoria }}</td>
-            <td>{{ categoria.qtdeAtivos }}</td>
+            <td>{{  findAtivosCategoria(categoria.id) }}</td>
             <td>{{ categoria.maximoAmarelo }}</td>
             <td>{{ categoria.minimoAmarelo }}</td>
 
@@ -65,17 +65,19 @@ data(){
     return {
       categoriaList: new Array<Categoria>(),
       searchQuery: '',
-      ativosList: new Array<Ativo>()
+      ativosList: new Array<Ativo>(),
+      qtde: 0 as number
+
     };
   },
 
   mounted() {
-    this.fetchAtivos();
+    this.fetchCatAtivos();
   },
 
   methods: {
 
-    async fetchAtivos() {
+    async fetchCatAtivos() {
       
         const categoriaClient = new CategoriaClient();
 
@@ -101,6 +103,8 @@ data(){
     });
 
 
+      this.qtde = this.ativosList.length
+      return this.qtde
     },
     
     async excluir(id: number) {
