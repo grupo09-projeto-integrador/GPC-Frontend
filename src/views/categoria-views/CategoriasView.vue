@@ -4,7 +4,7 @@
       <LinkDinamicoComponent routeList="/categorias" routeRegister="/categorias/cadastrar" />
 
       <div class="search-container mt-3">
-        <input type="text" class="search-input" placeholder="Search..." v-model="searchQuery" />
+        <input type="text" class="search-input" placeholder="Search..." />
         <i class="bi bi-search search-icon"></i>
       </div>
     </div>
@@ -23,7 +23,7 @@
           </thead>
 
           <tbody>
-          <tr v-for="categoria in categoriaFilter" :key="categoria.id">
+          <tr v-for="categoria in categoriaList" :key="categoria.id">
             <td> {{ categoria.id }} </td>
             <td>{{ categoria.nomeCategoria }}</td>
             <td>{{ categoria.qtdeAtivos }}</td>
@@ -34,7 +34,7 @@
               <div class="d-flex justify-content-center actions">
                 <router-link class="btn btn-sm btn-primary me-1" :to="{name: 'categorias editar', query: { id: categoria.id } }">
                   <i class="bi bi-pencil-square"></i> Editar </router-link>
-                <button class="btn btn-sm btn-danger bg-danger text-white" @click="deleteItem(categoria.id)">
+                <button class="btn btn-sm btn-danger bg-danger text-white" @click="excluir(categoria.id)">
                   <i class="bi bi-trash"></i> Excluir </button>
               </div>
             </td>
@@ -61,24 +61,9 @@ export default defineComponent({
 
 data(){
     return {
-      categoria: [] as Categoria[],
+      categoriaList: new Array<Categoria>(),
       searchQuery: '',
     };
-  },
-  computed: {
-    categoriaFilter(): Categoria[] {
-      if (!this.searchQuery) {
-        return this.categoria;
-      } else {
-        return this.categoria.filter((categoria: Categoria) => {
-          return categoria.id.toString().includes(this.searchQuery) ||
-          categoria.nomeCategoria.toString().includes(this.searchQuery) ||
-            categoria.qtdeAtivos.toString().includes(this.searchQuery) ||
-            categoria.minimoAmarelo.toString().includes(this.searchQuery) ||
-            categoria.maximoAmarelo.toString().includes(this.searchQuery);
-        });
-      }
-    }
   },
 
   mounted() {
@@ -86,16 +71,21 @@ data(){
   },
 
   methods: {
+
     async fetchAtivos() {
-      try {
+      
         const categoriaClient = new CategoriaClient();
-        this.categoria = await categoriaClient.findByAtivos();
-      } catch (error) {
-        console.error(error);
-      }
+
+      categoriaClient.findByAtivos().then(sucess => {
+       
+        this.categoriaList = sucess
+      
+    }).catch(error => {
+      console.log(error);
+    });
     },
     
-    async deleteItem(id: number) {
+    async excluir(id: number) {
       const confirmation = confirm("Você tem certeza de que deseja excluir essa categoria?");
       if (!confirmation) {
         return;

@@ -86,7 +86,7 @@ export class CategoriaClient{
 
     public async update(Categoria: Categoria): Promise<Categoria> {
         try {
-            return (await this.axiosClient.put<Categoria>('categorias', Categoria)).data
+            return (await this.axiosClient.put<Categoria>(`categorias?id=${Categoria.id}`, Categoria)).data
         } catch (error: any) {
             return Promise.reject(error.response)
         }
