@@ -19,6 +19,22 @@ export class BeneficiarioClient {
     }
   }
 
+  public async findByCPF(cpf: string): Promise<Beneficiario> {
+    try {
+      return (await this.axiosClient.get<Beneficiario>(`/cpf?cpf=${cpf}`)).data
+    } catch (error: any) {
+      return Promise.reject(error.response)
+    }
+  }
+
+  public async findByDatePdf(startDate: string, endDate: string): Promise<Beneficiario[]> {
+    try {
+        return (await this.axiosClient.get<Beneficiario[]>(`/pdf/dataCriacao/${startDate}/${endDate}`)).data
+    } catch (error: any) {
+        return Promise.reject(error.response)
+    }
+}
+
   public async findAll(): Promise<Beneficiario[]> {
     try {
       return (await this.axiosClient.get<Beneficiario[]>('/listar')).data

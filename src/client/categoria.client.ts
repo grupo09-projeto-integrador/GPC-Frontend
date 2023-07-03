@@ -84,13 +84,14 @@ export class CategoriaClient{
         }
     }
 
-    public async update(Categoria: Categoria): Promise<Categoria> {
+    public async update(cat: Categoria): Promise<Categoria> {
         try {
-            return (await this.axiosClient.put<Categoria>(`categorias?id=${Categoria.id}`, Categoria)).data
-        } catch (error: any) {
-            return Promise.reject(error.response)
+          const response = await this.axiosClient.put<Categoria>('/categorias', cat);
+          return response.data;
+        } catch (error) {
+          return Promise.reject(error);
         }
-    }
+      }   
 
     public async delete(id: number): Promise<void> {
         try {
