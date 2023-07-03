@@ -1,4 +1,5 @@
 import { AbstractEntity } from "./abstract-entity";
+import { Endereco } from "./endereco";
 export class Pessoa extends AbstractEntity {
     nome!: string
     email!: string
@@ -6,5 +7,5 @@ export class Pessoa extends AbstractEntity {
     dataNascimento!: Date
     rg!: string
     cpf!: string
-    endereco!: string
+    endereco!: Endereco
 }

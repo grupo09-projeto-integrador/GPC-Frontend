@@ -13,7 +13,7 @@
       <div class="col-md-2"></div>
     </div>
 
-    <form class="form-app d-flex flex-column align-items-start w-75 h-100 needs-validation">
+    <form class="form-app d-flex flex-column align-items-start w-75 h-100 needs-validation" @submit.prevent="onClickCadastrar()">
       <div class="row w-100 d-flex justify-content-start m-0 mb-2">
         <div class="mb-3 mt-3 w-50 text-start">
           <label for="nome-completo" class="form-label">Nome Completo <span style="color: red"> *</span></label>
@@ -114,6 +114,7 @@ export default defineComponent({
     return {
       pessoa: new Pessoa(),
       endereco: new Endereco(),
+      enderecoId: null
     }
   },
   components: {
@@ -134,34 +135,35 @@ export default defineComponent({
   },
   methods: {
     buscaCep() {
-      console.log('oi')
       const viaCepClient = new ViaCepClient()
       if (this.endereco.cep.length == 8) {
         viaCepClient.getByCep(this.endereco.cep)
           .then(response => {
-            console.log(response)
             this.endereco.pais = "BRASIL",
             this.endereco.logradouro = response.logradouro
             this.endereco.bairro = response.bairro
             this.endereco.cidade = response.localidade
             this.endereco.uf = response.uf
-          }
-
-          )
+          })
           .catch(error => console.log(error))
       }
     },
     onClickCadastrar() {
       const enderecoClient = new EnderecoClient()
       const pessoaClient = new PessoaClient()
-      pessoaClient
-        .cadastrarPessoa(this.pessoa)
-        .then(sucess => {
-          this.condutor = new Pessoa()
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      console.log(this.endereco)
+      console.log(this.pessoa)
+      enderecoClient.cadastrarEndereco(this.endereco).then(sucess =>{
+        this.pessoa.endereco = sucess
+        pessoaClient
+          .cadastrarPessoa(this.pessoa)
+          .then(sucess => {
+            this.pessoa = new Pessoa()
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      }).catch(err => {console.log(err)})
     },
     findById(id: number) {
       const pessoaClient = new PessoaClient()
